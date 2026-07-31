@@ -11,9 +11,13 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "validate": "npm run typecheck && npm run lint && npm run test && npm run build"
+    "validate": "npm run typecheck && npm run lint && npm run test && npm run build",
+    "db:migrate": "node --experimental-strip-types server/db/migrate.ts",
+    "db:seed-teams": "node --experimental-strip-types server/db/seed-teams.ts"
   },
   "dependencies": {
+    "drizzle-orm": "^0.45.2",
+    "postgres": "^3.4.9",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2"

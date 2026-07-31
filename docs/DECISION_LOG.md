@@ -7,3 +7,4 @@
 | 2026-07-31 | Canonical mission locked | Volume VII wording — no rewrites |
 | 2026-07-31 | Phase 1A Design System | Light Arkansas Blue / Green / Gold tokens |
 | 2026-07-31 | Phase 1B landing | Full vision page; mission emphasis without text change |
+| 2026-07-31 | Phase 1C data foundation | Drizzle + postgres.js; SQL migrations; server-only DB access |
