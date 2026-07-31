@@ -3,7 +3,9 @@ import './BetaFeedbackButton.css'
 
 export function BetaFeedbackButton() {
   const location = useLocation()
-  const to = `/feedback?from=${encodeURIComponent(location.pathname)}`
+  if (location.pathname === '/feedback') return null
+
+  const to = `/feedback?from=${encodeURIComponent(location.pathname + location.search)}`
 
   return (
     <Link to={to} className="beta-fab">

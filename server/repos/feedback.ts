@@ -4,10 +4,10 @@ import { betaFeedback } from '../db/schema.ts'
 import type { FeedbackCategory, FeedbackSeverity } from '../domain/enums.ts'
 import { insertAuditEvent } from './audit.ts'
 
-function buildReferenceCode(now = new Date()): string {
-  const stamp = now.toISOString().slice(0, 10).replaceAll('-', '')
-  const rand = Math.random().toString(36).slice(2, 6).toUpperCase()
-  return `FB-${stamp}-${rand}`
+/** Screen Bible / Volume IV style: AYC-FB-000128 */
+export function buildReferenceCode(seed = Math.floor(Math.random() * 1_000_000)): string {
+  const n = Math.abs(seed) % 1_000_000
+  return `AYC-FB-${n.toString().padStart(6, '0')}`
 }
 
 export type CreateFeedbackInput = {
