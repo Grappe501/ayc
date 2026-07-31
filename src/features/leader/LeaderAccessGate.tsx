@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Button } from '@/components/ui/Button'
+import { Field, Input } from '@/components/ui/Input'
+import { unlockLeader } from '@/features/leader/leaderApi'
 import { setLeaderSession } from '@/features/leader/leaderSession'
 
 type Props = {
   onUnlocked: () => void
 }
 
-/** Reserved for Phase 1D — write-access gate UI. Not used in Phase 1A shell. */
 export function LeaderAccessGate({ onUnlocked }: Props) {
   const [code, setCode] = useState('')
   const [error, setError] = useState('')
@@ -22,8 +23,15 @@ export function LeaderAccessGate({ onUnlocked }: Props) {
         setError('That access code was not accepted. Please check it and try again.')
         return
       }
-      setLeaderSession()
+      const result = await unlockLeader(code.trim())
+      if (!result.ok) {
+        setError(result.error.message)
+        return
+      }
+      setLeaderSession(code.trim())
       onUnlocked()
+    } catch {
+      setError('Something went wrong. Please try again.')
     } finally {
       setBusy(false)
     }
@@ -43,16 +51,15 @@ export function LeaderAccessGate({ onUnlocked }: Props) {
             {error}
           </div>
         ) : null}
-        <div className="field">
-          <label htmlFor="leader-code">Leader access code</label>
-          <input
+        <Field id="leader-code" label="Leader access code">
+          <Input
             id="leader-code"
             type="password"
             autoComplete="current-password"
             value={code}
             onChange={(e) => setCode(e.target.value)}
           />
-        </div>
+        </Field>
         <div className="btn-row">
           <Button type="submit" variant="primary" disabled={busy}>
             {busy ? 'Unlocking…' : 'Unlock Leader Board'}

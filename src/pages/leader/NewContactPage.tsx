@@ -1,6 +1,10 @@
-import { Navigate } from 'react-router-dom'
+import { ContactForm } from '@/features/leader/ContactForm'
+import { RequireLeaderAccess } from '@/features/leader/RequireLeaderAccess'
 
-/** Contact creation ships in Phase 1D — route preserved, no business logic in 1A. */
 export function NewContactPage() {
-  return <Navigate to="/leader" replace />
+  return (
+    <RequireLeaderAccess>
+      <ContactForm />
+    </RequireLeaderAccess>
+  )
 }

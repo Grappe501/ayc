@@ -138,8 +138,12 @@ export function validateContactCreate(input: ContactCreateInput): {
     }
   }
 
-  if (!email && !phone) {
-    issues.push({ field: 'contact', message: 'Provide at least an email or a phone number.' })
+  if (!email && !phone && status !== 'PROSPECTIVE') {
+    issues.push({
+      field: 'contact',
+      message:
+        'Provide an email or phone, or set participation status to Prospective when neither is available.',
+    })
   }
 
   if (!includes(LOCATION_TYPES, input.location.locationType)) {

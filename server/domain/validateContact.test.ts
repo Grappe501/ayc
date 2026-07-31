@@ -27,17 +27,25 @@ describe('validateContactCreate', () => {
     expect(result.value.person.displayName).toBe('Alex Rivera')
   })
 
-  it('requires name and at least one contact method', () => {
-    const result = validateContactCreate({
+  it('requires name and contact methods unless status is Prospective', () => {
+    const missing = validateContactCreate({
       ...valid,
       firstName: '',
       email: null,
       phone: null,
     })
-    expect(result.ok).toBe(false)
-    if (result.ok) return
-    expect(result.issues.some((i) => i.field === 'firstName')).toBe(true)
-    expect(result.issues.some((i) => i.field === 'contact')).toBe(true)
+    expect(missing.ok).toBe(false)
+    if (missing.ok) return
+    expect(missing.issues.some((i) => i.field === 'firstName')).toBe(true)
+    expect(missing.issues.some((i) => i.field === 'contact')).toBe(true)
+
+    const prospective = validateContactCreate({
+      ...valid,
+      email: null,
+      phone: null,
+      status: 'PROSPECTIVE',
+    })
+    expect(prospective.ok).toBe(true)
   })
 
   it('rejects invalid location codes', () => {
