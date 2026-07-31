@@ -1,5 +1,5 @@
 ---
-description: AYC master build protocol — H: drive only, ingest plan markdown, auto commit/push for Netlify
+description: AYC continuous auto-build — H: only, commit/push every major update, no approval stalls
 alwaysApply: true
 ---
 
@@ -9,54 +9,34 @@ alwaysApply: true
 
 - **All project files live on `H:\AYC` only.**
 - **Never create, install, cache, download, build, or write any file type to `C:\`.**
-- C: is full. Treat any path under `C:\` as forbidden for this project.
-- Configure tools so outputs stay on H: (workspace, `node_modules`, build artifacts, caches, temp, logs, env files, git objects for this repo).
-- If a tool defaults to C: (npm cache, temp, user profile, AppData), redirect it to H: or refuse and ask how to redirect — do not write to C:.
+- Prefer npm cache / temp on H: (e.g. `H:\npm-cache`) when tools default elsewhere.
 
-## GitHub → Netlify continuous deploy (required)
+## Continuous build authority (Steve)
+
+- **Build the entire Phase 0 + Phase 1 Leadership Workbench without stopping for approval.**
+- Do not wait for Volume VIII or further plan docs to begin implementation — Volumes I–VII + Screen Bible are sufficient.
+- Stay inside Phase 1 scope (no Phase 2 features). Follow Volumes II, III, IV, VI, VII.
+- Run installs, builds, tests, deploys, git commit/push automatically.
+
+## GitHub → Netlify (required, automatic)
 
 - Remote: https://github.com/Grappe501/ayc · branch `main` · workspace `H:\AYC`
-- **After every major update / completed slice / substantial pass:** automatically `git add`, `commit`, and `git push -u origin HEAD` (or `origin main`) so Netlify can deploy.
-- Do **not** wait for the user to ask for commit/push during normal build work — this protocol authorizes it.
-- Commit messages describe the delivered capability (conventional style: `feat:`, `fix:`, `docs:`, etc.).
-- Never commit secrets, `.env`, personal exports, API keys, or real youth contact data.
-- Never force-push to `main` unless Steve explicitly requests it.
-- Never skip hooks unless Steve explicitly requests it.
-- If validation is required for the slice, prefer committing only after `npm run validate` succeeds (docs-only updates may commit without full app validate).
-- After push, note that Netlify will pick up `main` once the site is linked to this repo.
-
-## Master build plan intake
-
-- The full website is defined by a **master build plan** delivered as markdown files.
-- Place every plan markdown under `H:\AYC\docs\master-build-plan\` (and subfolders if needed).
-- When the user provides markdown: **save it into that tree**, keep filenames clear, do not leave plan content only in chat.
-- While ingesting: **read and understand** what is being built. Update `00-UNDERSTANDING.md` as plan docs arrive.
-- Do **not** start full site implementation until the user says the master build plan is finished **and** Volume VIII (or explicit authorization) is in place.
+- **After every major update / completed slice / substantial pass:** automatically stage, commit, and `git push origin main`.
+- Do not ask for commit/push approval during build work — this protocol authorizes it.
+- Conventional commits (`feat:`, `fix:`, `docs:`). Never force-push `main`. Never commit secrets or personal data.
+- Prefer validate before push when the app exists; docs-only may push immediately.
 
 ## Canonical mission
 
-Use the locked mission in `docs/master-build-plan/02-AYC-VISION-CANONICAL.md` verbatim on the landing page. Do not rewrite.
+Use `docs/master-build-plan/02-AYC-VISION-CANONICAL.md` verbatim. Do not rewrite.
 
-## Governing docs
+## Scope
 
-Read Volumes I–VII before implementing. Follow Volume VII gates, slice naming, build-return format, and stop conditions. Stay inside the approved slice. Do not invent screens or expand the roadmap. Keep secrets out of code and chat output.
-
-Repo: [Grappe501/ayc](https://github.com/Grappe501/ayc) · Workspace: `H:\AYC`. No casual runtime imports from other SOSWebsite projects.
-
-## Implementation gate
-
-- Do **not** start application implementation until **Volume VIII (Phase 1 Master Implementation Plan)** is ingested, **unless** Steve explicitly authorizes an earlier start.
-- Volume VI is the exact Phase 1 UI contract — **do not invent** unapproved screens, actions, fields, or navigation.
-- After Vol VIII (or explicit authorization): follow Phase 0 then Phase 1 slice sequence; build only on `H:\AYC`.
-
-## After the plan is complete
-
-- Confirm all plan markdown is on H: under `docs/master-build-plan/`.
-- Build Phase 1 from Volumes I–VIII into `H:\AYC` (still never on C:).
-- Prefer governing volumes over assumptions. Report BUILD RETURN after every slice.
-- Commit and push each major slice automatically per this protocol.
+**Build:** Landing, shell, Leader Board, contacts, locations, directory, feedback, Netlify Functions, Postgres schema, tests.  
+**Do not build:** Accounts, OAuth, email/SMS, events, AI, imports/exports, Phase 2 boards.
 
 ## Working style
 
 - Prefer absolute paths on `H:\AYC\...`.
-- Keep plan markdown as source of truth until build starts; do not invent major scope outside the plan.
+- Report BUILD RETURN after slices; keep building the next slice immediately.
+- Prefer governing volumes over assumptions.

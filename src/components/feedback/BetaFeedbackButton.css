@@ -1,0 +1,29 @@
+.beta-fab {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 50;
+  min-height: var(--touch);
+  display: inline-flex;
+  align-items: center;
+  padding: 0.65rem 1rem;
+  background: var(--color-arkansas-red);
+  color: var(--color-white);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-soft);
+  border: 0;
+}
+
+.beta-fab:hover {
+  color: var(--color-white);
+  filter: brightness(1.08);
+}
+
+@media (max-width: 640px) {
+  .beta-fab {
+    font-size: 0.8rem;
+    padding-inline: 0.85rem;
+  }
+}

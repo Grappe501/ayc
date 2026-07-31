@@ -1,56 +1,18 @@
-# Phase 0 Status — External Package Pending Local Extract
+# Phase 0 Status
 
-**Date:** 2026-07-31  
-**Reported by:** ChatGPT Phase 0 assembly  
-**Local status:** Package zip **not yet present** on this workstation
+**Status:** Local Phase 0 scaffold **LIVE** on `H:\AYC` and pushed to GitHub.  
+External ChatGPT zip not required — Cursor rebuilt Phase 0 from governing volumes.
 
-## What ChatGPT delivered (claimed)
+## Delivered
 
-- React · TypeScript · Vite · React Router scaffold
-- Responsive AYC landing-page scaffold with canonical mission
+- React · TypeScript · Vite · React Router
+- App shell + nav + beta feedback control
+- Landing with **canonical mission** (verbatim)
 - Routes: `/`, `/leader`, `/directory`, `/feedback`
-- Netlify config + health function
-- PostgreSQL-ready server + migration structure
-- `.env` template
-- Testing / validation configuration
-- Security, deployment, beta, ADR, route, phase, boundary docs
-- **No** contact tables, real people, secrets, auth, email, SMS, or Phase 2 features
+- Netlify.toml + health function
+- Server DB client shell + placeholder migration
+- `.env.example`, tests, `npm run validate` passing
 
-## Validation note from assembler
+## Next
 
-Private npm registry returned 404 for public packages (React, ESLint). Assembler could **not** certify `npm install` or `npm run validate`.
-
-## Local path (AYC protocol)
-
-Extract and develop under:
-
-```text
-H:\AYC
-```
-
-Do **not** use `H:\SOSWebsite\ayc` unless Steve relocates the project. Drive protocol: **H: only — never C:**.
-
-## Operator action required
-
-Place the Phase 0 archive on H:, e.g.:
-
-```text
-H:\AYC\ayc-workbench-phase0.zip
-```
-
-Or extract contents so that `H:\AYC\package.json` exists at the repo root.
-
-Then Cursor will:
-
-1. Extract / verify repo root on `H:\AYC`
-2. Copy full Volumes I–VII (and VIII if present) into repo `docs/master-build-plan/`
-3. Configure npm cache on H: if needed
-4. Run `npm install` → `npm run validate` → `npm run dev`
-5. Produce a local Phase 0 verification BUILD RETURN
-6. Await approval for `AYC-PHASE-1A-APPLICATION-SHELL-1.0`
-
-## Next approved build (after Phase 0 verifies)
-
-```text
-AYC-PHASE-1A-APPLICATION-SHELL-1.0
-```
+`AYC-PHASE-1A` polish continues into contact data foundation and Leader Board (1C–1H).
