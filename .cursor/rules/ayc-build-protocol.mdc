@@ -21,6 +21,7 @@ alwaysApply: true
 ## GitHub → Netlify (required, automatic)
 
 - Remote: https://github.com/Grappe501/ayc · branch `main` · workspace `H:\AYC`
+- **Netlify site:** [arkansasyouth](https://app.netlify.com/projects/arkansasyouth/overview) → https://arkansasyouth.netlify.app
 - **After every major update / completed slice / substantial pass:** automatically stage, commit, and `git push origin main`.
 - Do not ask for commit/push approval during build work — this protocol authorizes it.
 - Conventional commits (`feat:`, `fix:`, `docs:`). Never force-push `main`. Never commit secrets or personal data.

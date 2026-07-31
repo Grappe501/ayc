@@ -4,7 +4,8 @@ Protected leadership workspace for the Arkansas Youth Coalition.
 
 - **Local path:** `H:\AYC`
 - **GitHub:** https://github.com/Grappe501/ayc
-- **Hosting:** Netlify (connect this repo, branch `main`)
+- **Live site:** https://arkansasyouth.netlify.app
+- **Netlify admin:** https://app.netlify.com/projects/arkansasyouth/overview
 - **Stack:** React · TypeScript · Vite · React Router · Netlify Functions · PostgreSQL (Phase 1C+)
 
 ## Quick start
