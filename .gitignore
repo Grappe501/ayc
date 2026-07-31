@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+build/
+.netlify/
+.vite/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Logs / coverage
+*.log
+npm-debug.log*
+coverage/
+.nyc_output/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Test / cache
+.cache/
+.tmp/
+*.tsbuildinfo
+
+# Personal data / exports (never commit)
+exports/
+*.csv
+!docs/**/*.md
+backups/
+*.sql.bak
+
+# Local tooling
+.pnpm-store/
