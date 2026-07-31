@@ -5,6 +5,7 @@ import { ContactDetailPage } from '@/pages/leader/ContactDetailPage'
 import { LeaderPage } from '@/pages/leader/LeaderPage'
 import { NewContactPage } from '@/pages/leader/NewContactPage'
 import { DirectoryPage } from '@/pages/directory/DirectoryPage'
+import { DirectoryPersonPage } from '@/pages/directory/DirectoryPersonPage'
 import { FeedbackPage } from '@/pages/feedback/FeedbackPage'
 import { NotFoundPage } from '@/pages/not-found/NotFoundPage'
 
@@ -17,7 +18,7 @@ export function App() {
         <Route path="/leader/contacts/new" element={<NewContactPage />} />
         <Route path="/leader/contacts/:personId" element={<ContactDetailPage />} />
         <Route path="/directory" element={<DirectoryPage />} />
-        <Route path="/directory/:personId" element={<DirectoryPage />} />
+        <Route path="/directory/:personId" element={<DirectoryPersonPage />} />
         <Route path="/feedback" element={<FeedbackPage />} />
         <Route path="/workbench" element={<LeaderPage />} />
         <Route path="/people" element={<DirectoryPage />} />

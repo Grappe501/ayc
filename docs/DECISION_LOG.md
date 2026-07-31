@@ -10,3 +10,4 @@
 | 2026-07-31 | Phase 1C data foundation | Drizzle + postgres.js; SQL migrations; server-only DB access |
 | 2026-07-31 | Phase 1D leader write path | Shared secret header; unlock + contact/location APIs |
 | 2026-07-31 | Phase 1E contact management | Detail/edit/archive/restore with audit + duplicate recheck |
+| 2026-07-31 | Phase 1F directory | Public read APIs; contact masking unless leader unlocked |
