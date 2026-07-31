@@ -7,8 +7,11 @@ import {
   createContact,
   fetchLocations,
   fetchTeams,
+  updateContact,
   type ApiError,
+  type ContactDetail,
 } from '@/features/leader/leaderApi'
+import type { ContactFormInitial } from '@/features/leader/contactFormInitial'
 import { DuplicateReviewPanel } from '@/features/leader/DuplicateReviewPanel'
 import { NewLocationDialog } from '@/features/leader/NewLocationDialog'
 
@@ -31,28 +34,51 @@ const AFFILIATION: Record<LocationType, 'CURRENT_COLLEGE' | 'CURRENT_SCHOOL' | '
   }
 
 type Props = {
+  mode?: 'create' | 'edit'
+  initial?: ContactFormInitial
   onSavedAnother?: () => void
+  onCancel?: () => void
+  onUpdated?: (detail: ContactDetail) => void
 }
 
-export function ContactForm({ onSavedAnother }: Props) {
+export function ContactForm({
+  mode = 'create',
+  initial,
+  onSavedAnother,
+  onCancel,
+  onUpdated,
+}: Props) {
   const navigate = useNavigate()
+  const isEdit = mode === 'edit'
   const [teams, setTeams] = useState<TeamOption[]>([])
   const [locations, setLocations] = useState<LocationOption[]>([])
   const [loadError, setLoadError] = useState('')
 
-  const [firstName, setFirstName] = useState('')
-  const [preferredName, setPreferredName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
-  const [preferredContactMethod, setPreferredContactMethod] = useState('UNKNOWN')
-  const [locationType, setLocationType] = useState<LocationType>('COLLEGE')
-  const [locationQuery, setLocationQuery] = useState('')
-  const [selectedLocation, setSelectedLocation] = useState<LocationOption | null>(null)
-  const [primaryTeamId, setPrimaryTeamId] = useState('')
-  const [additionalTeamIds, setAdditionalTeamIds] = useState<string[]>([])
-  const [position, setPosition] = useState<'LEAD' | 'VOLUNTEER'>('VOLUNTEER')
-  const [status, setStatus] = useState<'ACTIVE' | 'PROSPECTIVE' | 'INACTIVE'>('ACTIVE')
+  const [firstName, setFirstName] = useState(initial?.firstName ?? '')
+  const [preferredName, setPreferredName] = useState(initial?.preferredName ?? '')
+  const [lastName, setLastName] = useState(initial?.lastName ?? '')
+  const [email, setEmail] = useState(initial?.email ?? '')
+  const [phone, setPhone] = useState(initial?.phone ?? '')
+  const [preferredContactMethod, setPreferredContactMethod] = useState(
+    initial?.preferredContactMethod ?? 'UNKNOWN',
+  )
+  const [locationType, setLocationType] = useState<LocationType>(
+    initial?.locationType ?? 'COLLEGE',
+  )
+  const [locationQuery, setLocationQuery] = useState(initial?.location.name ?? '')
+  const [selectedLocation, setSelectedLocation] = useState<LocationOption | null>(
+    initial?.location ?? null,
+  )
+  const [primaryTeamId, setPrimaryTeamId] = useState(initial?.primaryTeamId ?? '')
+  const [additionalTeamIds, setAdditionalTeamIds] = useState<string[]>(
+    initial?.additionalTeamIds ?? [],
+  )
+  const [position, setPosition] = useState<'LEAD' | 'VOLUNTEER'>(
+    initial?.position ?? 'VOLUNTEER',
+  )
+  const [status, setStatus] = useState<'ACTIVE' | 'PROSPECTIVE' | 'INACTIVE'>(
+    initial?.status ?? 'ACTIVE',
+  )
 
   const [dialogOpen, setDialogOpen] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -79,12 +105,14 @@ export function ContactForm({ onSavedAnother }: Props) {
       }
       setTeams(teamsResult.data)
       setLocations(locationsResult.data)
-      if (teamsResult.data[0]) setPrimaryTeamId(teamsResult.data[0].id)
+      if (!isEdit && teamsResult.data[0]) {
+        setPrimaryTeamId((current) => current || teamsResult.data[0].id)
+      }
     })()
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [isEdit])
 
   const filteredLocations = useMemo(() => {
     const q = locationQuery.trim().toLowerCase()
@@ -176,7 +204,10 @@ export function ContactForm({ onSavedAnother }: Props) {
 
     setBusy(true)
     try {
-      const result = await createContact(payload)
+      const result =
+        isEdit && initial
+          ? await updateContact(initial.personId, payload)
+          : await createContact(payload)
       if (!result.ok) {
         if (result.error.code === 'DUPLICATE_CONTACT') {
           setDuplicateError(result.error)
@@ -185,6 +216,18 @@ export function ContactForm({ onSavedAnother }: Props) {
         if (result.error.fields) setFieldErrors(result.error.fields)
         setFormError(result.error.message)
         return
+      }
+
+      if (isEdit) {
+        const updated = 'contact' in result.data ? result.data.contact : null
+        if (updated) {
+          onUpdated?.(updated)
+          setSuccess({
+            personId: result.data.personId,
+            displayName: result.data.displayName,
+          })
+          return
+        }
       }
 
       if (opts?.addAnother) {
@@ -206,6 +249,25 @@ export function ContactForm({ onSavedAnother }: Props) {
   }
 
   if (success) {
+    if (isEdit) {
+      return (
+        <div>
+          <PageHeader
+            eyebrow="Contact Updated"
+            title="Contact Updated"
+            lede={`${success.displayName}’s record has been saved.`}
+          />
+          <div className="btn-row">
+            <Button to={`/leader/contacts/${success.personId}`} variant="primary">
+              View Contact
+            </Button>
+            <Button to="/leader" variant="secondary">
+              Return to Leader Board
+            </Button>
+          </div>
+        </div>
+      )
+    }
     return (
       <div>
         <PageHeader
@@ -263,9 +325,13 @@ export function ContactForm({ onSavedAnother }: Props) {
   return (
     <div>
       <PageHeader
-        eyebrow="Add Contact"
-        title="Add a Contact"
-        lede="Add a leader or volunteer to the statewide AYC directory. You can update this information later."
+        eyebrow={isEdit ? 'Edit Contact' : 'Add Contact'}
+        title={isEdit ? 'Edit Contact' : 'Add a Contact'}
+        lede={
+          isEdit
+            ? 'Update this leadership record. Duplicate checks run again when email or phone changes.'
+            : 'Add a leader or volunteer to the statewide AYC directory. You can update this information later.'
+        }
       />
 
       {loadError ? (
@@ -500,19 +566,33 @@ export function ContactForm({ onSavedAnother }: Props) {
 
         <div className="btn-row" style={{ marginTop: '1.25rem' }}>
           <Button type="submit" variant="primary" disabled={busy || Boolean(loadError)}>
-            {busy ? 'Saving Contact…' : 'Save Contact'}
+            {busy
+              ? isEdit
+                ? 'Saving Changes…'
+                : 'Saving Contact…'
+              : isEdit
+                ? 'Save Changes'
+                : 'Save Contact'}
           </Button>
-          <Button
-            type="button"
-            variant="secondary"
-            disabled={busy || Boolean(loadError)}
-            onClick={() => void submit({ addAnother: true })}
-          >
-            Save and Add Another
-          </Button>
-          <Button to="/leader" variant="secondary">
-            Cancel
-          </Button>
+          {!isEdit ? (
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={busy || Boolean(loadError)}
+              onClick={() => void submit({ addAnother: true })}
+            >
+              Save and Add Another
+            </Button>
+          ) : null}
+          {onCancel ? (
+            <Button type="button" variant="secondary" onClick={onCancel}>
+              Cancel
+            </Button>
+          ) : (
+            <Button to="/leader" variant="secondary">
+              Cancel
+            </Button>
+          )}
         </div>
       </form>
 

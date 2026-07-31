@@ -144,10 +144,91 @@ export function createLocation(body: {
   }>('locations', { method: 'POST', body: JSON.stringify(body) })
 }
 
+export type ContactDetail = {
+  id: string
+  firstName: string
+  middleName: string | null
+  lastName: string
+  preferredName: string | null
+  displayName: string | null
+  status: string
+  source: string
+  preferredContactMethod: string | null
+  createdAt: string
+  updatedAt: string
+  archivedAt: string | null
+  email: { value: string; normalized: string; isVerified: boolean } | null
+  phone: { value: string; normalized: string; isVerified: boolean } | null
+  location: {
+    id: string
+    name: string
+    code: string
+    compositeCode: string
+    locationType: string
+    city: string | null
+    countyName: string | null
+    affiliationType: string
+  } | null
+  primaryTeam: {
+    id: string
+    name: string
+    slug: string
+    position: string
+    status: string
+  } | null
+  additionalTeams: Array<{
+    id: string
+    name: string
+    slug: string
+    position: string
+    status: string
+  }>
+  recentAudit: Array<{
+    id: string
+    eventType: string
+    changeSummary: string
+    createdAt: string
+  }>
+}
+
 export function createContact(body: Record<string, unknown>) {
   return request<{
     status: 'created'
     personId: string
     displayName: string
   }>('contacts', { method: 'POST', body: JSON.stringify(body) })
+}
+
+export function fetchContact(personId: string) {
+  return request<ContactDetail>(`contact?id=${encodeURIComponent(personId)}`)
+}
+
+export function updateContact(personId: string, body: Record<string, unknown>) {
+  return request<{
+    status: 'updated'
+    personId: string
+    displayName: string
+    contact: ContactDetail | null
+  }>(`contact?id=${encodeURIComponent(personId)}`, {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  })
+}
+
+export function archiveContact(body: {
+  id: string
+  reason: string
+  note?: string
+}) {
+  return request<{ status: 'archived'; contact: ContactDetail | null }>(
+    'archive-contact',
+    { method: 'POST', body: JSON.stringify(body) },
+  )
+}
+
+export function restoreContact(body: { id: string; status: string }) {
+  return request<{ status: 'restored'; contact: ContactDetail | null }>(
+    'restore-contact',
+    { method: 'POST', body: JSON.stringify(body) },
+  )
 }
