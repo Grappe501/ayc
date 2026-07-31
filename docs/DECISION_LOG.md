@@ -12,3 +12,4 @@
 | 2026-07-31 | Phase 1E contact management | Detail/edit/archive/restore with audit + duplicate recheck |
 | 2026-07-31 | Phase 1F directory | Public read APIs; contact masking unless leader unlocked |
 | 2026-07-31 | Phase 1G beta feedback | Public submit API; AYC-FB reference codes; page context via `from` |
+| 2026-07-31 | Phase 1H beta readiness | A11y/security hardening + Gate 6 docs pack |

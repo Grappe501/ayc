@@ -77,6 +77,10 @@
   cursor: pointer;
   color: var(--color-blue);
   font-weight: 700;
+  min-width: var(--touch);
+  min-height: var(--touch);
+  display: inline-grid;
+  place-items: center;
 }
 
 .directory-count {

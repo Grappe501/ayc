@@ -3,6 +3,8 @@ import { getDatabaseUrl, pingDatabase } from '../../server/db/client.ts'
 
 export const handler: Handler = async () => {
   const environment = process.env.AYC_ENVIRONMENT ?? process.env.CONTEXT ?? 'development'
+  const isProduction =
+    environment === 'production' || process.env.CONTEXT === 'production'
   const databaseConfigured = Boolean(getDatabaseUrl())
 
   let database: { configured: boolean; ok: boolean | null; error?: string } = {
@@ -15,7 +17,8 @@ export const handler: Handler = async () => {
     database = {
       configured: true,
       ok: ping.ok,
-      ...(ping.error ? { error: ping.error } : {}),
+      // Never leak connection strings or provider errors to public clients in production.
+      ...(!ping.ok && !isProduction && ping.error ? { error: ping.error } : {}),
     }
   }
 

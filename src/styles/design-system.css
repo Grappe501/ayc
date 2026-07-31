@@ -371,8 +371,19 @@
 .field select:focus,
 .field textarea:focus {
   border-color: var(--color-blue-soft);
-  box-shadow: 0 0 0 3px rgba(26, 69, 120, 0.12);
-  outline: none;
+  box-shadow: 0 0 0 3px rgba(26, 69, 120, 0.18);
+  outline: 2px solid var(--color-blue);
+  outline-offset: 2px;
+}
+
+.field--error input,
+.field--error select,
+.field--error textarea {
+  border-color: #b42318;
+}
+
+.field__hint--error {
+  color: #b42318;
 }
 
 .field textarea {

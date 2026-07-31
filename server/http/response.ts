@@ -12,15 +12,26 @@ export type ApiErrorCode =
   | 'INTERNAL_ERROR'
   | 'MISCONFIGURED'
 
-const JSON_HEADERS = {
-  'Content-Type': 'application/json',
-  'Cache-Control': 'no-store',
+function corsHeaders(): Record<string, string> {
+  const origin = process.env.AYC_ALLOWED_ORIGIN?.trim()
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'Cache-Control': 'no-store',
+    Vary: 'Origin',
+  }
+  if (origin) {
+    headers['Access-Control-Allow-Origin'] = origin
+    headers['Access-Control-Allow-Headers'] =
+      'Content-Type, Authorization, X-AYC-Leader-Write-Secret'
+    headers['Access-Control-Allow-Methods'] = 'GET, POST, PATCH, OPTIONS'
+  }
+  return headers
 }
 
 export function ok<T>(data: T, statusCode = 200, meta: Record<string, unknown> = {}): HandlerResponse {
   return {
     statusCode,
-    headers: JSON_HEADERS,
+    headers: corsHeaders(),
     body: JSON.stringify({ ok: true, data, meta }),
   }
 }
@@ -34,7 +45,7 @@ export function fail(
 ): HandlerResponse {
   return {
     statusCode,
-    headers: JSON_HEADERS,
+    headers: corsHeaders(),
     body: JSON.stringify({
       ok: false,
       error: {
@@ -58,4 +69,19 @@ export function parseJsonBody<T>(body: string | null): T | null {
 
 export function methodNotAllowed(allowed: string[]): HandlerResponse {
   return fail('VALIDATION_ERROR', `Use ${allowed.join(' or ')}.`, 405)
+}
+
+export function rateLimited(retryAfterSec: number): HandlerResponse {
+  const response = fail(
+    'RATE_LIMITED',
+    'Too many requests. Please wait a moment and try again.',
+    429,
+  )
+  return {
+    ...response,
+    headers: {
+      ...response.headers,
+      'Retry-After': String(retryAfterSec),
+    },
+  }
 }

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
-import { useEffect } from 'react'
+import { useEffect, useId, useRef } from 'react'
+import { focusFirst, trapTabKey } from './focusTrap'
 
 type ModalProps = {
   open: boolean
@@ -8,24 +9,49 @@ type ModalProps = {
   onClose: () => void
 }
 
-export function Modal({ open, title, children, onClose }: ModalProps) {
+function useDialogFocus(open: boolean, onClose: () => void, panelRef: React.RefObject<HTMLElement | null>) {
+  const previousFocus = useRef<HTMLElement | null>(null)
+
   useEffect(() => {
     if (!open) return
-    function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose()
+    previousFocus.current = document.activeElement as HTMLElement | null
+    const panel = panelRef.current
+    if (panel) {
+      // Defer so content is mounted
+      requestAnimationFrame(() => focusFirst(panel))
     }
+
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        onClose()
+        return
+      }
+      if (panel) trapTabKey(e, panel)
+    }
+
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [open, onClose])
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      document.body.style.overflow = prevOverflow
+      previousFocus.current?.focus?.()
+    }
+  }, [open, onClose, panelRef])
+}
+
+export function Modal({ open, title, children, onClose }: ModalProps) {
+  const titleId = useId()
+  const panelRef = useRef<HTMLDivElement>(null)
+  useDialogFocus(open, onClose, panelRef)
 
   if (!open) return null
 
   return (
     <div
       className="ayc-modal-root"
-      role="dialog"
-      aria-modal="true"
-      aria-label={title}
+      role="presentation"
       onClick={onClose}
       style={{
         position: 'fixed',
@@ -38,11 +64,16 @@ export function Modal({ open, title, children, onClose }: ModalProps) {
       }}
     >
       <div
+        ref={panelRef}
         className="card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
         style={{ width: 'min(32rem, 100%)', maxHeight: '85vh', overflow: 'auto' }}
       >
-        <h2>{title}</h2>
+        <h2 id={titleId}>{title}</h2>
         {children}
       </div>
     </div>
@@ -60,12 +91,15 @@ export function Drawer({
   children: ReactNode
   onClose: () => void
 }) {
+  const titleId = useId()
+  const panelRef = useRef<HTMLDivElement>(null)
+  useDialogFocus(open, onClose, panelRef)
+
   if (!open) return null
+
   return (
     <div
-      role="dialog"
-      aria-modal="true"
-      aria-label={title}
+      role="presentation"
       style={{
         position: 'fixed',
         inset: 0,
@@ -75,7 +109,12 @@ export function Drawer({
       onClick={onClose}
     >
       <div
+        ref={panelRef}
         className="card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        tabIndex={-1}
         style={{
           position: 'absolute',
           top: 0,
@@ -87,7 +126,7 @@ export function Drawer({
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <h2>{title}</h2>
+        <h2 id={titleId}>{title}</h2>
         {children}
       </div>
     </div>

@@ -1,7 +1,8 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { AYC_SITE_NAME } from '@/content/ayc'
 import { BetaFeedbackButton } from '@/components/feedback/BetaFeedbackButton'
+import { focusFirst, trapTabKey } from '@/components/ui/focusTrap'
 import './AppShell.css'
 
 const NAV = [
@@ -15,6 +16,8 @@ export function AppShell() {
   const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
   const menuId = useId()
+  const panelRef = useRef<HTMLDivElement>(null)
+  const toggleRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     setMenuOpen(false)
@@ -25,6 +28,25 @@ export function AppShell() {
     return () => {
       document.body.style.overflow = ''
     }
+  }, [menuOpen])
+
+  useEffect(() => {
+    if (!menuOpen) return
+    const panel = panelRef.current
+    if (panel) requestAnimationFrame(() => focusFirst(panel))
+
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        setMenuOpen(false)
+        toggleRef.current?.focus()
+        return
+      }
+      if (panel) trapTabKey(e, panel)
+    }
+
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
   }, [menuOpen])
 
   return (
@@ -49,14 +71,15 @@ export function AppShell() {
           </NavLink>
 
           <button
+            ref={toggleRef}
             type="button"
             className="menu-toggle"
             aria-expanded={menuOpen}
             aria-controls={menuId}
-            aria-label="Open menu"
-            onClick={() => setMenuOpen(true)}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            onClick={() => setMenuOpen((open) => !open)}
           >
-            ☰
+            {menuOpen ? '✕' : '☰'}
           </button>
 
           <nav className="primary-nav" aria-label="Primary">
@@ -81,12 +104,22 @@ export function AppShell() {
         className={`mobile-nav ${menuOpen ? 'mobile-nav--open' : ''}`}
         hidden={!menuOpen}
       >
-        <div className="mobile-nav__panel" role="dialog" aria-modal="true" aria-label="Navigation">
+        <div
+          ref={panelRef}
+          className="mobile-nav__panel"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigation menu"
+          tabIndex={-1}
+        >
           <button
             type="button"
             className="mobile-nav__close"
             aria-label="Close menu"
-            onClick={() => setMenuOpen(false)}
+            onClick={() => {
+              setMenuOpen(false)
+              toggleRef.current?.focus()
+            }}
           >
             Close
           </button>

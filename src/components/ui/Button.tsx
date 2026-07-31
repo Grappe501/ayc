@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import type { AriaAttributes, ButtonHTMLAttributes, ReactNode } from 'react'
 
 type Variant = 'primary' | 'secondary'
 
@@ -7,6 +7,7 @@ type Base = {
   children: ReactNode
   variant?: Variant
   className?: string
+  'aria-current'?: AriaAttributes['aria-current']
 }
 
 type AsButton = Base &
@@ -24,7 +25,7 @@ export function Button(props: AsButton | AsLink) {
 
   if ('to' in props && props.to) {
     return (
-      <Link to={props.to} className={className}>
+      <Link to={props.to} className={className} aria-current={props['aria-current']}>
         {props.children}
       </Link>
     )
@@ -38,6 +39,7 @@ export function Button(props: AsButton | AsLink) {
       disabled={button.disabled}
       onClick={button.onClick}
       aria-label={button['aria-label']}
+      aria-current={button['aria-current']}
     >
       {button.children}
     </button>

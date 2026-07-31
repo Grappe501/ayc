@@ -272,10 +272,11 @@ export function DirectoryPage() {
         <StatCard value={String(summary?.locations ?? '—')} label="Locations" />
       </div>
 
-      <div className="directory-tabs" role="tablist" aria-label="Directory views">
+      <div className="directory-tabs" role="navigation" aria-label="Directory views">
         <Button
           type="button"
           variant={view === 'people' ? 'primary' : 'secondary'}
+          aria-current={view === 'people' ? 'page' : undefined}
           onClick={() => setView('people')}
         >
           People
@@ -283,6 +284,7 @@ export function DirectoryPage() {
         <Button
           type="button"
           variant={view === 'teams' ? 'primary' : 'secondary'}
+          aria-current={view === 'teams' ? 'page' : undefined}
           onClick={() => setView('teams')}
         >
           Teams
@@ -290,6 +292,7 @@ export function DirectoryPage() {
         <Button
           type="button"
           variant={view === 'locations' ? 'primary' : 'secondary'}
+          aria-current={view === 'locations' ? 'page' : undefined}
           onClick={() => setView('locations')}
         >
           Locations

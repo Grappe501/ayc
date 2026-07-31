@@ -8,7 +8,7 @@ export function BetaFeedbackButton() {
   const to = `/feedback?from=${encodeURIComponent(location.pathname + location.search)}`
 
   return (
-    <Link to={to} className="beta-fab">
+    <Link to={to} className="beta-fab" aria-label="Send beta feedback">
       Send Beta Feedback
     </Link>
   )

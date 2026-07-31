@@ -1,5 +1,12 @@
 import type { Handler } from '@netlify/functions'
-import { fail, methodNotAllowed, ok, parseJsonBody } from '../../server/http/response.ts'
+import { checkRateLimit, clientKey } from '../../server/http/rateLimit.ts'
+import {
+  fail,
+  methodNotAllowed,
+  ok,
+  parseJsonBody,
+  rateLimited,
+} from '../../server/http/response.ts'
 import {
   submitFeedback,
   type SubmitFeedbackRequest,
@@ -10,6 +17,9 @@ export const handler: Handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return methodNotAllowed(['POST'])
   }
+
+  const limited = checkRateLimit(`feedback:${clientKey(event)}`, 30, 60 * 60_000)
+  if (!limited.ok) return rateLimited(limited.retryAfterSec)
 
   const body = parseJsonBody<SubmitFeedbackRequest>(event.body)
   if (!body) {
