@@ -4,6 +4,7 @@ import { people } from '../../server/db/schema.ts'
 import type { ContactCreateInput } from '../../server/domain/validateContact.ts'
 import { fail, methodNotAllowed, ok, parseJsonBody } from '../../server/http/response.ts'
 import { createContact } from '../../server/services/contactService.ts'
+import { listLeaderRoster } from '../../server/services/leaderRoster.ts'
 import { withLeaderDb } from './_shared.ts'
 
 type CreateBody = ContactCreateInput & {
@@ -14,20 +15,32 @@ type CreateBody = ContactCreateInput & {
 export const handler: Handler = async (event) => {
   if (event.httpMethod === 'GET') {
     return withLeaderDb(event, async (db) => {
-      const rows = await db
-        .select({
-          id: people.id,
-          firstName: people.firstName,
-          lastName: people.lastName,
-          preferredName: people.preferredName,
-          displayName: people.displayName,
-          status: people.status,
-          createdAt: people.createdAt,
-        })
-        .from(people)
-        .orderBy(desc(people.createdAt))
-        .limit(5)
-      return ok(rows)
+      const view = (event.queryStringParameters?.view ?? 'roster').toLowerCase()
+
+      if (view === 'recent') {
+        const rows = await db
+          .select({
+            id: people.id,
+            firstName: people.firstName,
+            lastName: people.lastName,
+            preferredName: people.preferredName,
+            displayName: people.displayName,
+            status: people.status,
+            createdAt: people.createdAt,
+          })
+          .from(people)
+          .orderBy(desc(people.createdAt))
+          .limit(5)
+        return ok(rows)
+      }
+
+      const result = await listLeaderRoster(db, {
+        q: event.queryStringParameters?.q ?? undefined,
+        teamSlug: event.queryStringParameters?.team ?? undefined,
+        status: event.queryStringParameters?.status ?? undefined,
+        gapsOnly: event.queryStringParameters?.gaps === '1',
+      })
+      return ok(result)
     })
   }
 
@@ -39,15 +52,11 @@ export const handler: Handler = async (event) => {
       }
 
       try {
-        const result = await createContact(
-          db,
-          body,
-          {
-            actorType: 'SHARED_LEADER_SESSION',
-            actorLabel: 'SHARED_LEADER_SESSION',
-            requestId: event.headers['x-nf-request-id'] ?? null,
-          },
-        )
+        const result = await createContact(db, body, {
+          actorType: 'SHARED_LEADER_SESSION',
+          actorLabel: 'SHARED_LEADER_SESSION',
+          requestId: event.headers['x-nf-request-id'] ?? null,
+        })
 
         if (result.status === 'duplicate_review') {
           return fail(

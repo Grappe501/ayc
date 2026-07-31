@@ -83,6 +83,28 @@ export function fetchLeaderSummary() {
   }>('leader-summary')
 }
 
+export type LeaderRosterRow = {
+  id: string
+  displayName: string
+  firstName: string
+  lastName: string
+  preferredName: string | null
+  status: string
+  createdAt: string
+  updatedAt: string
+  hasEmail: boolean
+  hasPhone: boolean
+  missingContact: boolean
+  location: { id: string; code: string; name: string; locationType: string } | null
+  primaryTeam: {
+    id: string
+    name: string
+    slug: string
+    position: string
+  } | null
+  additionalTeams: Array<{ id: string; name: string; slug: string; position: string }>
+}
+
 export function fetchRecentContacts() {
   return request<
     Array<{
@@ -94,7 +116,38 @@ export function fetchRecentContacts() {
       status: string
       createdAt: string
     }>
-  >('contacts')
+  >('contacts?view=recent')
+}
+
+export function fetchLeaderRoster(params?: {
+  q?: string
+  team?: string
+  status?: string
+  gapsOnly?: boolean
+}) {
+  const qs = new URLSearchParams()
+  qs.set('view', 'roster')
+  if (params?.q) qs.set('q', params.q)
+  if (params?.team) qs.set('team', params.team)
+  if (params?.status) qs.set('status', params.status)
+  if (params?.gapsOnly) qs.set('gaps', '1')
+  return request<{
+    total: number
+    attention: { missingContact: number; prospective: number }
+    people: LeaderRosterRow[]
+  }>(`contacts?${qs.toString()}`)
+}
+
+export function assignTeam(body: {
+  personId: string
+  primaryTeamId: string
+  position: 'LEAD' | 'VOLUNTEER'
+  additionalTeamIds?: string[]
+}) {
+  return request<{ person: LeaderRosterRow | null }>('assign-team', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
 }
 
 export function fetchTeams() {
