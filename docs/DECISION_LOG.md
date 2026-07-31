@@ -13,3 +13,4 @@
 | 2026-07-31 | Phase 1F directory | Public read APIs; contact masking unless leader unlocked |
 | 2026-07-31 | Phase 1G beta feedback | Public submit API; AYC-FB reference codes; page context via `from` |
 | 2026-07-31 | Phase 1H beta readiness | A11y/security hardening + Gate 6 docs pack |
+| 2026-07-31 | Team Lead Boards under `/leader` | Five boards (Organizer, Voter Registration, Social Media, Events, Outreach); Phase 2 full dashboards still deferred |

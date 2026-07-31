@@ -1,9 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import {
-  Badge,
   Button,
   Card,
-  EmptyState,
   Field,
   Input,
   LoadingState,
@@ -13,7 +11,9 @@ import {
   StatCard,
   Tag,
 } from '@/components/ui'
+import { TEAMS } from '@/content/ayc'
 import { AssignTeamDialog } from '@/features/leader/AssignTeamDialog'
+import { LeaderRosterList } from '@/features/leader/LeaderRosterList'
 import { RequireLeaderAccess } from '@/features/leader/RequireLeaderAccess'
 import { clearLeaderSession } from '@/features/leader/leaderSession'
 import {
@@ -23,10 +23,6 @@ import {
   type LeaderRosterRow,
 } from '@/features/leader/leaderApi'
 import './leader-board.css'
-
-function labelStatus(status: string) {
-  return status.charAt(0) + status.slice(1).toLowerCase()
-}
 
 function LeaderBoard() {
   const [stats, setStats] = useState({
@@ -144,6 +140,24 @@ function LeaderBoard() {
         <StatCard value={String(stats.locationsRepresented)} label="Locations Represented" />
       </div>
 
+      <Section id="team-boards" title="Team Lead Boards">
+        <p className="field__hint" style={{ marginBottom: '1rem' }}>
+          Open a team board to manage that team’s leads, volunteers, and contact gaps.
+        </p>
+        <div className="team-board-hub">
+          {TEAMS.map((team) => (
+            <Card key={team.id}>
+              <span className="team-board-hub__mark">{team.mark}</span>
+              <h3>{team.name} Lead</h3>
+              <p>{team.shortLabel}</p>
+              <Button to={`/leader/teams/${team.id}`} variant="primary">
+                Open {team.name} board
+              </Button>
+            </Card>
+          ))}
+        </div>
+      </Section>
+
       <Section id="attention" title="Needs attention">
         {attention.missingContact === 0 && attention.prospective === 0 ? (
           <p className="field__hint">Nothing needs attention right now.</p>
@@ -235,129 +249,14 @@ function LeaderBoard() {
 
         {loading ? <LoadingState label="Loading contact list…" /> : null}
 
-        {!loading && people.length === 0 ? (
-          <EmptyState
-            icon="+"
-            title="No contacts match these filters."
-            description="Add a contact or clear filters. After DATABASE_URL is set, run npm run db:seed-roster to load the leadership intake list."
-            actionTo="/leader/contacts/new"
-            actionLabel="Add a Contact"
-          >
-            <Badge tone="gold">Chance Bradford board</Badge>
-          </EmptyState>
-        ) : null}
-
-        {!loading && people.length > 0 ? (
-          <>
-            <div className="leader-roster-desktop leader-roster-table-wrap">
-              <table className="leader-roster-table">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Location</th>
-                    <th>Primary team</th>
-                    <th>Contact</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {people.map((person) => (
-                    <tr key={person.id}>
-                      <td>
-                        <strong>{person.displayName}</strong>
-                        {person.additionalTeams.length > 0 ? (
-                          <div className="field__hint">
-                            Also:{' '}
-                            {person.additionalTeams.map((t) => t.name).join(', ')}
-                          </div>
-                        ) : null}
-                      </td>
-                      <td>
-                        {person.location
-                          ? `${person.location.code} · ${person.location.name}`
-                          : '—'}
-                      </td>
-                      <td>
-                        {person.primaryTeam ? (
-                          <>
-                            {person.primaryTeam.name}
-                            <div className="field__hint">
-                              {person.primaryTeam.position === 'LEAD' ? 'Lead' : 'Volunteer'}
-                            </div>
-                          </>
-                        ) : (
-                          <span className="leader-gap">Assign team</span>
-                        )}
-                      </td>
-                      <td>
-                        {person.missingContact ? (
-                          <span className="leader-gap">Needs phone/email</span>
-                        ) : (
-                          <>
-                            {person.hasEmail ? 'Email · ' : ''}
-                            {person.hasPhone ? 'Phone' : ''}
-                          </>
-                        )}
-                      </td>
-                      <td>{labelStatus(person.status)}</td>
-                      <td>
-                        <div className="btn-row">
-                          <Button
-                            to={`/leader/contacts/${person.id}`}
-                            variant="secondary"
-                          >
-                            {person.missingContact ? 'Fill contact' : 'Open'}
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="primary"
-                            onClick={() => setAssignPerson(person)}
-                          >
-                            Assign team
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="leader-roster-mobile">
-              {people.map((person) => (
-                <Card key={person.id}>
-                  <Tag>{labelStatus(person.status)}</Tag>
-                  <h3>{person.displayName}</h3>
-                  <p>
-                    {person.location
-                      ? `${person.location.code} · ${person.location.name}`
-                      : 'No location'}
-                  </p>
-                  <p>
-                    {person.primaryTeam
-                      ? `${person.primaryTeam.name} · ${person.primaryTeam.position === 'LEAD' ? 'Lead' : 'Volunteer'}`
-                      : 'No team assigned'}
-                  </p>
-                  {person.missingContact ? (
-                    <p className="leader-gap">Needs phone/email</p>
-                  ) : null}
-                  <div className="btn-row">
-                    <Button to={`/leader/contacts/${person.id}`} variant="secondary">
-                      {person.missingContact ? 'Fill contact' : 'Open'}
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="primary"
-                      onClick={() => setAssignPerson(person)}
-                    >
-                      Assign team
-                    </Button>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </>
+        {!loading ? (
+          <LeaderRosterList
+            people={people}
+            emptyTitle="No contacts match these filters."
+            emptyDescription="Add a contact or clear filters. After DATABASE_URL is set, run npm run db:seed-roster to load the leadership intake list."
+            emptyBadge="Chance Bradford board"
+            onAssign={setAssignPerson}
+          />
         ) : null}
       </Section>
 

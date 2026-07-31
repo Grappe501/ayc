@@ -9,11 +9,19 @@ type TeamOption = { id: string; name: string; slug: string }
 type Props = {
   open: boolean
   person: LeaderRosterRow | null
+  /** Prefill primary team when person has none (e.g. from a Team Lead Board). */
+  defaultTeamId?: string
   onClose: () => void
   onAssigned: (row: LeaderRosterRow) => void
 }
 
-export function AssignTeamDialog({ open, person, onClose, onAssigned }: Props) {
+export function AssignTeamDialog({
+  open,
+  person,
+  defaultTeamId,
+  onClose,
+  onAssigned,
+}: Props) {
   const [teams, setTeams] = useState<TeamOption[]>([])
   const [primaryTeamId, setPrimaryTeamId] = useState('')
   const [position, setPosition] = useState<'LEAD' | 'VOLUNTEER'>('VOLUNTEER')
@@ -30,11 +38,11 @@ export function AssignTeamDialog({ open, person, onClose, onAssigned }: Props) {
 
   useEffect(() => {
     if (!open || !person) return
-    setPrimaryTeamId(person.primaryTeam?.id ?? '')
+    setPrimaryTeamId(person.primaryTeam?.id ?? defaultTeamId ?? '')
     setPosition(person.primaryTeam?.position === 'LEAD' ? 'LEAD' : 'VOLUNTEER')
     setAdditionalTeamIds(person.additionalTeams.map((t) => t.id))
     setError('')
-  }, [open, person])
+  }, [open, person, defaultTeamId])
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault()
