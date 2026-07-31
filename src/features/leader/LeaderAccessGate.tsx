@@ -1,30 +1,13 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Button } from '@/components/ui/Button'
-import '@/components/ui/ui.css'
-
-const SESSION_KEY = 'ayc_leader_write_session'
-
-export function hasLeaderSession(): boolean {
-  try {
-    return sessionStorage.getItem(SESSION_KEY) === '1'
-  } catch {
-    return false
-  }
-}
-
-export function clearLeaderSession(): void {
-  try {
-    sessionStorage.removeItem(SESSION_KEY)
-  } catch {
-    /* ignore */
-  }
-}
+import { setLeaderSession } from '@/features/leader/leaderSession'
 
 type Props = {
   onUnlocked: () => void
 }
 
+/** Reserved for Phase 1D — write-access gate UI. Not used in Phase 1A shell. */
 export function LeaderAccessGate({ onUnlocked }: Props) {
   const [code, setCode] = useState('')
   const [error, setError] = useState('')
@@ -35,13 +18,11 @@ export function LeaderAccessGate({ onUnlocked }: Props) {
     setError('')
     setBusy(true)
     try {
-      // Phase 1D will validate against AYC_LEADER_WRITE_SECRET via Netlify Function.
-      // Until then, accept any non-empty local unlock for UI development only.
       if (!code.trim()) {
         setError('That access code was not accepted. Please check it and try again.')
         return
       }
-      sessionStorage.setItem(SESSION_KEY, '1')
+      setLeaderSession()
       onUnlocked()
     } finally {
       setBusy(false)
@@ -50,15 +31,15 @@ export function LeaderAccessGate({ onUnlocked }: Props) {
 
   return (
     <div>
-      <p className="page-eyebrow">Leader Entry Access</p>
+      <p className="page-header__eyebrow">Leader Entry Access</p>
       <h1>Leader Entry Access</h1>
-      <p className="page-lede">
+      <p className="page-header__lede">
         This area is used to create and manage AYC leadership records. Enter the leader access code
         to continue.
       </p>
-      <form className="surface form-stack" onSubmit={onSubmit}>
+      <form className="card" onSubmit={onSubmit}>
         {error ? (
-          <div className="alert alert--on-light" role="alert">
+          <div className="error-state" role="alert">
             {error}
           </div>
         ) : null}

@@ -1,25 +1,24 @@
 import { Link } from 'react-router-dom'
 import type { ButtonHTMLAttributes, ReactNode } from 'react'
-import './ui.css'
 
-type ButtonVariant = 'primary' | 'secondary' | 'text' | 'danger'
+type Variant = 'primary' | 'secondary'
 
-type BaseProps = {
+type Base = {
   children: ReactNode
-  variant?: ButtonVariant
+  variant?: Variant
   className?: string
 }
 
-type ButtonAsButton = BaseProps &
+type AsButton = Base &
   ButtonHTMLAttributes<HTMLButtonElement> & {
     to?: never
   }
 
-type ButtonAsLink = BaseProps & {
+type AsLink = Base & {
   to: string
 }
 
-export function Button(props: ButtonAsButton | ButtonAsLink) {
+export function Button(props: AsButton | AsLink) {
   const variant = props.variant ?? 'primary'
   const className = `btn btn--${variant} ${props.className ?? ''}`.trim()
 
@@ -31,15 +30,16 @@ export function Button(props: ButtonAsButton | ButtonAsLink) {
     )
   }
 
-  const buttonProps = props as ButtonAsButton
+  const button = props as AsButton
   return (
     <button
-      type={buttonProps.type ?? 'button'}
+      type={button.type ?? 'button'}
       className={className}
-      disabled={buttonProps.disabled}
-      onClick={buttonProps.onClick}
+      disabled={button.disabled}
+      onClick={button.onClick}
+      aria-label={button['aria-label']}
     >
-      {buttonProps.children}
+      {button.children}
     </button>
   )
 }

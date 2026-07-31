@@ -1,120 +1,110 @@
 import { AYC_MISSION, TEAMS } from '@/content/ayc'
+import { Badge, Card, Hero, Section } from '@/components/ui'
 import { Button } from '@/components/ui/Button'
-import '@/components/ui/ui.css'
 
-function missionParagraphs(mission: string): string[] {
-  const parts = mission.split(/(?<=\.)\s+(?=[A-Z])/)
-  return parts.length > 1 ? parts : [mission]
+function missionExcerpt(mission: string): string {
+  const first = mission.split(/(?<=\.)\s+(?=[A-Z])/)[0]
+  return first ?? mission
 }
 
 export function HomePage() {
-  const paragraphs = missionParagraphs(AYC_MISSION)
-
   return (
-    <div className="home">
-      <section className="hero" aria-labelledby="hero-heading">
-        <div className="hero__network" aria-hidden="true" />
-        <p className="page-eyebrow">Arkansas Youth Coalition</p>
-        <h1 id="hero-heading">Arkansas belongs to the people who are ready to build its future.</h1>
-        <p className="page-lede">
-          A statewide network of young Arkansans organizing, leading, registering voters, creating
-          community, and building lasting civic power.
-        </p>
-        <div className="btn-row">
-          <Button to="/leader" variant="primary">
-            Enter the Leader Board
-          </Button>
-          <Button to="/directory" variant="secondary">
-            View the Leadership Directory
-          </Button>
-        </div>
-      </section>
+    <div>
+      <Hero
+        title="Building the next generation of Arkansas leadership."
+        mission={missionExcerpt(AYC_MISSION)}
+        primaryTo="/leader"
+        primaryLabel="Enter Leader Board"
+        secondaryTo="/directory"
+        secondaryLabel="Leadership Directory"
+      />
 
-      <section className="section" aria-labelledby="mission-heading">
-        <div className="surface">
-          <p className="page-eyebrow">Our Mission</p>
-          <h2 id="mission-heading">Why AYC exists</h2>
-          <div className="mission-block">
-            {paragraphs.map((p) => (
-              <p key={p.slice(0, 48)}>{p}</p>
-            ))}
-          </div>
-        </div>
-      </section>
+      <Section
+        id="mission"
+        eyebrow="Our Mission"
+        title="Why AYC exists"
+        description="Canonical mission language — preserved exactly as approved by AYC leadership."
+      >
+        <Card>
+          <p>{AYC_MISSION}</p>
+        </Card>
+      </Section>
 
-      <section className="section" aria-labelledby="vision-heading">
-        <h2 id="vision-heading">Vision</h2>
+      <Section
+        id="vision"
+        eyebrow="Vision"
+        title="From listening to building"
+        description="Young Arkansans want meaningful ways to participate. Leadership grows locally — then connects statewide."
+      >
         <div className="card-grid card-grid--3">
-          <article className="content-card surface">
+          <Card interactive>
+            <p className="card__eyebrow">Listen</p>
             <h3>Here’s What We Heard</h3>
             <p>Young Arkansans want meaningful ways to participate — not afterthoughts at the edge of politics.</p>
-          </article>
-          <article className="content-card surface">
+          </Card>
+          <Card interactive>
+            <p className="card__eyebrow">Build</p>
             <h3>What We Are Building</h3>
-            <p>
-              A statewide, youth-led network rooted in schools, colleges, and local communities —
-              connected through one shared Workbench.
-            </p>
-          </article>
-          <article className="content-card surface">
+            <p>A statewide, youth-led network rooted in schools, colleges, and local communities.</p>
+          </Card>
+          <Card interactive>
+            <p className="card__eyebrow">Grow</p>
             <h3>How We Get There</h3>
-            <p>
-              Organizing. Voter registration. Social media. Events. Community outreach. Leadership
-              developed locally and multiplied statewide.
-            </p>
-          </article>
+            <p>Organizing. Voter registration. Social media. Events. Outreach. Leadership multiplied statewide.</p>
+          </Card>
         </div>
-      </section>
+      </Section>
 
-      <section className="section" aria-labelledby="teams-heading">
-        <h2 id="teams-heading">Five Teams</h2>
-        <p className="page-lede">Phase 1 introduces the teams that will later receive their own boards.</p>
+      <Section
+        id="teams"
+        eyebrow="Five Teams"
+        title="The work of the coalition"
+        description="Phase 1 introduces the teams. Operational boards arrive through beta."
+      >
         <div className="card-grid card-grid--5">
           {TEAMS.map((team) => (
-            <article key={team.id} className="content-card surface">
-              <p className="page-eyebrow">Phase 1 Team</p>
+            <Card key={team.id} interactive>
+              <Badge tone="blue">Phase 1 Team</Badge>
               <h3>{team.name}</h3>
               <p>
                 <strong>{team.purpose}</strong>
               </p>
               <p>{team.detail}</p>
-            </article>
+            </Card>
           ))}
         </div>
-      </section>
+      </Section>
 
-      <section className="section" aria-labelledby="build-heading">
-        <div className="surface">
-          <h2 id="build-heading">Built with the leadership team</h2>
+      <Section id="build-with-us" eyebrow="Leadership Beta" title="Built with the leadership team">
+        <Card className="glass">
           <p>
-            This Workbench will grow with the coalition. AYC leaders will test each phase, identify
-            what they need, and help decide what gets built next.
+            This Workbench will grow with the coalition. AYC leaders will test each phase, identify what
+            they need, and help decide what gets built next.
           </p>
           <Button to="/feedback" variant="primary">
             Share Beta Feedback
           </Button>
-        </div>
-      </section>
+        </Card>
+      </Section>
 
-      <section className="section" aria-labelledby="enter-heading">
-        <h2 id="enter-heading">Enter the Workbench</h2>
+      <Section id="enter" eyebrow="Workbench" title="Enter the Workbench">
         <div className="card-grid card-grid--2">
-          <article className="content-card surface">
+          <Card interactive>
             <h3>Leader Board</h3>
             <p>Create and manage the statewide leadership contact list.</p>
             <Button to="/leader" variant="primary">
               Open Leader Board
             </Button>
-          </article>
-          <article className="content-card surface">
+          </Card>
+          <Card interactive>
             <h3>Leadership Directory</h3>
             <p>Find the people, locations, teams, and leadership roles building AYC.</p>
             <Button to="/directory" variant="secondary">
               View Directory
             </Button>
-          </article>
+          </Card>
         </div>
-      </section>
+      </Section>
     </div>
   )
 }

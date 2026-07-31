@@ -1,21 +1,41 @@
 :root {
-  --color-midnight: #0b1f33;
-  --color-midnight-deep: #071522;
-  --color-electric: #1ec8ff;
-  --color-electric-dim: #0e8fb8;
-  --color-arkansas-red: #c8102e;
-  --color-cream: #f4f0e6;
-  --color-white: #ffffff;
-  --color-light-gray: #d9e0e8;
-  --color-success: #1f9d6a;
-  --color-amber: #d4a017;
-  --color-text: #0b1f33;
-  --color-text-on-dark: #f4f0e6;
-  --color-muted: #5c6b7a;
+  /* Color — AYC Design System */
+  --color-blue: #0f2f57;
+  --color-blue-deep: #0a2240;
+  --color-blue-soft: #1a4578;
+  --color-green: #2f7d5a;
+  --color-green-soft: #3f946c;
+  --color-gold: #d4a017;
+  --color-gold-soft: #e6b83a;
+  --color-bg: #f3f5f7;
+  --color-bg-elevated: #fafbfc;
+  --color-surface: #ffffff;
+  --color-border: rgba(15, 47, 87, 0.1);
+  --color-border-strong: rgba(15, 47, 87, 0.18);
+  --color-text: #142033;
+  --color-text-muted: #5b6778;
+  --color-text-inverse: #ffffff;
+  --color-error: #c45c5c;
+  --color-error-soft: #f8eaea;
+  --color-warning: #c9922a;
+  --color-warning-soft: #f8f0df;
+  --color-success: #2f7d5a;
+  --color-success-soft: #e7f3ec;
+  --color-focus: #1a4578;
 
-  --font-display: 'Bebas Neue', Impact, sans-serif;
-  --font-body: 'Source Sans 3', 'Segoe UI', sans-serif;
+  /* Typography */
+  --font-display: 'Bebas Neue', Impact, Haettenschweiler, sans-serif;
+  --font-body: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+  --text-hero: clamp(3rem, 7vw, 4rem);
+  --text-large: clamp(2.5rem, 5vw, 3.5rem);
+  --text-medium: clamp(1.75rem, 3vw, 2.25rem);
+  --text-body: 1.125rem;
+  --text-small: 0.9375rem;
+  --text-micro: 0.8125rem;
+  --leading-tight: 1.05;
+  --leading-body: 1.6;
 
+  /* Spacing */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -24,18 +44,37 @@
   --space-6: 2rem;
   --space-7: 3rem;
   --space-8: 4rem;
+  --space-9: 5.5rem;
 
-  --radius: 0.35rem;
-  --max-width: 72rem;
-  --header-height: 3.75rem;
-  --touch: 44px;
+  /* Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.85rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+  --radius-pill: 999px;
 
-  --shadow-soft: 0 12px 40px rgba(7, 21, 34, 0.28);
-  --motion: 220ms ease;
+  /* Elevation */
+  --shadow-sm: 0 1px 2px rgba(15, 47, 87, 0.04), 0 4px 12px rgba(15, 47, 87, 0.04);
+  --shadow-md: 0 8px 24px rgba(15, 47, 87, 0.08);
+  --shadow-lg: 0 18px 48px rgba(15, 47, 87, 0.12);
+  --shadow-lift: 0 12px 28px rgba(15, 47, 87, 0.14);
+
+  /* Layout */
+  --max-width: 80rem;
+  --header-height: 4.25rem;
+  --touch: 48px;
+
+  /* Motion */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 160ms;
+  --duration: 240ms;
+  --duration-slow: 360ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --motion: 0ms;
+    --duration-fast: 0ms;
+    --duration: 0ms;
+    --duration-slow: 0ms;
   }
 }
