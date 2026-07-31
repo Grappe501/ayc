@@ -3,11 +3,11 @@
 ## Status
 
 - Protocol: **H:\AYC only** — never C:
-- **GitHub connected:** https://github.com/Grappe501/ayc (`origin` on `main`, remote reachable, empty remote)
+- **GitHub connected:** https://github.com/Grappe501/ayc (`main` pushed · `5ae2e9b`)
 - Auth: `gh` logged in as **Grappe501** (repo scope)
-- Volumes I–VII: **ingested** · Mission **LOCKED**
+- **Deploy protocol:** auto commit + push after every major update / slice so Netlify can deploy
+- Volumes I–VII: **ingested** · Mission **LOCKED** · on GitHub
 - Phase 0 zip: still pending local extract
-- First commit/push: **not done yet** (ask to push when ready)
 - Next app slice after Phase 0: **`AYC-PHASE-1A-APPLICATION-SHELL-1.0`**
 
 ## Canonical mission (verbatim)
