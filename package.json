@@ -17,6 +17,7 @@
     "db:seed-roster": "node --experimental-strip-types server/db/seed-leadership-roster.ts"
   },
   "dependencies": {
+    "@netlify/database": "^1.1.0",
     "drizzle-orm": "^0.45.2",
     "postgres": "^3.4.9",
     "react": "^19.1.0",

@@ -53,5 +53,5 @@ export function toCompositeCode(
 }
 
 export function isValidLocationCode(code: string): boolean {
-  return /^[A-Z]{3}$/.test(code)
+  return /^[A-Z]{3,4}$/.test(code)
 }

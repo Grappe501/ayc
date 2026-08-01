@@ -18,7 +18,9 @@ export function assertServerOnly(): void {
 
 export function getDatabaseUrl(): string | undefined {
   assertServerOnly()
-  const url = process.env.DATABASE_URL?.trim()
+  // DATABASE_URL for local/.env; NETLIFY_DB_URL is injected by Netlify Database.
+  const url =
+    process.env.DATABASE_URL?.trim() || process.env.NETLIFY_DB_URL?.trim()
   return url || undefined
 }
 

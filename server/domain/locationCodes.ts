@@ -50,13 +50,13 @@ export function toCompositeCode(locationType: LocationType, code: string): strin
 }
 
 export function isValidLocationCode(code: string): boolean {
-  return /^[A-Z]{3}$/.test(code)
+  return /^[A-Z]{3,4}$/.test(code)
 }
 
 export function parseCompositeCode(
   composite: string,
 ): { locationType: LocationType; code: string } | null {
-  const match = /^(COL|HSC|CTY)-([A-Z]{3})$/.exec(composite.toUpperCase())
+  const match = /^(COL|HSC|CTY)-([A-Z]{3,4})$/.exec(composite.toUpperCase())
   if (!match) return null
   const prefix = match[1] as 'COL' | 'HSC' | 'CTY'
   const locationType =

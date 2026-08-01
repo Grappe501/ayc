@@ -19,5 +19,10 @@ describe('locationCodes', () => {
       code: 'LRC',
     })
     expect(isValidLocationCode('UCA')).toBe(true)
+    expect(isValidLocationCode('UAPB')).toBe(true)
+    expect(parseCompositeCode('COL-UAPB')).toEqual({
+      locationType: 'COLLEGE',
+      code: 'UAPB',
+    })
   })
 })
