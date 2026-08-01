@@ -46,6 +46,8 @@ function LeaderBoard() {
     readyToLead: 0,
     needsMentoring: 0,
     futureLeader: 0,
+    localLeadCandidate: 0,
+    categoryLeadCandidate: 0,
   })
 
   function clearPipelineAndContactFilters() {
@@ -228,17 +230,17 @@ function LeaderBoard() {
           <Card>
             <Tag>Segment</Tag>
             <h3>High School Lead Organizer</h3>
-            <p>Rollup shell for HS locations and people — open location TEAM boards from there.</p>
+            <p>Full HS workspace — develop-local-leads queue, school coverage, location TEAM boards.</p>
             <Button to="/leader/segments/high-school" variant="primary">
-              Open HS board
+              Open HS workspace
             </Button>
           </Card>
           <Card>
             <Tag>Segment</Tag>
             <h3>Working Class Lead Organizer</h3>
-            <p>Rollup shell for county / non-student locations.</p>
+            <p>Full WC workspace — develop-local-leads queue, county coverage, location TEAM boards.</p>
             <Button to="/leader/segments/working-class" variant="primary">
-              Open WC board
+              Open WC workspace
             </Button>
           </Card>
           <Card>

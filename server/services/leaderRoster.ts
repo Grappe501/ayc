@@ -19,6 +19,7 @@ export type LeaderRosterFilters = {
   q?: string
   teamSlug?: string
   locationId?: string
+  locationType?: string
   status?: string
   gapsOnly?: boolean
   textReadyOnly?: boolean
@@ -69,6 +70,8 @@ export async function listLeaderRoster(
     readyToLead: number
     needsMentoring: number
     futureLeader: number
+    localLeadCandidate: number
+    categoryLeadCandidate: number
   }
   people: LeaderRosterRow[]
 }> {
@@ -230,6 +233,10 @@ export async function listLeaderRoster(
     peopleRows = peopleRows.filter((p) => p.location?.id === filters.locationId)
   }
 
+  if (filters.locationType) {
+    peopleRows = peopleRows.filter((p) => p.location?.locationType === filters.locationType)
+  }
+
   // Attention reflects the board/team scope before list filters (gaps / preferred / search).
   const attention = {
     missingContact: peopleRows.filter((p) => p.missingContact).length,
@@ -244,6 +251,12 @@ export async function listLeaderRoster(
       p.pipelineTags.includes('NEEDS_MENTORING'),
     ).length,
     futureLeader: peopleRows.filter((p) => p.pipelineTags.includes('FUTURE_LEADER')).length,
+    localLeadCandidate: peopleRows.filter((p) =>
+      p.pipelineTags.includes('LOCAL_LEAD_CANDIDATE'),
+    ).length,
+    categoryLeadCandidate: peopleRows.filter((p) =>
+      p.pipelineTags.includes('CATEGORY_LEAD_CANDIDATE'),
+    ).length,
   }
 
   if (filters.gapsOnly) {

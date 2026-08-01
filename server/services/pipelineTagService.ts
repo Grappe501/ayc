@@ -61,6 +61,17 @@ export async function listPipelineTagsForPeople(
   return map
 }
 
+/** Merge tags onto a person without removing existing ones. */
+export async function addPipelineTags(
+  db: AycDatabase,
+  personId: string,
+  tags: string[],
+  actor: ActorContext,
+): Promise<PipelineTag[]> {
+  const current = await listPipelineTagsForPerson(db, personId)
+  return setPipelineTags(db, personId, [...current, ...tags], actor)
+}
+
 /**
  * Replace active pipeline tags for a person with the provided set.
  * Adds missing tags; archives removed tags.

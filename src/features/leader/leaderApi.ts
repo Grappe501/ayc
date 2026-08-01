@@ -267,6 +267,7 @@ export function fetchLeaderRoster(params?: {
   q?: string
   team?: string
   locationId?: string
+  locationType?: string
   status?: string
   gapsOnly?: boolean
   textReadyOnly?: boolean
@@ -279,6 +280,7 @@ export function fetchLeaderRoster(params?: {
   if (params?.q) qs.set('q', params.q)
   if (params?.team) qs.set('team', params.team)
   if (params?.locationId) qs.set('locationId', params.locationId)
+  if (params?.locationType) qs.set('locationType', params.locationType)
   if (params?.status) qs.set('status', params.status)
   if (params?.gapsOnly) qs.set('gaps', '1')
   if (params?.textReadyOnly) qs.set('textReady', '1')
@@ -296,6 +298,8 @@ export function fetchLeaderRoster(params?: {
       readyToLead: number
       needsMentoring: number
       futureLeader: number
+      localLeadCandidate: number
+      categoryLeadCandidate: number
     }
     people: LeaderRosterRow[]
   }>(`contacts?${qs.toString()}`)

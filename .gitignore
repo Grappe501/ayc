@@ -33,10 +33,11 @@ Desktop.ini
 .tmp/
 *.tsbuildinfo
 
-# Personal data / exports (never commit)
+# Personal data / exports / printable keys (never commit)
 /exports/
 /backups/
 *.sql.bak
+*KEYS_PRINT*
 
 # Local tooling
 .pnpm-store/

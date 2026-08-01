@@ -20,15 +20,15 @@
 
 - Roles catalog + `person_leadership_roles` + `boards` registry  
 - Graphic Design secondary board under Social Media (`/leader/teams/social-media/graphic-design`)  
-- HS / WC segment shells (`/leader/segments/*`)  
+- HS / WC segment workspaces (`/leader/segments/*`)  
 - Hierarchical keys including optional `AYC_KEY_GRAPHIC_DESIGN`  
 - Location TEAM + five location category boards per location (`/leader/locations/*`)  
+- HS / WC segment workspaces with develop-local-leads queues + location coverage  
 
 ## Phase 2 still deferred
 
 Canonical plan: `docs/master-build-plan/10-PHASE-2-MASTER-PLAN.md`
 
-- Full HS / WC segment workspaces (2F)  
 - Person-linked `canAccessBoard` (2G) — keys remain until then  
 - Membership applications inbox (2B), notify email (2C)  
 - Nested calendars (CAL track), reports hub (2H)  

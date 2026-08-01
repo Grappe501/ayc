@@ -9,8 +9,8 @@
 | `/leader/feedback` | Complete | Leader-gated beta feedback inbox (status, severity, notes) |
 | `/leader/teams/:teamSlug` | Complete | Five statewide Category Boards + Mission + Tasks + Resources |
 | `/leader/teams/social-media/graphic-design` | Complete | Graphic Design secondary board (under Social Media) |
-| `/leader/segments/high-school` | Complete | HS Lead Organizer shell → location TEAM boards |
-| `/leader/segments/working-class` | Complete | WC Lead Organizer shell → location TEAM boards |
+| `/leader/segments/high-school` | Complete | HS Lead Organizer workspace (develop leads + coverage) |
+| `/leader/segments/working-class` | Complete | WC Lead Organizer workspace (develop leads + coverage) |
 | `/leader/locations/:locationId` | Complete | Location TEAM board (all people at location) |
 | `/leader/locations/:locationId/teams/:teamSlug` | Complete | Location category board (five categories; not GD) |
 | `/leader/contacts/new` | Complete | Contact create |

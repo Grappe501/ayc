@@ -2,6 +2,7 @@ import type { AycDatabase } from '../db/client.ts'
 import type { AffiliationType, LocationType } from '../domain/enums.ts'
 import { suggestLocationCode } from '../domain/locationCodes.ts'
 import { createContact } from './contactService.ts'
+import { addPipelineTags } from './pipelineTagService.ts'
 import { createBetaFeedback } from '../repos/feedback.ts'
 import { findLocationByTypeAndCode } from '../repos/locations.ts'
 import { getTeamBySlug, listActiveTeams } from '../repos/teams.ts'
@@ -124,12 +125,29 @@ export async function submitJoinApplication(
   const primaryTeam = team ?? (await listActiveTeams(db))[0]!
 
   const code = await resolveUniqueCode(db, locationType, locationName)
-  const leadInterest = input.leadInterest?.trim() || 'volunteer'
+  const leadInterest = (input.leadInterest?.trim() || 'volunteer').toLowerCase()
   const notes = input.notes?.trim() || ''
 
   const actor = {
     actorType: 'SYSTEM' as const,
     actorLabel: 'JOIN_FORM',
+  }
+
+  async function tagLeadInterest(personId: string) {
+    if (!personId) return
+    const tags: string[] = []
+    if (leadInterest === 'local-lead' || leadInterest === 'local_lead') {
+      tags.push('LOCAL_LEAD_CANDIDATE')
+    }
+    if (leadInterest === 'category-lead' || leadInterest === 'category_lead') {
+      tags.push('CATEGORY_LEAD_CANDIDATE')
+    }
+    if (tags.length === 0) return
+    try {
+      await addPipelineTags(db, personId, tags, actor)
+    } catch (error) {
+      console.error('join lead-interest pipeline tag failed', error)
+    }
   }
 
   const result = await createContact(
@@ -220,6 +238,7 @@ export async function submitJoinApplication(
         },
       })
     }
+    await tagLeadInterest(forced.personId)
     await createBetaFeedback(db, {
       category: 'IDEA',
       description: [
@@ -250,6 +269,7 @@ export async function submitJoinApplication(
     }
   }
 
+  await tagLeadInterest(result.personId)
   await createBetaFeedback(db, {
     category: 'IDEA',
     description: [
