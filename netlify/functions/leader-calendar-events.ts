@@ -2,6 +2,7 @@ import type { Handler } from '@netlify/functions'
 import { requireLeaderWriteAccess } from '../../server/http/auth.ts'
 import { fail, methodNotAllowed, ok, parseJsonBody } from '../../server/http/response.ts'
 import {
+  cancelCalendarOccurrence,
   createCalendarEvent,
   listCalendarEvents,
   updateCalendarEvent,
@@ -77,6 +78,11 @@ export const handler: Handler = async (event) => {
         allDay?: boolean
         locationText?: string | null
         url?: string | null
+        recurrenceFrequency?: string | null
+        recurrenceInterval?: number | null
+        recurrenceByWeekday?: number[] | null
+        recurrenceUntil?: string | null
+        recurrenceCount?: number | null
       }>(event.body)
       if (!body) return fail('VALIDATION_ERROR', 'Request body must be JSON.')
 
@@ -128,6 +134,13 @@ export const handler: Handler = async (event) => {
         locationText?: string | null
         url?: string | null
         status?: 'SCHEDULED' | 'CANCELLED'
+        cancelScope?: 'one' | 'series'
+        occurrenceStartsAt?: string | null
+        recurrenceFrequency?: string | null
+        recurrenceInterval?: number | null
+        recurrenceByWeekday?: number[] | null
+        recurrenceUntil?: string | null
+        recurrenceCount?: number | null
       }>(event.body)
       if (!body?.id?.trim()) {
         return fail('VALIDATION_ERROR', 'Event id is required.', 400, { id: 'Required' })
@@ -140,6 +153,19 @@ export const handler: Handler = async (event) => {
       }
 
       try {
+        if (body.cancelScope === 'one' || body.cancelScope === 'series') {
+          const result = await cancelCalendarOccurrence(
+            db,
+            {
+              eventId: body.id.trim(),
+              scope: body.cancelScope,
+              occurrenceStartsAt: body.occurrenceStartsAt,
+            },
+            auth.scope,
+            actor,
+          )
+          return ok(result)
+        }
         await updateCalendarEvent(db, body.id.trim(), body, auth.scope, actor)
         return ok({ id: body.id.trim(), status: body.status ?? 'updated' })
       } catch (error) {

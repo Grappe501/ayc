@@ -1,7 +1,8 @@
-import { and, asc, eq, gte, inArray, isNull, lte, ne } from 'drizzle-orm'
+import { and, asc, eq, gte, inArray, isNull, lte, ne, or, sql } from 'drizzle-orm'
 import type { AycDatabase } from '../db/client.ts'
 import {
   boards,
+  calendarEventExceptions,
   calendarEventRsvps,
   calendarEvents,
   calendars,
@@ -10,6 +11,12 @@ import {
 } from '../db/schema.ts'
 import { boardIdsForRollup } from '../domain/calendarRollup.ts'
 import { emptyRsvpCounts, tallyRsvpStatuses } from '../domain/calendarRsvp.ts'
+import {
+  expandOccurrences,
+  parseRecurrenceInput,
+  recurrenceLabel,
+  type RecurrenceRule,
+} from '../domain/calendarRecurrence.ts'
 import {
   isLocationCategorySlug,
   locationCategoryBoardSlug,
@@ -294,16 +301,34 @@ export async function listCalendarEvents(
   const calendarIds =
     mode === 'own' ? [board.calendarId] : await listRollupCalendarIds(db, board)
 
+  const fromDate = input.from
+    ? new Date(input.from)
+    : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+  const toDate = input.to
+    ? new Date(input.to)
+    : new Date(Date.now() + 60 * 24 * 60 * 60 * 1000)
+
   const conditions = [inArray(calendarEvents.sourceCalendarId, calendarIds)]
   if (!input.includeCancelled) {
     conditions.push(ne(calendarEvents.status, 'CANCELLED'))
   }
-  if (input.from) {
-    conditions.push(gte(calendarEvents.endsAt, new Date(input.from)))
-  }
-  if (input.to) {
-    conditions.push(lte(calendarEvents.startsAt, new Date(input.to)))
-  }
+  conditions.push(
+    or(
+      and(
+        sql`${calendarEvents.recurrenceFrequency} is null`,
+        gte(calendarEvents.endsAt, fromDate),
+        lte(calendarEvents.startsAt, toDate),
+      ),
+      and(
+        sql`${calendarEvents.recurrenceFrequency} is not null`,
+        lte(calendarEvents.startsAt, toDate),
+        or(
+          sql`${calendarEvents.recurrenceUntil} is null`,
+          gte(calendarEvents.recurrenceUntil, fromDate),
+        ),
+      ),
+    )!,
+  )
 
   const rows = await db
     .select({
@@ -318,6 +343,11 @@ export async function listCalendarEvents(
       visibility: calendarEvents.visibility,
       status: calendarEvents.status,
       sourceCalendarId: calendarEvents.sourceCalendarId,
+      recurrenceFrequency: calendarEvents.recurrenceFrequency,
+      recurrenceInterval: calendarEvents.recurrenceInterval,
+      recurrenceByWeekday: calendarEvents.recurrenceByWeekday,
+      recurrenceUntil: calendarEvents.recurrenceUntil,
+      recurrenceCount: calendarEvents.recurrenceCount,
       createdAt: calendarEvents.createdAt,
       updatedAt: calendarEvents.updatedAt,
       cancelledAt: calendarEvents.cancelledAt,
@@ -350,6 +380,7 @@ export async function listCalendarEvents(
 
   const eventIds = rows.map((row) => row.id)
   const countsByEvent = new Map<string, ReturnType<typeof emptyRsvpCounts>>()
+  const exceptionsByEvent = new Map<string, Set<string>>()
   if (eventIds.length > 0) {
     const rsvpRows = await db
       .select({
@@ -367,37 +398,90 @@ export async function listCalendarEvents(
     for (const [eventId, statuses] of statusesByEvent) {
       countsByEvent.set(eventId, tallyRsvpStatuses(statuses))
     }
+
+    const exceptionRows = await db
+      .select({
+        eventId: calendarEventExceptions.eventId,
+        occurrenceStartsAt: calendarEventExceptions.occurrenceStartsAt,
+      })
+      .from(calendarEventExceptions)
+      .where(inArray(calendarEventExceptions.eventId, eventIds))
+    for (const row of exceptionRows) {
+      const set = exceptionsByEvent.get(row.eventId) ?? new Set<string>()
+      set.add(row.occurrenceStartsAt.toISOString())
+      exceptionsByEvent.set(row.eventId, set)
+    }
   }
+
+  const events = []
+  for (const row of rows) {
+    const rule: RecurrenceRule | null = row.recurrenceFrequency
+      ? {
+          frequency: row.recurrenceFrequency as RecurrenceRule['frequency'],
+          interval: row.recurrenceInterval ?? 1,
+          byWeekday: row.recurrenceByWeekday,
+          until: row.recurrenceUntil,
+          count: row.recurrenceCount,
+        }
+      : null
+    const occurrences = expandOccurrences(
+      { startsAt: row.startsAt, endsAt: row.endsAt, recurrence: rule },
+      fromDate,
+      toDate,
+    )
+    const cancelled = exceptionsByEvent.get(row.id) ?? new Set<string>()
+    const label = recurrenceLabel(rule)
+    for (const occurrence of occurrences) {
+      const occurrenceStartsAt = occurrence.startsAt.toISOString()
+      if (cancelled.has(occurrenceStartsAt)) continue
+      events.push({
+        id: row.id,
+        occurrenceKey: `${row.id}_${occurrenceStartsAt}`,
+        occurrenceStartsAt,
+        isRecurring: occurrence.isRecurring,
+        recurrenceLabel: label,
+        recurrence: rule
+          ? {
+              frequency: rule.frequency,
+              interval: rule.interval,
+              byWeekday: rule.byWeekday ?? null,
+              until: rule.until?.toISOString() ?? null,
+              count: rule.count ?? null,
+            }
+          : null,
+        title: row.title,
+        description: row.description,
+        startsAt: occurrenceStartsAt,
+        endsAt: occurrence.endsAt.toISOString(),
+        allDay: row.allDay,
+        locationText: row.locationText,
+        url: row.url,
+        visibility: row.visibility,
+        status: row.status,
+        sourceCalendarId: row.sourceCalendarId,
+        sourceBoard: {
+          id: row.boardId,
+          slug: row.boardSlug,
+          name: row.boardName,
+          kind: row.boardKind,
+          locationId: row.boardLocationId,
+          teamSlug: row.boardTeamId ? (teamSlugById.get(row.boardTeamId) ?? null) : null,
+        },
+        calendarName: row.calendarName,
+        rsvpCounts: countsByEvent.get(row.id) ?? emptyRsvpCounts(),
+        createdAt: row.createdAt.toISOString(),
+        updatedAt: row.updatedAt.toISOString(),
+        cancelledAt: row.cancelledAt?.toISOString() ?? null,
+      })
+    }
+  }
+
+  events.sort((a, b) => a.startsAt.localeCompare(b.startsAt))
 
   return {
     board,
     mode,
-    events: rows.map((row) => ({
-      id: row.id,
-      title: row.title,
-      description: row.description,
-      startsAt: row.startsAt.toISOString(),
-      endsAt: row.endsAt.toISOString(),
-      allDay: row.allDay,
-      locationText: row.locationText,
-      url: row.url,
-      visibility: row.visibility,
-      status: row.status,
-      sourceCalendarId: row.sourceCalendarId,
-      sourceBoard: {
-        id: row.boardId,
-        slug: row.boardSlug,
-        name: row.boardName,
-        kind: row.boardKind,
-        locationId: row.boardLocationId,
-        teamSlug: row.boardTeamId ? (teamSlugById.get(row.boardTeamId) ?? null) : null,
-      },
-      calendarName: row.calendarName,
-      rsvpCounts: countsByEvent.get(row.id) ?? emptyRsvpCounts(),
-      createdAt: row.createdAt.toISOString(),
-      updatedAt: row.updatedAt.toISOString(),
-      cancelledAt: row.cancelledAt?.toISOString() ?? null,
-    })),
+    events: events.slice(0, 500),
   }
 }
 
@@ -412,6 +496,11 @@ export type UpsertCalendarEventInput = {
   allDay?: boolean
   locationText?: string | null
   url?: string | null
+  recurrenceFrequency?: string | null
+  recurrenceInterval?: number | null
+  recurrenceByWeekday?: number[] | null
+  recurrenceUntil?: string | null
+  recurrenceCount?: number | null
 }
 
 export async function createCalendarEvent(
@@ -456,6 +545,14 @@ export async function createCalendarEvent(
     })
   }
 
+  const recurrence = parseRecurrenceInput({
+    frequency: input.recurrenceFrequency,
+    interval: input.recurrenceInterval,
+    byWeekday: input.recurrenceByWeekday,
+    until: input.recurrenceUntil,
+    count: input.recurrenceCount,
+  })
+
   const [row] = await db
     .insert(calendarEvents)
     .values({
@@ -469,6 +566,11 @@ export async function createCalendarEvent(
       url: input.url?.trim() || null,
       visibility: 'INTERNAL',
       status: 'SCHEDULED',
+      recurrenceFrequency: recurrence?.frequency ?? null,
+      recurrenceInterval: recurrence?.interval ?? 1,
+      recurrenceByWeekday: recurrence?.byWeekday ?? null,
+      recurrenceUntil: recurrence?.until ?? null,
+      recurrenceCount: recurrence?.count ?? null,
     })
     .returning()
 
@@ -478,7 +580,9 @@ export async function createCalendarEvent(
     entityId: row!.id,
     actorType: actor.actorType,
     actorLabel: actor.actorLabel,
-    changeSummary: `Event “${title}” created on ${board.name}.`,
+    changeSummary: recurrence
+      ? `Recurring event “${title}” created on ${board.name} (${recurrenceLabel(recurrence)}).`
+      : `Event “${title}” created on ${board.name}.`,
     metadata: { boardId: board.id, calendarId: board.calendarId },
   })
 
@@ -645,6 +749,27 @@ export async function updateCalendarEvent(
     patch.cancelledAt = null
   }
 
+  if (
+    input.recurrenceFrequency !== undefined ||
+    input.recurrenceInterval !== undefined ||
+    input.recurrenceByWeekday !== undefined ||
+    input.recurrenceUntil !== undefined ||
+    input.recurrenceCount !== undefined
+  ) {
+    const recurrence = parseRecurrenceInput({
+      frequency: input.recurrenceFrequency,
+      interval: input.recurrenceInterval,
+      byWeekday: input.recurrenceByWeekday,
+      until: input.recurrenceUntil,
+      count: input.recurrenceCount,
+    })
+    patch.recurrenceFrequency = recurrence?.frequency ?? null
+    patch.recurrenceInterval = recurrence?.interval ?? 1
+    patch.recurrenceByWeekday = recurrence?.byWeekday ?? null
+    patch.recurrenceUntil = recurrence?.until ?? null
+    patch.recurrenceCount = recurrence?.count ?? null
+  }
+
   const [row] = await db
     .update(calendarEvents)
     .set(patch)
@@ -667,4 +792,97 @@ export async function updateCalendarEvent(
   })
 
   return { board, eventId }
+}
+
+/** Cancel one occurrence of a recurring series (exception), or the whole series. */
+export async function cancelCalendarOccurrence(
+  db: AycDatabase,
+  input: {
+    eventId: string
+    scope: 'one' | 'series'
+    occurrenceStartsAt?: string | null
+  },
+  scope: UnlockScope,
+  actor: ActorContext,
+) {
+  const { event, board } = await getEventWithBoardAccess(
+    db,
+    input.eventId,
+    scope,
+    'edit',
+  )
+
+  if (input.scope === 'series') {
+    await db
+      .update(calendarEvents)
+      .set({
+        status: 'CANCELLED',
+        cancelledAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .where(eq(calendarEvents.id, input.eventId))
+    await insertAuditEvent(db, {
+      eventType: 'CALENDAR_EVENT_CANCELLED',
+      entityType: 'CALENDAR_EVENT',
+      entityId: input.eventId,
+      actorType: actor.actorType,
+      actorLabel: actor.actorLabel,
+      changeSummary: `Series “${event.title}” cancelled on ${board.name}.`,
+    })
+    return { eventId: input.eventId, scope: 'series' as const }
+  }
+
+  if (!input.occurrenceStartsAt) {
+    throw Object.assign(new Error('VALIDATION_ERROR'), {
+      code: 'VALIDATION_ERROR' as const,
+      fields: { occurrenceStartsAt: 'Required to cancel one occurrence' },
+    })
+  }
+  const occurrenceStartsAt = new Date(input.occurrenceStartsAt)
+  if (Number.isNaN(occurrenceStartsAt.getTime())) {
+    throw Object.assign(new Error('VALIDATION_ERROR'), {
+      code: 'VALIDATION_ERROR' as const,
+      fields: { occurrenceStartsAt: 'Invalid occurrence time' },
+    })
+  }
+
+  const [existing] = await db
+    .select({ id: calendarEventExceptions.id })
+    .from(calendarEventExceptions)
+    .where(
+      and(
+        eq(calendarEventExceptions.eventId, input.eventId),
+        eq(calendarEventExceptions.occurrenceStartsAt, occurrenceStartsAt),
+      ),
+    )
+    .limit(1)
+
+  if (!existing) {
+    const [row] = await db
+      .insert(calendarEventExceptions)
+      .values({
+        eventId: input.eventId,
+        occurrenceStartsAt,
+        status: 'CANCELLED',
+      })
+      .returning()
+    await insertAuditEvent(db, {
+      eventType: 'CALENDAR_OCCURRENCE_CANCELLED',
+      entityType: 'CALENDAR_EVENT',
+      entityId: input.eventId,
+      actorType: actor.actorType,
+      actorLabel: actor.actorLabel,
+      changeSummary: `Occurrence of “${event.title}” cancelled on ${board.name}.`,
+      metadata: {
+        exceptionId: row!.id,
+        occurrenceStartsAt: occurrenceStartsAt.toISOString(),
+      },
+    })
+  }
+
+  return {
+    eventId: input.eventId,
+    scope: 'one' as const,
+    occurrenceStartsAt: occurrenceStartsAt.toISOString(),
+  }
 }

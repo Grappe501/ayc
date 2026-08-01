@@ -33,6 +33,7 @@
 | 2026-07-31 | Phase 2H reports | `/leader/reports` hub: thin location/category coverage + application pipeline + recent signups/assignments |
 | 2026-07-31 | Phase 2 CAL calendars | One calendar per board; events written once; Main/segment/category/location rollup via query; `/leader/calendar` |
 | 2026-07-31 | Calendar RSVP | `calendar_event_rsvps` person-linked INVITED/YES/NO/MAYBE; leader invite + mark; counts on event list |
+| 2026-07-31 | Calendar recurrence | Master event rule (DAILY/WEEKLY/MONTHLY); expand in query window; exceptions cancel one occurrence; RSVPs stay series-level |
 | 2026-07-31 | Green canvas theme | Page background `#2E5A3D` with light text; light surfaces keep dark text |
 | 2026-07-31 | Join → Prospective pipeline | `/join` creates people with status `PROSPECTIVE`, source `JOIN_FORM`, on selected team board |
 | 2026-07-31 | Duplicate merge (#4) | `/leader/duplicates` queue + merge into survivor; `person_merge_history` + `PERSON_MERGED` audit |

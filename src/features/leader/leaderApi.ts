@@ -803,6 +803,17 @@ export type CalendarRsvpCounts = {
 
 export type CalendarEventItem = {
   id: string
+  occurrenceKey: string
+  occurrenceStartsAt: string
+  isRecurring: boolean
+  recurrenceLabel: string | null
+  recurrence: {
+    frequency: string
+    interval: number
+    byWeekday: number[] | null
+    until: string | null
+    count: number | null
+  } | null
   title: string
   description: string | null
   startsAt: string
@@ -883,6 +894,11 @@ export function createCalendarEvent(body: {
   allDay?: boolean
   locationText?: string | null
   url?: string | null
+  recurrenceFrequency?: string | null
+  recurrenceInterval?: number | null
+  recurrenceByWeekday?: number[] | null
+  recurrenceUntil?: string | null
+  recurrenceCount?: number | null
 }) {
   return request<{ board: CalendarBoardRef; event: CalendarEventItem | undefined }>(
     'leader-calendar-events',
@@ -900,8 +916,15 @@ export function updateCalendarEvent(body: {
   locationText?: string | null
   url?: string | null
   status?: 'SCHEDULED' | 'CANCELLED'
+  cancelScope?: 'one' | 'series'
+  occurrenceStartsAt?: string | null
+  recurrenceFrequency?: string | null
+  recurrenceInterval?: number | null
+  recurrenceByWeekday?: number[] | null
+  recurrenceUntil?: string | null
+  recurrenceCount?: number | null
 }) {
-  return request<{ id: string; status: string }>('leader-calendar-events', {
+  return request<{ id?: string; status?: string; scope?: string }>('leader-calendar-events', {
     method: 'PATCH',
     body: JSON.stringify(body),
   })

@@ -98,6 +98,10 @@ function CalendarHub() {
   const [locationText, setLocationText] = useState('')
   const [url, setUrl] = useState('')
   const [allDay, setAllDay] = useState(false)
+  const [recurrenceFrequency, setRecurrenceFrequency] = useState('NONE')
+  const [recurrenceInterval, setRecurrenceInterval] = useState('1')
+  const [recurrenceCount, setRecurrenceCount] = useState('')
+  const [recurrenceUntil, setRecurrenceUntil] = useState('')
   const [startsAt, setStartsAt] = useState(() => {
     const d = new Date()
     d.setMinutes(0, 0, 0)
@@ -237,6 +241,13 @@ function CalendarHub() {
       allDay,
       locationText: locationText.trim() || null,
       url: url.trim() || null,
+      recurrenceFrequency:
+        recurrenceFrequency === 'NONE' ? null : recurrenceFrequency,
+      recurrenceInterval: Number(recurrenceInterval) || 1,
+      recurrenceCount: recurrenceCount ? Number(recurrenceCount) : null,
+      recurrenceUntil: recurrenceUntil
+        ? new Date(`${recurrenceUntil}T23:59:59`).toISOString()
+        : null,
     })
     setBusy(false)
     if (!result.ok) {
@@ -245,20 +256,39 @@ function CalendarHub() {
     }
     setTitle('')
     setDescription('')
-    setToast('Event created on this board calendar.')
+    setRecurrenceFrequency('NONE')
+    setRecurrenceCount('')
+    setRecurrenceUntil('')
+    setToast(
+      recurrenceFrequency === 'NONE'
+        ? 'Event created on this board calendar.'
+        : 'Recurring event created.',
+    )
     setReload((n) => n + 1)
   }
 
-  async function cancelEvent(id: string) {
+  async function cancelEvent(item: CalendarEventItem, scope: 'one' | 'series') {
     setBusy(true)
     setError('')
-    const result = await updateCalendarEvent({ id, status: 'CANCELLED' })
+    const result = await updateCalendarEvent({
+      id: item.id,
+      cancelScope: item.isRecurring ? scope : 'series',
+      occurrenceStartsAt: item.occurrenceStartsAt,
+      status: scope === 'series' || !item.isRecurring ? 'CANCELLED' : undefined,
+    })
     setBusy(false)
     if (!result.ok) {
       setError(result.error.message)
       return
     }
-    setToast('Event cancelled.')
+    setToast(
+      scope === 'one' && item.isRecurring
+        ? 'This occurrence cancelled.'
+        : 'Event series cancelled.',
+    )
+    if (selectedEventId === item.id && scope === 'series') {
+      setSelectedEventId(null)
+    }
     setReload((n) => n + 1)
   }
 
@@ -387,7 +417,7 @@ function CalendarHub() {
                 <ul className="calendar-event-list">
                   {events.map((item) => (
                     <li
-                      key={item.id}
+                      key={item.occurrenceKey}
                       className={
                         item.id === selectedEventId
                           ? 'calendar-event-list__item calendar-event-list__item--active'
@@ -402,6 +432,9 @@ function CalendarHub() {
                         ) : null}
                         <div className="btn-row">
                           <Tag>Belongs to {item.sourceBoard.name}</Tag>
+                          {item.recurrenceLabel ? (
+                            <Tag>{item.recurrenceLabel}</Tag>
+                          ) : null}
                           <Tag>{formatRsvpCounts(item.rsvpCounts)}</Tag>
                         </div>
                       </div>
@@ -423,14 +456,35 @@ function CalendarHub() {
                             Link
                           </a>
                         ) : null}
-                        <Button
-                          type="button"
-                          variant="secondary"
-                          disabled={busy}
-                          onClick={() => void cancelEvent(item.id)}
-                        >
-                          Cancel
-                        </Button>
+                        {item.isRecurring ? (
+                          <>
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              disabled={busy}
+                              onClick={() => void cancelEvent(item, 'one')}
+                            >
+                              Cancel day
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              disabled={busy}
+                              onClick={() => void cancelEvent(item, 'series')}
+                            >
+                              Cancel series
+                            </Button>
+                          </>
+                        ) : (
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            disabled={busy}
+                            onClick={() => void cancelEvent(item, 'series')}
+                          >
+                            Cancel
+                          </Button>
+                        )}
                       </div>
                     </li>
                   ))}
@@ -457,10 +511,10 @@ function CalendarHub() {
                         <div className="calendar-month__day">{cell.date.getDate()}</div>
                         {cell.events.slice(0, 3).map((item) => (
                           <button
-                            key={item.id}
+                            key={item.occurrenceKey}
                             type="button"
                             className="calendar-month__event"
-                            title={`${item.sourceBoard.name} · ${formatRsvpCounts(item.rsvpCounts)}`}
+                            title={`${item.sourceBoard.name} · ${item.recurrenceLabel ?? 'Once'} · ${formatRsvpCounts(item.rsvpCounts)}`}
                             onClick={() => setSelectedEventId(item.id)}
                           >
                             {item.title}
@@ -663,6 +717,65 @@ function CalendarHub() {
                   />
                   <span>All day</span>
                 </label>
+                <Field id="cal-repeat" label="Repeat">
+                  <Select
+                    id="cal-repeat"
+                    value={recurrenceFrequency}
+                    onChange={(e) => setRecurrenceFrequency(e.target.value)}
+                  >
+                    <option value="NONE">Does not repeat</option>
+                    <option value="DAILY">Daily</option>
+                    <option value="WEEKLY">Weekly</option>
+                    <option value="MONTHLY">Monthly</option>
+                  </Select>
+                </Field>
+                {recurrenceFrequency !== 'NONE' ? (
+                  <>
+                    <Field id="cal-interval" label="Every">
+                      <Select
+                        id="cal-interval"
+                        value={recurrenceInterval}
+                        onChange={(e) => setRecurrenceInterval(e.target.value)}
+                      >
+                        {[1, 2, 3, 4].map((n) => (
+                          <option key={n} value={String(n)}>
+                            {n}{' '}
+                            {recurrenceFrequency === 'DAILY'
+                              ? n === 1
+                                ? 'day'
+                                : 'days'
+                              : recurrenceFrequency === 'WEEKLY'
+                                ? n === 1
+                                  ? 'week'
+                                  : 'weeks'
+                                : n === 1
+                                  ? 'month'
+                                  : 'months'}
+                          </option>
+                        ))}
+                      </Select>
+                    </Field>
+                    <Field id="cal-count" label="End after (count, optional)">
+                      <Input
+                        id="cal-count"
+                        type="number"
+                        min={1}
+                        max={365}
+                        value={recurrenceCount}
+                        onChange={(e) => setRecurrenceCount(e.target.value)}
+                        placeholder="e.g. 8"
+                      />
+                    </Field>
+                    <Field id="cal-until" label="Or end on date (optional)">
+                      <Input
+                        id="cal-until"
+                        type="date"
+                        value={recurrenceUntil}
+                        onChange={(e) => setRecurrenceUntil(e.target.value)}
+                      />
+                    </Field>
+                  </>
+                ) : null}
                 <Field id="cal-place" label="Place (optional)">
                   <Input
                     id="cal-place"

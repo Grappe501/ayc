@@ -108,7 +108,11 @@ export const AUDIT_EVENT_TYPES = [
   'CALENDAR_RSVP_INVITED',
   'CALENDAR_RSVP_UPDATED',
   'CALENDAR_RSVP_REMOVED',
+  'CALENDAR_OCCURRENCE_CANCELLED',
 ] as const
+
+export const CALENDAR_RECURRENCE_FREQUENCIES = ['DAILY', 'WEEKLY', 'MONTHLY'] as const
+export type CalendarRecurrenceFrequency = (typeof CALENDAR_RECURRENCE_FREQUENCIES)[number]
 export type AuditEventType = (typeof AUDIT_EVENT_TYPES)[number]
 
 export const AUDIT_ENTITY_TYPES = [

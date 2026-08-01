@@ -29,6 +29,7 @@
 - Reports hub (`/leader/reports`) — coverage + pipeline for Chance  
 - Nested calendars (`/leader/calendar`) — one calendar per board, rollup by query  
 - Calendar RSVP / attendance — person-linked YES/NO/MAYBE/INVITED on events  
+- Calendar recurrence — daily/weekly/monthly series with occurrence cancel exceptions  
 
 ## Phase 2 still deferred
 
@@ -36,7 +37,7 @@ Canonical plan: `docs/master-build-plan/10-PHASE-2-MASTER-PLAN.md`
 
 - Per-person unlock / OAuth accounts (identity path after keys)  
 - Notify Chance email outbox (2C) — skipped for now, add later  
-- Calendar recurrence / ICS / public visibility  
+- Calendar ICS export / public visibility  
 - Location-level Graphic Design boards (GD stays statewide)
 
 ## Phase 1 forbidden

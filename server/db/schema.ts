@@ -348,11 +348,36 @@ export const calendarEvents = pgTable(
     visibility: text('visibility').notNull().default('INTERNAL'),
     status: text('status').notNull().default('SCHEDULED'),
     createdByPersonId: uuid('created_by_person_id').references(() => people.id),
+    recurrenceFrequency: text('recurrence_frequency'),
+    recurrenceInterval: integer('recurrence_interval').notNull().default(1),
+    recurrenceByWeekday: integer('recurrence_by_weekday').array(),
+    recurrenceUntil: timestamp('recurrence_until', { withTimezone: true }),
+    recurrenceCount: integer('recurrence_count'),
     ...timestamps,
     cancelledAt: timestamp('cancelled_at', { withTimezone: true }),
   },
   (table) => [
     index('calendar_events_source_starts_idx').on(table.sourceCalendarId, table.startsAt),
+  ],
+)
+
+export const calendarEventExceptions = pgTable(
+  'calendar_event_exceptions',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    eventId: uuid('event_id')
+      .notNull()
+      .references(() => calendarEvents.id, { onDelete: 'cascade' }),
+    occurrenceStartsAt: timestamp('occurrence_starts_at', { withTimezone: true }).notNull(),
+    status: text('status').notNull().default('CANCELLED'),
+    ...timestamps,
+  },
+  (table) => [
+    uniqueIndex('calendar_event_exceptions_uidx').on(
+      table.eventId,
+      table.occurrenceStartsAt,
+    ),
+    index('calendar_event_exceptions_event_idx').on(table.eventId),
   ],
 )
 

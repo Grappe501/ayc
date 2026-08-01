@@ -36,6 +36,7 @@ describe('SQL migrations', () => {
     expect(files).toContain('009_membership_applications.sql')
     expect(files).toContain('010_calendars.sql')
     expect(files).toContain('011_calendar_event_rsvps.sql')
+    expect(files).toContain('012_calendar_recurrence.sql')
   })
 
   it('defines person_merge_history in 003_person_merge', () => {
@@ -107,7 +108,18 @@ describe('SQL migrations', () => {
     expect(sql).toContain("'YES'")
     expect(sql).toContain('CALENDAR_RSVP')
   })
+
+  it('defines calendar recurrence in 012_calendar_recurrence', () => {
+    const sql = readFileSync(
+      path.join(migrationsDir, '012_calendar_recurrence.sql'),
+      'utf8',
+    )
+    expect(sql).toContain('recurrence_frequency')
+    expect(sql).toContain('CREATE TABLE IF NOT EXISTS calendar_event_exceptions')
+    expect(sql).toContain('CALENDAR_OCCURRENCE_CANCELLED')
+  })
 })
+
 
 
 
