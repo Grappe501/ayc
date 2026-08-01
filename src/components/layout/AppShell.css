@@ -4,7 +4,7 @@
   top: 0;
   z-index: 1000;
   padding: var(--space-3) var(--space-4);
-  background: var(--color-clay);
+  background: var(--color-secondary);
   color: var(--color-text-inverse);
   font-weight: 700;
   border-radius: var(--radius-md);
@@ -57,7 +57,7 @@
   width: 2.75rem;
   height: 2.75rem;
   border-radius: var(--radius-md);
-  background: linear-gradient(145deg, var(--color-clay) 0%, var(--color-clay-soft) 100%);
+  background: linear-gradient(145deg, var(--color-splash) 0%, var(--color-secondary) 100%);
   color: var(--color-text-inverse);
   font-family: var(--font-display);
   font-size: 1.35rem;
@@ -75,7 +75,7 @@
 .brand__org {
   font-size: var(--text-small);
   font-weight: 700;
-  color: var(--color-clay);
+  color: var(--color-primary-deep);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -97,7 +97,7 @@
   border-radius: var(--radius-pill);
   border: 1.5px solid var(--color-border-strong);
   background: var(--color-surface);
-  color: var(--color-clay);
+  color: var(--color-secondary);
   font-weight: 700;
   cursor: pointer;
 }
@@ -119,7 +119,7 @@
 }
 
 .primary-nav__link--active {
-  color: var(--color-clay);
+  color: var(--color-secondary);
 }
 
 .mobile-nav {
@@ -163,7 +163,7 @@
   background: var(--color-bg);
   border-radius: var(--radius-pill);
   font-weight: 700;
-  color: var(--color-clay);
+  color: var(--color-secondary);
   cursor: pointer;
 }
 
@@ -174,13 +174,13 @@
   padding: 0 var(--space-4);
   border-radius: var(--radius-md);
   text-decoration: none;
-  color: var(--color-clay);
+  color: var(--color-secondary);
   font-weight: 700;
   font-size: 1.15rem;
 }
 
 .mobile-nav__link--active {
-  background: var(--color-clay-wash);
+  background: var(--color-secondary-wash);
 }
 
 .main {
@@ -223,7 +223,7 @@
   align-items: center;
   padding: 0.7rem 1.1rem;
   border-radius: var(--radius-pill);
-  background: var(--color-clay);
+  background: var(--color-secondary);
   color: var(--color-text-inverse);
   text-decoration: none;
   font-weight: 700;
@@ -233,7 +233,7 @@
 
 .beta-fab:hover {
   color: var(--color-text-inverse);
-  background: var(--color-clay-deep);
+  background: var(--color-secondary-deep);
 }
 
 @media (min-width: 880px) {
@@ -244,7 +244,7 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--color-green);
+    color: var(--color-splash);
   }
 
   .menu-toggle {

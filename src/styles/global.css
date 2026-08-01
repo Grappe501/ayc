@@ -16,10 +16,10 @@ body {
   line-height: var(--leading-body);
   color: var(--color-text);
   background:
-    radial-gradient(ellipse 75% 50% at 0% -8%, rgba(168, 93, 59, 0.18), transparent 55%),
-    radial-gradient(ellipse 50% 40% at 100% 5%, rgba(85, 107, 78, 0.1), transparent 50%),
-    radial-gradient(ellipse 40% 30% at 80% 100%, rgba(168, 93, 59, 0.08), transparent 55%),
-    linear-gradient(180deg, #faf7f1 0%, var(--color-bg) 42%, #ebe4d6 100%);
+    radial-gradient(ellipse 70% 45% at 0% -8%, rgba(229, 163, 61, 0.16), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 100% 0%, rgba(106, 90, 205, 0.1), transparent 50%),
+    radial-gradient(ellipse 40% 30% at 85% 100%, rgba(255, 107, 53, 0.08), transparent 55%),
+    linear-gradient(180deg, #ffffff 0%, var(--color-bg) 45%, #ececec 100%);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
 }
@@ -34,12 +34,12 @@ img {
 }
 
 a {
-  color: var(--color-clay);
+  color: var(--color-tertiary);
   text-decoration: none;
 }
 
 a:hover {
-  color: var(--color-clay-deep);
+  color: var(--color-tertiary-deep);
 }
 
 h1,
@@ -50,7 +50,7 @@ h4 {
   font-weight: 400;
   letter-spacing: 0.02em;
   line-height: var(--leading-tight);
-  color: var(--color-blue);
+  color: var(--color-primary-deep);
   margin: 0 0 var(--space-4);
 }
 

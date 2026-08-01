@@ -1,34 +1,52 @@
 :root {
   /* Color — AYC brand palette */
-  --color-green: #556b4e;
-  --color-green-soft: #6a8162;
-  --color-blue: #4f7ea8;
-  --color-blue-deep: #3d6487;
-  --color-blue-soft: #6a97bb;
-  --color-stone: #8a857a;
-  --color-tan: #d7c9b1;
-  --color-clay: #a85d3b;
-  --color-clay-deep: #8a4a2e;
-  --color-clay-soft: #c47a56;
-  --color-clay-wash: rgba(168, 93, 59, 0.12);
-  --color-gold: #a85d3b;
-  --color-gold-soft: #c47a56;
-  --color-bg: #f5f1e8;
-  --color-bg-elevated: #faf7f1;
-  --color-surface: #fffcf7;
-  --color-border: rgba(138, 133, 122, 0.35);
-  --color-border-strong: rgba(168, 93, 59, 0.28);
-  --color-text: #2f332c;
-  --color-text-muted: #8a857a;
-  --color-text-inverse: #f5f1e8;
-  --color-error: #a85d3b;
-  --color-error-soft: #f3e4db;
-  --color-warning: #a85d3b;
-  --color-warning-soft: #f0e6d6;
-  --color-success: #556b4e;
-  --color-success-soft: #e4ebe1;
-  --color-focus: #4f7ea8;
-  --color-accent: #a85d3b;
+  --color-bg: #f5f5f5;
+  --color-bg-elevated: #ffffff;
+  --color-surface: #ffffff;
+  --color-primary: #e5a33d;
+  --color-primary-deep: #c48920;
+  --color-primary-soft: #f0c06a;
+  --color-primary-wash: rgba(229, 163, 61, 0.14);
+  --color-secondary: #ff6b35;
+  --color-secondary-deep: #e25520;
+  --color-secondary-soft: #ff8f66;
+  --color-secondary-wash: rgba(255, 107, 53, 0.12);
+  --color-tertiary: #00a3ff;
+  --color-tertiary-deep: #0082cc;
+  --color-tertiary-soft: #4dbcff;
+  --color-tertiary-wash: rgba(0, 163, 255, 0.12);
+  --color-splash: #6a5acd;
+  --color-splash-deep: #5548a8;
+  --color-splash-soft: #8b7ddd;
+  --color-splash-wash: rgba(106, 90, 205, 0.12);
+
+  /* Legacy aliases → new roles */
+  --color-gold: var(--color-primary);
+  --color-gold-soft: var(--color-primary-soft);
+  --color-clay: var(--color-secondary);
+  --color-clay-deep: var(--color-secondary-deep);
+  --color-clay-soft: var(--color-secondary-soft);
+  --color-clay-wash: var(--color-secondary-wash);
+  --color-blue: var(--color-tertiary);
+  --color-blue-deep: var(--color-tertiary-deep);
+  --color-blue-soft: var(--color-tertiary-soft);
+  --color-green: var(--color-splash);
+  --color-green-soft: var(--color-splash-soft);
+  --color-stone: #6b6b6b;
+  --color-tan: #ececec;
+  --color-border: rgba(26, 26, 26, 0.12);
+  --color-border-strong: rgba(255, 107, 53, 0.35);
+  --color-text: #1a1a1a;
+  --color-text-muted: #6b6b6b;
+  --color-text-inverse: #ffffff;
+  --color-error: #ff6b35;
+  --color-error-soft: rgba(255, 107, 53, 0.12);
+  --color-warning: #e5a33d;
+  --color-warning-soft: rgba(229, 163, 61, 0.14);
+  --color-success: #00a3ff;
+  --color-success-soft: rgba(0, 163, 255, 0.12);
+  --color-focus: #00a3ff;
+  --color-accent: #ff6b35;
 
   /* Typography */
   --font-display: 'Bebas Neue', Impact, Haettenschweiler, sans-serif;
@@ -61,10 +79,10 @@
   --radius-pill: 999px;
 
   /* Elevation */
-  --shadow-sm: 0 1px 2px rgba(47, 51, 44, 0.04), 0 4px 12px rgba(47, 51, 44, 0.05);
-  --shadow-md: 0 8px 24px rgba(47, 51, 44, 0.08);
-  --shadow-lg: 0 18px 48px rgba(47, 51, 44, 0.12);
-  --shadow-lift: 0 12px 28px rgba(47, 51, 44, 0.14);
+  --shadow-sm: 0 1px 2px rgba(26, 26, 26, 0.04), 0 4px 12px rgba(26, 26, 26, 0.05);
+  --shadow-md: 0 8px 24px rgba(26, 26, 26, 0.08);
+  --shadow-lg: 0 18px 48px rgba(26, 26, 26, 0.12);
+  --shadow-lift: 0 12px 28px rgba(26, 26, 26, 0.14);
 
   /* Layout */
   --max-width: 80rem;

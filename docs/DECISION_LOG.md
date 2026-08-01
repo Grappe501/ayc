@@ -19,3 +19,4 @@
 | 2026-07-31 | Feedback inbox under `/leader` | Chance triage at `/leader/feedback`; public `/feedback` stays submit-only; no `/admin` |
 | 2026-07-31 | Brand palette refresh | Sage `#556B4E`, blue `#4F7EA8`, stone `#8a857a`, tan `#D7C9B1`, clay `#A85d3B`, cream `#F5F1E8` |
 | 2026-07-31 | Clay as action accent | Primary buttons, brand mark, nav active, FABs, and landing accents use clay; blue kept for headings/focus |
+| 2026-07-31 | Palette refresh | BG `#F5F5F5`, dominant `#E5A33D`, secondary `#FF6B35`, tertiary `#00A3FF`, splash `#6A5ACD` |
