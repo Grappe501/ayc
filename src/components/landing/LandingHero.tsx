@@ -4,13 +4,15 @@ import logoMark from '@/assets/brand/ayc-logo-mark-f.png'
 export function LandingHero() {
   return (
     <section className="landing-hero ayc-reveal" aria-labelledby="hero-heading">
-      <img
-        className="landing-hero__mark"
-        src={logoMark}
-        alt="Arkansas Youth Coalition"
-        width={240}
-        height={240}
-      />
+      <div className="landing-hero__mark-well">
+        <img
+          className="landing-hero__mark"
+          src={logoMark}
+          alt="Arkansas Youth Coalition"
+          width={480}
+          height={480}
+        />
+      </div>
       <div className="landing-hero__copy">
         <p className="landing__eyebrow landing-hero__eyebrow">Arkansas Youth Coalition</p>
         <h1 id="hero-heading">A home for young Arkansans ready to lead.</h1>
