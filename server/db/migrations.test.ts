@@ -34,6 +34,7 @@ describe('SQL migrations', () => {
     expect(files).toContain('007_hierarchy_foundation.sql')
     expect(files).toContain('008_location_boards.sql')
     expect(files).toContain('009_membership_applications.sql')
+    expect(files).toContain('010_calendars.sql')
   })
 
   it('defines person_merge_history in 003_person_merge', () => {
@@ -86,5 +87,14 @@ describe('SQL migrations', () => {
     expect(sql).toContain('APPLICATION_SUBMITTED')
     expect(sql).toContain('MEMBERSHIP_APPLICATION')
   })
+
+  it('defines calendars in 010_calendars', () => {
+    const sql = readFileSync(path.join(migrationsDir, '010_calendars.sql'), 'utf8')
+    expect(sql).toContain('CREATE TABLE IF NOT EXISTS calendars')
+    expect(sql).toContain('CREATE TABLE IF NOT EXISTS calendar_events')
+    expect(sql).toContain('CALENDAR_EVENT_CREATED')
+    expect(sql).toContain('source_calendar_id')
+  })
 })
+
 

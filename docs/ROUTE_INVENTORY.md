@@ -26,6 +26,6 @@
 
 Reserved for later phases (do not ship stubs): `/teams` (public/future RBAC boards), `/admin`, `/events`, `/training`, `/messages`, `/analytics`, `/profile`, `/settings`
 
-Phase 2 live: `/join`, `/join/thanks`, `/leader/applications`, `/leader/reports`, `/leader/segments/*`, `/leader/locations/*`, `/leader/teams/social-media/graphic-design`. Still planned: `/leader/calendar` (CAL track).
+Phase 2 live: `/join`, `/join/thanks`, `/leader/applications`, `/leader/reports`, `/leader/calendar`, `/leader/segments/*`, `/leader/locations/*`, `/leader/teams/social-media/graphic-design`.
 
 Phase 1 Team Lead Boards live under `/leader/teams/*` (same unlock as Leader Board). Full Phase 2 Team Boards (tasks, resources, communication, reports) remain deferred.

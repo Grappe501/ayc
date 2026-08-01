@@ -128,6 +128,16 @@ function TeamBoard({ teamSlug }: { teamSlug: TeamBoardSlug }) {
             <Button to="/leader" variant="secondary">
               All teams
             </Button>
+            <Button
+              to={
+                teamSlug === 'graphic-design'
+                  ? '/leader/calendar?board=graphic-design'
+                  : `/leader/calendar?board=${teamSlug}`
+              }
+              variant="secondary"
+            >
+              Calendar
+            </Button>
             {teamSlug === 'graphic-design' ? (
               <Button to="/leader/teams/social-media" variant="secondary">
                 Social Media parent

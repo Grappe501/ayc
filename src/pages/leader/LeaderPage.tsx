@@ -164,6 +164,9 @@ function LeaderBoard() {
             <Button to="/leader/reports" variant="secondary">
               Reports
             </Button>
+            <Button to="/leader/calendar" variant="secondary">
+              Calendar
+            </Button>
             <Button to="/leader/feedback" variant="secondary">
               Feedback inbox
             </Button>
@@ -631,6 +634,9 @@ function LeaderBoard() {
           </Button>
           <Button to="/leader/reports" variant="secondary">
             Reports
+          </Button>
+          <Button to="/leader/calendar" variant="secondary">
+            Calendar
           </Button>
           <Button to="/leader/applications" variant="secondary">
             Join applications

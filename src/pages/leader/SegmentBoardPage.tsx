@@ -177,6 +177,9 @@ function SegmentBoard({ segment }: { segment: SegmentSlug }) {
             <Button to="/leader" variant="secondary">
               Leader Board
             </Button>
+            <Button to={`/leader/calendar?board=${segment}`} variant="secondary">
+              Calendar
+            </Button>
             <Button to="/leader/contacts/new" variant="primary">
               Add a Contact
             </Button>

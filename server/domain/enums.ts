@@ -102,6 +102,9 @@ export const AUDIT_EVENT_TYPES = [
   'APPLICATION_UPDATED',
   'APPLICATION_ACCEPTED',
   'APPLICATION_DECLINED',
+  'CALENDAR_EVENT_CREATED',
+  'CALENDAR_EVENT_UPDATED',
+  'CALENDAR_EVENT_CANCELLED',
 ] as const
 export type AuditEventType = (typeof AUDIT_EVENT_TYPES)[number]
 
@@ -118,8 +121,16 @@ export const AUDIT_ENTITY_TYPES = [
   'BETA_FEEDBACK',
   'TEAM',
   'MEMBERSHIP_APPLICATION',
+  'CALENDAR',
+  'CALENDAR_EVENT',
 ] as const
 export type AuditEntityType = (typeof AUDIT_ENTITY_TYPES)[number]
+
+export const CALENDAR_EVENT_STATUSES = ['SCHEDULED', 'CANCELLED'] as const
+export type CalendarEventStatus = (typeof CALENDAR_EVENT_STATUSES)[number]
+
+export const CALENDAR_VISIBILITIES = ['INTERNAL', 'PUBLIC'] as const
+export type CalendarVisibility = (typeof CALENDAR_VISIBILITIES)[number]
 
 /** Phase 2B membership applications queue. */
 export const APPLICATION_STATUSES = [

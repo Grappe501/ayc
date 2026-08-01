@@ -316,6 +316,46 @@ export const boards = pgTable(
   ],
 )
 
+export const calendars = pgTable(
+  'calendars',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    boardId: uuid('board_id')
+      .notNull()
+      .unique()
+      .references(() => boards.id),
+    name: text('name').notNull(),
+    kind: text('kind').notNull().default('BOARD'),
+    ...timestamps,
+  },
+  (table) => [index('calendars_board_idx').on(table.boardId)],
+)
+
+export const calendarEvents = pgTable(
+  'calendar_events',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    sourceCalendarId: uuid('source_calendar_id')
+      .notNull()
+      .references(() => calendars.id),
+    title: text('title').notNull(),
+    description: text('description'),
+    startsAt: timestamp('starts_at', { withTimezone: true }).notNull(),
+    endsAt: timestamp('ends_at', { withTimezone: true }).notNull(),
+    allDay: boolean('all_day').notNull().default(false),
+    locationText: text('location_text'),
+    url: text('url'),
+    visibility: text('visibility').notNull().default('INTERNAL'),
+    status: text('status').notNull().default('SCHEDULED'),
+    createdByPersonId: uuid('created_by_person_id').references(() => people.id),
+    ...timestamps,
+    cancelledAt: timestamp('cancelled_at', { withTimezone: true }),
+  },
+  (table) => [
+    index('calendar_events_source_starts_idx').on(table.sourceCalendarId, table.startsAt),
+  ],
+)
+
 export const membershipApplications = pgTable(
   'membership_applications',
   {

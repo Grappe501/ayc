@@ -776,3 +776,105 @@ export type LeaderReportsPayload = {
 export function fetchLeaderReports() {
   return request<LeaderReportsPayload>('leader-reports')
 }
+
+export type CalendarBoardRef = {
+  id: string
+  kind: string
+  slug: string
+  name: string
+  teamId: string | null
+  teamSlug: string | null
+  locationId: string | null
+  locationType: string | null
+  segment: string | null
+  parentBoardId: string | null
+  calendarId: string
+  calendarName: string
+  path: string
+}
+
+export type CalendarEventItem = {
+  id: string
+  title: string
+  description: string | null
+  startsAt: string
+  endsAt: string
+  allDay: boolean
+  locationText: string | null
+  url: string | null
+  visibility: string
+  status: string
+  sourceCalendarId: string
+  sourceBoard: {
+    id: string
+    slug: string
+    name: string
+    kind: string
+    locationId: string | null
+    teamSlug: string | null
+  }
+  calendarName: string
+  createdAt: string
+  updatedAt: string
+  cancelledAt: string | null
+}
+
+export function fetchCalendarEvents(params: {
+  boardSlug?: string
+  locationId?: string
+  teamSlug?: string
+  mode?: 'rollup' | 'own'
+  from?: string
+  to?: string
+  includeCancelled?: boolean
+}) {
+  const search = new URLSearchParams()
+  if (params.boardSlug) search.set('board', params.boardSlug)
+  if (params.locationId) search.set('locationId', params.locationId)
+  if (params.teamSlug) search.set('teamSlug', params.teamSlug)
+  if (params.mode) search.set('mode', params.mode)
+  if (params.from) search.set('from', params.from)
+  if (params.to) search.set('to', params.to)
+  if (params.includeCancelled) search.set('includeCancelled', '1')
+  const qs = search.toString()
+  return request<{
+    board: CalendarBoardRef
+    mode: 'rollup' | 'own'
+    events: CalendarEventItem[]
+  }>(`leader-calendar-events${qs ? `?${qs}` : ''}`)
+}
+
+export function createCalendarEvent(body: {
+  boardSlug?: string
+  locationId?: string
+  teamSlug?: string
+  title: string
+  description?: string | null
+  startsAt: string
+  endsAt: string
+  allDay?: boolean
+  locationText?: string | null
+  url?: string | null
+}) {
+  return request<{ board: CalendarBoardRef; event: CalendarEventItem | undefined }>(
+    'leader-calendar-events',
+    { method: 'POST', body: JSON.stringify(body) },
+  )
+}
+
+export function updateCalendarEvent(body: {
+  id: string
+  title?: string
+  description?: string | null
+  startsAt?: string
+  endsAt?: string
+  allDay?: boolean
+  locationText?: string | null
+  url?: string | null
+  status?: 'SCHEDULED' | 'CANCELLED'
+}) {
+  return request<{ id: string; status: string }>('leader-calendar-events', {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  })
+}

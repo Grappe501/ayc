@@ -230,6 +230,12 @@ function LocationTeamBoard({ locationId }: { locationId: string }) {
                 Leader Board
               </Button>
             )}
+            <Button
+              to={`/leader/calendar?locationId=${location.id}`}
+              variant="secondary"
+            >
+              Calendar
+            </Button>
             <Button to="/leader/contacts/new" variant="primary">
               Add a Contact
             </Button>
@@ -358,6 +364,12 @@ function LocationCategoryBoard({
             </Button>
             <Button to={teamBoardPath(teamSlug)} variant="secondary">
               Statewide {teamMeta.name}
+            </Button>
+            <Button
+              to={`/leader/calendar?locationId=${location.id}&teamSlug=${teamSlug}`}
+              variant="secondary"
+            >
+              Calendar
             </Button>
             <Button to="/leader/contacts/new" variant="primary">
               Add a Contact

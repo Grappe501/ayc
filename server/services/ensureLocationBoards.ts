@@ -9,6 +9,7 @@ import {
   parentBoardSlugForLocationType,
   segmentForLocationType,
 } from '../domain/locationBoards.ts'
+import { ensureCalendarForBoard } from './ensureCalendar.ts'
 
 export type EnsureLocationBoardsResult = {
   locationId: string
@@ -108,7 +109,10 @@ export async function ensureLocationBoards(
       created += 1
     }
     categoryBoardIds.push(categoryBoard.id)
+    await ensureCalendarForBoard(db, categoryBoard.id, categoryBoard.name)
   }
+
+  await ensureCalendarForBoard(db, teamBoard.id, teamBoard.name)
 
   return {
     locationId: location.id,
