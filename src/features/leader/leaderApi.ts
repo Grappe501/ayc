@@ -67,11 +67,15 @@ async function request<T>(
 }
 
 export function unlockLeader(code: string) {
-  return request<{ unlocked: boolean }>(
-    'leader-unlock',
-    { method: 'POST', body: JSON.stringify({ code }) },
-    { auth: false },
-  )
+  return request<{
+    unlocked: boolean
+    scope: {
+      kind: 'master' | 'category' | 'segment'
+      label: string
+      teamSlug?: string
+      segment?: 'high-school' | 'working-class'
+    }
+  }>('leader-unlock', { method: 'POST', body: JSON.stringify({ code }) }, { auth: false })
 }
 
 export function fetchLeaderSummary() {

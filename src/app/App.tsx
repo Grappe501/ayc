@@ -10,6 +10,7 @@ import { TeamBoardPage } from '@/pages/leader/TeamBoardPage'
 import { DirectoryPage } from '@/pages/directory/DirectoryPage'
 import { DirectoryPersonPage } from '@/pages/directory/DirectoryPersonPage'
 import { FeedbackPage } from '@/pages/feedback/FeedbackPage'
+import { JoinPage } from '@/pages/join/JoinPage'
 import { NotFoundPage } from '@/pages/not-found/NotFoundPage'
 
 export function App() {
@@ -26,6 +27,7 @@ export function App() {
         <Route path="/directory" element={<DirectoryPage />} />
         <Route path="/directory/:personId" element={<DirectoryPersonPage />} />
         <Route path="/feedback" element={<FeedbackPage />} />
+        <Route path="/join" element={<JoinPage />} />
         <Route path="/workbench" element={<LeaderPage />} />
         <Route path="/people" element={<DirectoryPage />} />
         <Route path="/add-contact" element={<NewContactPage />} />

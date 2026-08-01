@@ -7,9 +7,9 @@ export function TeamCards() {
     <section id="teams" className="landing__section ayc-reveal" aria-labelledby="teams-heading">
       <SectionHeading
         id="teams"
-        eyebrow="The Teams"
-        title="Five Teams. One Coalition."
-        lede="AYC begins with five practical teams that give every leader and volunteer a clear way to contribute."
+        eyebrow="Where you can serve"
+        title="Five teams. One coalition."
+        lede="Every member picks a home team. Graphic design hangs with Social Media as one statewide design group. You can volunteer now and grow into leading locally or statewide."
       />
       <div className="team-grid">
         {TEAMS.map((team) => (
@@ -17,7 +17,7 @@ export function TeamCards() {
             <span className="team-card__mark" aria-hidden="true">
               {team.mark}
             </span>
-            <Badge tone="blue">Founding Team</Badge>
+            <Badge tone="blue">Team</Badge>
             <h3>{team.name}</h3>
             <span className="team-card__label">{team.shortLabel}</span>
             <p>{team.description}</p>

@@ -1,18 +1,12 @@
 import type { HandlerEvent, HandlerResponse } from '@netlify/functions'
 import { closeDb, getDatabaseUrl, getDb } from '../../server/db/client.ts'
-import {
-  requireLeaderWriteAccess,
-  extractLeaderSecret,
-  getLeaderWriteSecret,
-  secretsMatch,
-} from '../../server/http/auth.ts'
+import { requireLeaderWriteAccess, extractLeaderSecret, resolveKey } from '../../server/http/auth.ts'
 import { fail } from '../../server/http/response.ts'
 
 export function canRevealContacts(event: HandlerEvent): boolean {
-  const expected = getLeaderWriteSecret()
   const provided = extractLeaderSecret(event)
-  if (!expected || !provided) return false
-  return secretsMatch(provided, expected)
+  if (!provided) return false
+  return Boolean(resolveKey(provided))
 }
 
 export async function withPublicDb(

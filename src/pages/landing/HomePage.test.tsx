@@ -13,9 +13,9 @@ function renderHome() {
 }
 
 describe('HomePage landing', () => {
-  it('renders the landing page with one H1', () => {
+  it('renders the newcomer landing with one H1', () => {
     const html = renderHome()
-    expect(html).toContain('Young Arkansans are not waiting for the future.')
+    expect(html).toContain('A home for young Arkansans ready to lead.')
     expect(html.match(/<h1\b/g)?.length).toBe(1)
   })
 
@@ -24,39 +24,38 @@ describe('HomePage landing', () => {
     expect(html).toContain('data-testid="canonical-mission"')
     expect(html).toContain('Youth (16 - 24)')
     expect(html).toContain('Natural State')
-    expect(html).toContain('young people from all walks of life')
-    expect(html).toContain('bridge the gap')
-    // Full mission characters remain present across paragraphs/highlights
     for (const chunk of AYC_MISSION.split(/(?<=\.)\s+(?=[A-Z])/)) {
       expect(html.replace(/<[^>]+>/g, '')).toContain(chunk)
     }
   })
 
-  it('links hero actions to leader and directory', () => {
+  it('emphasizes join over leadership in the hero', () => {
     const html = renderHome()
+    expect(html).toContain('href="/join"')
+    expect(html).toContain('Join AYC')
+    expect(html).toContain('Why join AYC now.')
+    expect(html).toContain('Why volunteer with us.')
+    expect(html).toContain('Why step into leadership.')
+  })
+
+  it('keeps leadership tools at the bottom', () => {
+    const html = renderHome()
+    expect(html).toContain('Leadership Workbench')
     expect(html).toContain('href="/leader"')
-    expect(html).toContain('Enter the Leader Board')
-    expect(html).toContain('href="/directory"')
-    expect(html).toContain('View the Leadership Directory')
+    expect(html).toContain('Enter Leader Board')
+    const joinIdx = html.indexOf('Start your join form')
+    const leaderIdx = html.indexOf('Enter Leader Board')
+    expect(joinIdx).toBeGreaterThan(-1)
+    expect(leaderIdx).toBeGreaterThan(joinIdx)
   })
 
-  it('links feedback action', () => {
-    const html = renderHome()
-    expect(html).toContain('href="/feedback"')
-    expect(html).toContain('Share Beta Feedback')
-  })
-
-  it('renders five team names and core sections', () => {
+  it('renders five team names and momentum', () => {
     const html = renderHome()
     for (const team of TEAMS) {
       expect(html).toContain(team.name)
     }
-    expect(html).toContain('Here’s What We Heard')
-    expect(html).toContain('What We Are Building')
-    expect(html).toContain('How We Get There')
-    expect(html).toContain('Five Teams. One Coalition.')
-    expect(html).toContain('Built With the Leadership Team')
-    expect(html).toContain('This is where the network begins.')
+    expect(html).toContain('100+')
+    expect(html).toContain('civic leadership')
   })
 
   it('does not expose unapproved Phase 2 navigation', () => {

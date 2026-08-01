@@ -22,3 +22,5 @@
 | 2026-07-31 | Palette refresh | BG `#F5F5F5`, dominant `#2E5A3D`, secondary `#FF6B35`, tertiary `#00A3FF`, splash `#6A5ACD` |
 | 2026-07-31 | Launch styling harden | Deeper elevation, surface tints, nav/table/form polish for beta launch readiness |
 | 2026-07-31 | Phase 2 master plan drafted | Hierarchy (Chance admin, category/HS/WC leads, Graphic Design under Social Media), Join CTA, notify email, nested calendars as CAL track — `10-PHASE-2-MASTER-PLAN.md` |
+| 2026-07-31 | Landing → newcomer first | Public home educates what/why/how; Join CTA primary; Leader Workbench at bottom |
+| 2026-07-31 | Hierarchical board keys | `AYC_MASTER_KEY` opens all boards; `AYC_KEY_*` category/segment keys open hierarchy; write APIs accept any registered key |

@@ -29,7 +29,7 @@ describe('leaderSession', () => {
     })
 
     expect(hasLeaderSession()).toBe(false)
-    setLeaderSession('test-secret')
+    setLeaderSession('test-secret', { kind: 'master', label: 'Master' })
     expect(hasLeaderSession()).toBe(true)
     expect(getLeaderWriteSecret()).toBe('test-secret')
     clearLeaderSession()

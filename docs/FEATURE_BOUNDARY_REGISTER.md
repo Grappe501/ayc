@@ -6,7 +6,8 @@
 - Contacts, locations, teams, directory, feedback  
 - Statewide Leader Board + five Team Lead Boards under `/leader/teams/:slug` (roster, gaps, assign)  
 - Leader-gated feedback inbox (`/leader/feedback`) for status/severity/notes triage  
-- Netlify password + leader write secret  
+- Public Join page (`/join`) capturing interest (stored via feedback workflow until applications table ships)  
+- Netlify site password + hierarchical board keys (`AYC_MASTER_KEY` + `AYC_KEY_*`)  
 
 ## Phase 1 deferred (see Phase 2 master plan)
 

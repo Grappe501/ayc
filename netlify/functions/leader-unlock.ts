@@ -26,5 +26,5 @@ export const handler: Handler = async (event) => {
     )
   }
 
-  return ok({ unlocked: true })
+  return ok({ unlocked: true, scope: result.scope })
 }

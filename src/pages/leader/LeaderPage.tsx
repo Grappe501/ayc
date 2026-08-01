@@ -305,7 +305,7 @@ function LeaderBoard() {
 
 export function LeaderPage() {
   return (
-    <RequireLeaderAccess>
+    <RequireLeaderAccess requireStatewide>
       <LeaderBoard />
     </RequireLeaderAccess>
   )

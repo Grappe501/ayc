@@ -368,8 +368,8 @@ Phase 1 uses shared leader secret. Phase 2 should not jump to full OAuth on day 
 
 | Step | Approach |
 |------|----------|
-| 2A | Keep shared secret for Lead Organizer; encode hierarchy in **data** (roles on Chance + named leads) even if UI still uses one unlock |
-| 2B | Per-lead unlock codes or magic-link emails (still light) scoped by `person_leadership_roles` |
+| 2A | **Started:** `AYC_MASTER_KEY` + `AYC_KEY_*` scoped unlock codes (category + HS/WC). Still encode roles in data next. |
+| 2B | Per-lead identity tied to `person_leadership_roles` (codes become optional bridge) |
 | 2C | Real accounts (email login) when multiple concurrent leads need isolation |
 
 **Product rule:** Build the **scope engine** early (`canAccessBoard(person, board)`). Swap auth front-ends later without rewriting boards.

@@ -3,7 +3,7 @@
 ## Secrets
 
 - [ ] `DATABASE_URL` never committed; only Netlify / local `.env`
-- [ ] `AYC_LEADER_WRITE_SECRET` never committed
+- [ ] `AYC_MASTER_KEY` / `AYC_LEADER_WRITE_SECRET` / `AYC_KEY_*` never committed
 - [ ] `.env` gitignored
 - [ ] No `VITE_*` secret variables
 

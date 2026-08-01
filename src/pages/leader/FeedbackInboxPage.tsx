@@ -328,7 +328,7 @@ function FeedbackInbox() {
 
 export function FeedbackInboxPage() {
   return (
-    <RequireLeaderAccess>
+    <RequireLeaderAccess requireMaster>
       <FeedbackInbox />
     </RequireLeaderAccess>
   )

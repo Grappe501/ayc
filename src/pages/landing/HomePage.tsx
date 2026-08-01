@@ -1,29 +1,29 @@
 import { DocumentMeta } from '@/components/seo/DocumentMeta'
-import { AYC_PAGE_DESCRIPTION, AYC_PAGE_TITLE } from '@/content/ayc'
+import { LANDING_PAGE_DESCRIPTION, LANDING_PAGE_TITLE } from '@/content/landing'
 import { LandingHero } from '@/components/landing/LandingHero'
+import { MomentumStrip } from '@/components/landing/MomentumStrip'
 import { MissionPanel } from '@/components/landing/MissionPanel'
-import { InsightCards } from '@/components/landing/InsightCards'
-import { PillarCards } from '@/components/landing/PillarCards'
+import { HowWeWork } from '@/components/landing/HowWeWork'
+import { WhySections } from '@/components/landing/WhySections'
 import { JourneySteps } from '@/components/landing/JourneySteps'
 import { TeamCards } from '@/components/landing/TeamCards'
-import { WorkbenchActionCards } from '@/components/landing/WorkbenchActionCards'
-import { BetaLoop } from '@/components/landing/BetaLoop'
-import { FinalCallToAction } from '@/components/landing/FinalCallToAction'
+import { JoinCallToAction } from '@/components/landing/JoinCallToAction'
+import { LeadershipEntry } from '@/components/landing/LeadershipEntry'
 import './landing.css'
 
 export function HomePage() {
   return (
     <div className="landing">
-      <DocumentMeta title={AYC_PAGE_TITLE} description={AYC_PAGE_DESCRIPTION} />
+      <DocumentMeta title={LANDING_PAGE_TITLE} description={LANDING_PAGE_DESCRIPTION} />
       <LandingHero />
+      <MomentumStrip />
       <MissionPanel />
-      <InsightCards />
-      <PillarCards />
+      <HowWeWork />
+      <WhySections />
       <JourneySteps />
       <TeamCards />
-      <WorkbenchActionCards />
-      <BetaLoop />
-      <FinalCallToAction />
+      <JoinCallToAction />
+      <LeadershipEntry />
     </div>
   )
 }

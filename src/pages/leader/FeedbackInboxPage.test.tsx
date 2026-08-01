@@ -5,7 +5,9 @@ import { MemoryRouter } from 'react-router-dom'
 vi.mock('@/features/leader/leaderSession', () => ({
   getLeaderWriteSecret: () => 'test-secret',
   hasLeaderSession: () => true,
+  getLeaderScope: () => ({ kind: 'master', label: 'Master' }),
   clearLeaderSession: () => undefined,
+  setLeaderSession: () => undefined,
 }))
 
 vi.mock('@/features/leader/leaderApi', () => ({

@@ -3,10 +3,10 @@ import type { FormEvent } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Field, Input } from '@/components/ui/Input'
 import { unlockLeader } from '@/features/leader/leaderApi'
-import { setLeaderSession } from '@/features/leader/leaderSession'
+import { setLeaderSession, type UnlockScope } from '@/features/leader/leaderSession'
 
 type Props = {
-  onUnlocked: () => void
+  onUnlocked: (scope: UnlockScope) => void
 }
 
 export function LeaderAccessGate({ onUnlocked }: Props) {
@@ -28,8 +28,9 @@ export function LeaderAccessGate({ onUnlocked }: Props) {
         setError(result.error.message)
         return
       }
-      setLeaderSession(code.trim())
-      onUnlocked()
+      const scope = result.data.scope as UnlockScope
+      setLeaderSession(code.trim(), scope)
+      onUnlocked(scope)
     } catch {
       setError('Something went wrong. Please try again.')
     } finally {
@@ -39,11 +40,11 @@ export function LeaderAccessGate({ onUnlocked }: Props) {
 
   return (
     <div>
-      <p className="page-header__eyebrow">Leader Entry Access</p>
-      <h1>Leader Entry Access</h1>
+      <p className="page-header__eyebrow">Leadership Access</p>
+      <h1>Board access code</h1>
       <p className="page-header__lede">
-        This area is used to create and manage AYC leadership records. Enter the leader access code
-        to continue.
+        Enter your leadership key. The Lead Organizer master key opens every board. Campaign Lead
+        and segment keys open the boards in your hierarchy.
       </p>
       <form className="card" onSubmit={onSubmit}>
         {error ? (
@@ -51,7 +52,7 @@ export function LeaderAccessGate({ onUnlocked }: Props) {
             {error}
           </div>
         ) : null}
-        <Field id="leader-code" label="Leader access code">
+        <Field id="leader-code" label="Leadership access code">
           <Input
             id="leader-code"
             type="password"
@@ -62,10 +63,10 @@ export function LeaderAccessGate({ onUnlocked }: Props) {
         </Field>
         <div className="btn-row">
           <Button type="submit" variant="primary" disabled={busy}>
-            {busy ? 'Unlocking…' : 'Unlock Leader Board'}
+            {busy ? 'Unlocking…' : 'Unlock board'}
           </Button>
-          <Button to="/directory" variant="secondary">
-            Return to Directory
+          <Button to="/" variant="secondary">
+            Back to home
           </Button>
         </div>
       </form>

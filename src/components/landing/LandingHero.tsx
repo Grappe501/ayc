@@ -6,21 +6,19 @@ export function LandingHero() {
       <div className="landing-hero__copy">
         <p className="landing__eyebrow landing-hero__eyebrow">Arkansas Youth Coalition</p>
         <h1 id="hero-heading">
-          Young Arkansans are not waiting for the future.
-          <br />
-          We are building it.
+          A home for young Arkansans ready to lead.
         </h1>
         <p className="landing-hero__support">
-          AYC is building a statewide network of young people ages 16–24 who are ready to organize,
-          vote, lead, gather, speak directly with policymakers, and turn youth priorities into
-          political action.
+          AYC is a statewide civic leadership network for ages 16–24 — college students, high school
+          students, and working-class young people building political power together. This is the
+          moment to get in at the start.
         </p>
         <div className="btn-row">
-          <Button to="/leader" variant="primary">
-            Enter the Leader Board
+          <Button to="/join" variant="primary">
+            Join AYC
           </Button>
-          <Button to="/directory" variant="secondary">
-            View the Leadership Directory
+          <Button to="#why" variant="secondary">
+            Why this matters
           </Button>
         </div>
       </div>

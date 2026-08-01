@@ -326,7 +326,7 @@ function TeamBoardGate() {
     return <Navigate to="/leader" replace />
   }
   return (
-    <RequireLeaderAccess>
+    <RequireLeaderAccess teamSlug={teamSlug}>
       <TeamBoard teamSlug={teamSlug} />
     </RequireLeaderAccess>
   )

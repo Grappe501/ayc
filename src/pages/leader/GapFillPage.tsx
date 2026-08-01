@@ -284,7 +284,7 @@ function GapFillBoard() {
 
 export function GapFillPage() {
   return (
-    <RequireLeaderAccess>
+    <RequireLeaderAccess requireStatewide>
       <GapFillBoard />
     </RequireLeaderAccess>
   )
