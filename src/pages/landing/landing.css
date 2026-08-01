@@ -81,7 +81,7 @@
 .mission-highlight {
   font-weight: 700;
   color: var(--color-primary-deep);
-  background: linear-gradient(transparent 62%, rgba(229, 163, 61, 0.35) 62%);
+  background: linear-gradient(transparent 62%, rgba(46, 90, 61, 0.28) 62%);
 }
 
 .mission-panel__callout {
