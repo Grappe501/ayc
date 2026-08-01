@@ -185,7 +185,7 @@
   min-height: var(--touch);
   min-width: var(--touch);
   border: 0;
-  background: rgba(46, 90, 61, 0.1);
+  background: rgba(53, 85, 50, 0.1);
   border-radius: var(--radius-pill);
   font-weight: 700;
   color: var(--color-secondary-deep);

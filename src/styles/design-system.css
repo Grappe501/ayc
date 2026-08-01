@@ -135,7 +135,7 @@
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0.7),
-    rgba(255, 107, 53, 0.55),
+    rgba(143, 30, 24, 0.55),
     transparent
   );
 }
@@ -179,8 +179,8 @@
   height: min(26rem, 70vw);
   border-radius: 50%;
   background:
-    radial-gradient(circle at 30% 30%, rgba(255, 107, 53, 0.22), transparent 55%),
-    radial-gradient(circle at 70% 60%, rgba(106, 90, 205, 0.16), transparent 60%);
+    radial-gradient(circle at 30% 30%, rgba(143, 30, 24, 0.22), transparent 55%),
+    radial-gradient(circle at 70% 60%, rgba(173, 198, 228, 0.16), transparent 60%);
   filter: blur(10px);
   pointer-events: none;
 }
@@ -189,8 +189,8 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(46, 90, 61, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(46, 90, 61, 0.05) 1px, transparent 1px);
+    linear-gradient(rgba(53, 85, 50, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(53, 85, 50, 0.05) 1px, transparent 1px);
   background-size: 28px 28px;
   mask-image: radial-gradient(ellipse 70% 60% at 70% 40%, black, transparent);
   pointer-events: none;
@@ -265,7 +265,7 @@
   align-items: center;
   padding: 0.35rem 0.75rem;
   border-radius: var(--radius-md);
-  background: rgba(46, 90, 61, 0.08);
+  background: rgba(53, 85, 50, 0.08);
   border: 1px solid var(--color-border-on-light);
   color: var(--color-text-muted-on-light);
   font-size: var(--text-small);
@@ -430,7 +430,7 @@
 .field input:hover,
 .field select:hover,
 .field textarea:hover {
-  border-color: rgba(46, 90, 61, 0.35);
+  border-color: rgba(53, 85, 50, 0.35);
 }
 
 .field input:focus,

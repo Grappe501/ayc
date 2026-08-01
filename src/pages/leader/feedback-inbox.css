@@ -40,7 +40,7 @@
 }
 
 .feedback-inbox__item:hover {
-  border-color: rgba(46, 90, 61, 0.28);
+  border-color: rgba(53, 85, 50, 0.28);
   box-shadow: var(--shadow-sm);
 }
 

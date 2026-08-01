@@ -201,7 +201,7 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--color-primary-deep);
-  background: linear-gradient(180deg, rgba(46, 90, 61, 0.08), rgba(46, 90, 61, 0.14));
+  background: linear-gradient(180deg, rgba(53, 85, 50, 0.08), rgba(53, 85, 50, 0.14));
 }
 
 .leader-roster-table td {
@@ -209,7 +209,7 @@
 }
 
 .leader-roster-table tbody tr:hover td {
-  background: rgba(46, 90, 61, 0.03);
+  background: rgba(53, 85, 50, 0.03);
 }
 
 .leader-gap {
@@ -252,7 +252,7 @@
   gap: 0.35rem;
   text-align: left;
   padding: var(--space-4);
-  border: 1px solid rgba(46, 90, 61, 0.18);
+  border: 1px solid rgba(53, 85, 50, 0.18);
   border-radius: var(--radius-md);
   background: var(--color-surface);
   color: var(--color-text-on-light);
@@ -266,7 +266,7 @@
 
 .duplicate-person-card--selected {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(46, 90, 61, 0.2);
+  box-shadow: 0 0 0 2px rgba(53, 85, 50, 0.2);
 }
 
 .duplicate-person-card__top {
@@ -313,8 +313,8 @@
 }
 
 .team-digest-card--needs-work {
-  border-color: rgba(255, 107, 53, 0.45);
-  box-shadow: 0 0 0 1px rgba(255, 107, 53, 0.12);
+  border-color: rgba(143, 30, 24, 0.45);
+  box-shadow: 0 0 0 1px rgba(143, 30, 24, 0.12);
 }
 
 .team-digest-issues {
@@ -337,8 +337,8 @@
   border-radius: var(--radius-md);
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(245, 245, 245, 0.88)),
-    linear-gradient(120deg, rgba(255, 107, 53, 0.08), rgba(0, 163, 255, 0.06));
-  border: 1px solid rgba(46, 90, 61, 0.14);
+    linear-gradient(120deg, rgba(143, 30, 24, 0.08), rgba(122, 155, 192, 0.06));
+  border: 1px solid rgba(53, 85, 50, 0.14);
   color: var(--color-text-on-light);
 }
 
@@ -370,7 +370,7 @@
   padding: var(--space-4);
   border-radius: var(--radius-md);
   background: var(--color-surface);
-  border: 1px solid rgba(46, 90, 61, 0.14);
+  border: 1px solid rgba(53, 85, 50, 0.14);
   color: var(--color-text-on-light);
 }
 
@@ -423,7 +423,7 @@
   padding: var(--space-4);
   border-radius: var(--radius-md);
   background: var(--color-surface);
-  border: 1px solid rgba(46, 90, 61, 0.14);
+  border: 1px solid rgba(53, 85, 50, 0.14);
   color: var(--color-text-on-light);
 }
 
@@ -431,7 +431,7 @@
   padding: var(--space-4);
   border-radius: var(--radius-md);
   background: var(--color-surface);
-  border: 1px solid rgba(46, 90, 61, 0.14);
+  border: 1px solid rgba(53, 85, 50, 0.14);
   color: var(--color-text-on-light);
 }
 
@@ -452,12 +452,12 @@
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
   background: var(--color-surface);
-  border: 1px solid rgba(46, 90, 61, 0.14);
+  border: 1px solid rgba(53, 85, 50, 0.14);
   color: var(--color-text-on-light);
 }
 
 .team-tasks__item--high {
-  border-color: rgba(255, 107, 53, 0.45);
+  border-color: rgba(143, 30, 24, 0.45);
 }
 
 .team-tasks__item--done {
@@ -516,7 +516,7 @@
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
   background: var(--color-surface);
-  border: 1px solid rgba(46, 90, 61, 0.14);
+  border: 1px solid rgba(53, 85, 50, 0.14);
   color: var(--color-text-on-light);
 }
 

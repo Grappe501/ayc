@@ -1,65 +1,81 @@
 :root {
-  /* Color — AYC brand palette (green canvas, light surfaces) */
-  --color-bg: #2e5a3d;
-  --color-bg-deep: #234832;
-  --color-bg-soft: #4a7a5c;
-  --color-bg-elevated: #355f44;
-  --color-surface: #f5f5f5;
-  --color-surface-elevated: #ffffff;
-  --color-primary: #2e5a3d;
-  --color-primary-deep: #1c3a28;
-  --color-primary-soft: #4a7a5c;
-  --color-primary-wash: rgba(46, 90, 61, 0.12);
-  --color-secondary: #ff6b35;
-  --color-secondary-deep: #e25520;
-  --color-secondary-soft: #ff8f66;
-  --color-secondary-wash: rgba(255, 107, 53, 0.14);
-  --color-tertiary: #7dd3ff;
-  --color-tertiary-deep: #00a3ff;
-  --color-tertiary-soft: #b3e6ff;
-  --color-tertiary-wash: rgba(0, 163, 255, 0.14);
-  --color-splash: #9b8ce8;
-  --color-splash-deep: #6a5acd;
-  --color-splash-soft: #b8aded;
-  --color-splash-wash: rgba(106, 90, 205, 0.16);
+  /*
+   * AYC brand palette — Onyx “all-star” base
+   * Hunter Green · crushed Berry · Papaya Whip · Onyx
+   * Blue Cotton (#ADC6E4) replaces Dusk Blue from the onyx chart
+   * Midnight Forest + Cream + Very Dark Red mixed from the 4-color chart
+   */
+  --ayc-hunter: #355532;
+  --ayc-midnight: #053b2d;
+  --ayc-berry: #8f1e18;
+  --ayc-berry-deep: #941704;
+  --ayc-papaya: #feebd1;
+  --ayc-cream: #f8f3ec;
+  --ayc-cotton: #adc6e4;
+  --ayc-onyx: #070c0f;
+
+  /* Color — green canvas, warm light surfaces */
+  --color-bg: var(--ayc-hunter);
+  --color-bg-deep: var(--ayc-midnight);
+  --color-bg-soft: #4a6b47;
+  --color-bg-elevated: #3d5f3a;
+  --color-surface: var(--ayc-cream);
+  --color-surface-elevated: var(--ayc-papaya);
+  --color-primary: var(--ayc-hunter);
+  --color-primary-deep: var(--ayc-midnight);
+  --color-primary-soft: #4a6b47;
+  --color-primary-wash: rgba(53, 85, 50, 0.14);
+  --color-secondary: var(--ayc-berry);
+  --color-secondary-deep: var(--ayc-berry-deep);
+  --color-secondary-soft: #a83a32;
+  --color-secondary-wash: rgba(143, 30, 24, 0.14);
+  --color-tertiary: var(--ayc-cotton);
+  --color-tertiary-deep: #7a9bc0;
+  --color-tertiary-soft: #c9daf0;
+  --color-tertiary-wash: rgba(173, 198, 228, 0.22);
+  /* Splash role → Blue Cotton (no purple) */
+  --color-splash: var(--ayc-cotton);
+  --color-splash-deep: #7a9bc0;
+  --color-splash-soft: #c9daf0;
+  --color-splash-wash: rgba(173, 198, 228, 0.2);
 
   /* Legacy aliases → new roles */
-  --color-gold: var(--color-surface);
-  --color-gold-soft: #ffffff;
+  --color-gold: var(--color-surface-elevated);
+  --color-gold-soft: var(--ayc-papaya);
   --color-clay: var(--color-secondary);
   --color-clay-deep: var(--color-secondary-deep);
   --color-clay-soft: var(--color-secondary-soft);
   --color-clay-wash: var(--color-secondary-wash);
   --color-blue: var(--color-tertiary-deep);
-  --color-blue-deep: #0082cc;
+  --color-blue-deep: #6d8cb0;
   --color-blue-soft: var(--color-tertiary);
   --color-green: var(--color-primary);
   --color-green-soft: var(--color-primary-soft);
-  --color-stone: rgba(245, 245, 245, 0.72);
-  --color-tan: #e8ebe9;
+  --color-stone: rgba(248, 243, 236, 0.72);
+  --color-tan: var(--ayc-papaya);
 
-  /* Page (dark green) text */
-  --color-text: #f5f5f5;
-  --color-text-muted: rgba(245, 245, 245, 0.78);
-  --color-text-inverse: #f5f5f5;
+  /* Page (dark green) text — warm light */
+  --color-text: var(--ayc-papaya);
+  --color-text-muted: rgba(254, 235, 209, 0.78);
+  --color-text-inverse: var(--ayc-papaya);
 
-  /* Light surface text */
-  --color-text-on-light: #1a1a1a;
-  --color-text-muted-on-light: #4a4a4a;
+  /* Light surface text — onyx */
+  --color-text-on-light: var(--ayc-onyx);
+  --color-text-muted-on-light: #3a403c;
 
-  --color-border: rgba(245, 245, 245, 0.18);
-  --color-border-strong: rgba(255, 107, 53, 0.45);
-  --color-border-on-light: rgba(26, 26, 26, 0.12);
-  --color-surface-tint: linear-gradient(180deg, #ffffff 0%, #f5f5f5 100%);
-  --color-highlight: rgba(255, 255, 255, 0.2);
-  --color-error: #ff8f66;
-  --color-error-soft: rgba(255, 107, 53, 0.18);
-  --color-warning: #ff8f66;
-  --color-warning-soft: rgba(255, 107, 53, 0.18);
-  --color-success: #8fd4a4;
-  --color-success-soft: rgba(143, 212, 164, 0.16);
-  --color-focus: #7dd3ff;
-  --color-accent: #ff6b35;
+  --color-border: rgba(254, 235, 209, 0.18);
+  --color-border-strong: rgba(143, 30, 24, 0.45);
+  --color-border-on-light: rgba(7, 12, 15, 0.12);
+  --color-surface-tint: linear-gradient(180deg, var(--ayc-papaya) 0%, var(--ayc-cream) 100%);
+  --color-highlight: rgba(254, 235, 209, 0.22);
+  --color-error: #c44a3a;
+  --color-error-soft: rgba(143, 30, 24, 0.16);
+  --color-warning: #c47a3a;
+  --color-warning-soft: rgba(196, 122, 58, 0.16);
+  --color-success: #8fbc8f;
+  --color-success-soft: rgba(143, 188, 143, 0.18);
+  --color-focus: var(--ayc-cotton);
+  --color-accent: var(--ayc-berry);
 
   /* Typography */
   --font-display: 'Bebas Neue', Impact, Haettenschweiler, sans-serif;
@@ -91,22 +107,22 @@
   --radius-xl: 1.75rem;
   --radius-pill: 999px;
 
-  /* Elevation — tuned for green canvas */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.18);
+  /* Elevation — tuned for hunter canvas */
+  --shadow-xs: 0 1px 2px rgba(7, 12, 15, 0.22);
   --shadow-sm:
-    0 1px 2px rgba(0, 0, 0, 0.16),
-    0 6px 18px rgba(0, 0, 0, 0.18);
+    0 1px 2px rgba(7, 12, 15, 0.18),
+    0 6px 18px rgba(7, 12, 15, 0.2);
   --shadow-md:
-    0 2px 6px rgba(0, 0, 0, 0.16),
-    0 14px 32px rgba(0, 0, 0, 0.22);
+    0 2px 6px rgba(7, 12, 15, 0.18),
+    0 14px 32px rgba(7, 12, 15, 0.24);
   --shadow-lg:
-    0 6px 12px rgba(0, 0, 0, 0.18),
-    0 24px 48px rgba(0, 0, 0, 0.28);
+    0 6px 12px rgba(7, 12, 15, 0.2),
+    0 24px 48px rgba(7, 12, 15, 0.3);
   --shadow-lift:
-    0 4px 10px rgba(255, 107, 53, 0.22),
-    0 16px 34px rgba(0, 0, 0, 0.28);
-  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.55);
-  --ring-focus: 0 0 0 3px rgba(125, 211, 255, 0.35);
+    0 4px 10px rgba(143, 30, 24, 0.28),
+    0 16px 34px rgba(7, 12, 15, 0.3);
+  --shadow-inset: inset 0 1px 0 rgba(254, 235, 209, 0.45);
+  --ring-focus: 0 0 0 3px rgba(173, 198, 228, 0.45);
 
   /* Layout */
   --max-width: 80rem;

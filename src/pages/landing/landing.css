@@ -138,11 +138,11 @@
   width: min(34rem, 80vw);
   height: min(34rem, 80vw);
   border-radius: 50%;
-  /* Soft warm wash — logo sits centered in this circle */
+  /* Soft papaya + cotton wash — logo sits centered in this circle */
   background: radial-gradient(
     circle at 50% 50%,
-    rgba(212, 175, 55, 0.22) 0%,
-    rgba(212, 175, 55, 0.1) 42%,
+    rgba(254, 235, 209, 0.28) 0%,
+    rgba(173, 198, 228, 0.14) 42%,
     transparent 68%
   );
   filter: blur(2px);
@@ -154,8 +154,8 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(46, 90, 61, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(46, 90, 61, 0.045) 1px, transparent 1px);
+    linear-gradient(rgba(5, 59, 45, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(5, 59, 45, 0.06) 1px, transparent 1px);
   background-size: 32px 32px;
   mask-image: radial-gradient(ellipse 75% 70% at 75% 30%, black, transparent);
   pointer-events: none;
@@ -254,7 +254,7 @@
 .mission-highlight {
   font-weight: 700;
   color: var(--color-primary-deep);
-  background: linear-gradient(transparent 62%, rgba(255, 107, 53, 0.28) 62%);
+  background: linear-gradient(transparent 62%, rgba(143, 30, 24, 0.28) 62%);
 }
 
 .mission-panel__callout {
@@ -290,7 +290,7 @@
   min-height: 2.5rem;
   margin-bottom: var(--space-3);
   border-radius: var(--radius-md);
-  background: linear-gradient(180deg, rgba(46, 90, 61, 0.1), rgba(46, 90, 61, 0.18));
+  background: linear-gradient(180deg, rgba(53, 85, 50, 0.1), rgba(53, 85, 50, 0.18));
   color: var(--color-primary-deep);
   font-family: var(--font-display);
   font-size: 1.25rem;
@@ -336,7 +336,7 @@
 .journey-step:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md), var(--shadow-inset);
-  border-color: rgba(106, 90, 205, 0.25);
+  border-color: rgba(173, 198, 228, 0.25);
 }
 
 .journey-step__word {
@@ -380,8 +380,8 @@
   padding: clamp(1.9rem, 4.5vw, 3.25rem);
   border-radius: var(--radius-xl);
   background:
-    radial-gradient(ellipse 60% 80% at 100% 0%, rgba(255, 107, 53, 0.32), transparent 50%),
-    radial-gradient(ellipse 50% 60% at 0% 100%, rgba(46, 90, 61, 0.22), transparent 55%),
+    radial-gradient(ellipse 60% 80% at 100% 0%, rgba(143, 30, 24, 0.32), transparent 50%),
+    radial-gradient(ellipse 50% 60% at 0% 100%, rgba(53, 85, 50, 0.22), transparent 55%),
     linear-gradient(145deg, var(--color-splash) 0%, var(--color-splash-deep) 100%);
   color: var(--color-text-inverse);
   box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.18);

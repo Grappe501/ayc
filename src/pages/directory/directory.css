@@ -124,11 +124,11 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--color-primary-deep);
-  background: linear-gradient(180deg, rgba(46, 90, 61, 0.08), rgba(46, 90, 61, 0.14));
+  background: linear-gradient(180deg, rgba(53, 85, 50, 0.08), rgba(53, 85, 50, 0.14));
 }
 
 .directory-table tbody tr:hover td {
-  background: rgba(46, 90, 61, 0.03);
+  background: rgba(53, 85, 50, 0.03);
 }
 
 .directory-table tr:last-child td {
