@@ -316,7 +316,8 @@ function SegmentBoard({ segment }: { segment: SegmentSlug }) {
       <Section id="develop" title="Develop local leads">
         <p className="field__hint" style={{ marginBottom: '1rem' }}>
           Primary queue: local lead candidates and people marked ready to lead. Open the contact to
-          adjust pipeline tags; open the location TEAM board to place them in context.
+          adjust pipeline tags or grant a Location Lead role (master key). Open the location TEAM
+          board to place them in context.
         </p>
         {loading ? <LoadingState label="Loading develop queue…" /> : null}
         {!loading && developQueue.length === 0 ? (

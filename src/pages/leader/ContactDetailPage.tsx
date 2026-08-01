@@ -4,10 +4,12 @@ import { Badge, Button, Card, LoadingState, PageHeader, Section, Tag } from '@/c
 import { ArchiveContactDialog } from '@/features/leader/ArchiveContactDialog'
 import { ContactForm } from '@/features/leader/ContactForm'
 import { initialFromDetail } from '@/features/leader/contactFormInitial'
+import { LeadershipRolesPanel } from '@/features/leader/LeadershipRolesPanel'
 import { PipelineTagsEditor } from '@/features/leader/PipelineTagsEditor'
 import { pipelineTagLabel } from '@/features/leader/pipelineLabels'
 import { RequireLeaderAccess } from '@/features/leader/RequireLeaderAccess'
 import { RestoreContactDialog } from '@/features/leader/RestoreContactDialog'
+import { getLeaderScope } from '@/features/leader/leaderSession'
 import {
   fetchContact,
   type ContactDetail,
@@ -232,6 +234,21 @@ function ContactDetailView() {
               onSaved={(tags) => setContact((current) => (current ? { ...current, pipelineTags: tags } : current))}
             />
           ) : null}
+        </Card>
+      </Section>
+
+      <Section id="roles" title="Leadership roles">
+        <Card>
+          <LeadershipRolesPanel
+            personId={contact.id}
+            roles={contact.leadershipRoles ?? []}
+            locationId={contact.location?.id}
+            canGrant={getLeaderScope()?.kind === 'master'}
+            disabled={archived}
+            onChange={(roles) =>
+              setContact((current) => (current ? { ...current, leadershipRoles: roles } : current))
+            }
+          />
         </Card>
       </Section>
 

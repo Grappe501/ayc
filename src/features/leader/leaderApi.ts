@@ -423,6 +423,7 @@ export type ContactDetail = {
   textReady: boolean
   needsPreferred: boolean
   pipelineTags: string[]
+  leadershipRoles: LeadershipRole[]
   createdAt: string
   updatedAt: string
   archivedAt: string | null
@@ -463,6 +464,19 @@ export type ContactDetail = {
     changeSummary: string
     createdAt: string
   }>
+}
+
+export type LeadershipRole = {
+  id: string
+  roleCode: string
+  teamSlug: string | null
+  teamName: string | null
+  locationId: string | null
+  locationName: string | null
+  locationCode: string | null
+  segment: string | null
+  isPrimary: boolean
+  grantedAt: string
 }
 
 export function createContact(body: Record<string, unknown>) {
@@ -568,4 +582,25 @@ export function mergeContacts(body: {
     }
     contact: ContactDetail | null
   }>('merge-contacts', { method: 'POST', body: JSON.stringify(body) })
+}
+
+export function grantLeadershipRole(body: {
+  personId: string
+  roleCode: string
+  teamSlug?: string | null
+  locationId?: string | null
+  segment?: string | null
+  isPrimary?: boolean
+}) {
+  return request<{ status: 'granted'; role: LeadershipRole }>('leadership-roles', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
+}
+
+export function revokeLeadershipRole(roleId: string) {
+  return request<{ id: string; status: 'revoked' }>('leadership-roles', {
+    method: 'PATCH',
+    body: JSON.stringify({ id: roleId }),
+  })
 }

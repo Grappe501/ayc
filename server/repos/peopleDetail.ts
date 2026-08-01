@@ -9,6 +9,7 @@ import {
   teams,
 } from '../db/schema.ts'
 import { computeContactReachFlags } from '../domain/textReady.ts'
+import { listLeadershipRolesForPerson } from '../services/leadershipRoleService.ts'
 import { listPipelineTagsForPerson } from '../services/pipelineTagService.ts'
 import { listAuditEventsForEntity } from './audit.ts'
 
@@ -25,6 +26,18 @@ export type ContactDetail = {
   textReady: boolean
   needsPreferred: boolean
   pipelineTags: string[]
+  leadershipRoles: Array<{
+    id: string
+    roleCode: string
+    teamSlug: string | null
+    teamName: string | null
+    locationId: string | null
+    locationName: string | null
+    locationCode: string | null
+    segment: string | null
+    isPrimary: boolean
+    grantedAt: Date
+  }>
   createdAt: Date
   updatedAt: Date
   archivedAt: Date | null
@@ -147,6 +160,7 @@ export async function getContactDetail(
     phoneConsent: phoneRow?.consentStatus ?? null,
   })
   const pipelineTags = await listPipelineTagsForPerson(db, personId)
+  const leadershipRoles = await listLeadershipRolesForPerson(db, personId)
 
   return {
     id: person.id,
@@ -161,6 +175,7 @@ export async function getContactDetail(
     textReady: flags.textReady,
     needsPreferred: flags.needsPreferred,
     pipelineTags,
+    leadershipRoles,
     createdAt: person.createdAt,
     updatedAt: person.updatedAt,
     archivedAt: person.archivedAt,

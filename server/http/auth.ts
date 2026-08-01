@@ -1,5 +1,13 @@
 import { timingSafeEqual } from 'node:crypto'
 import type { HandlerEvent } from '@netlify/functions'
+import {
+  scopeCanAccessLocationCategoryBoard as lawLocationCategory,
+  scopeCanAccessLocationTeamBoard as lawLocationTeam,
+  scopeCanAccessSegmentBoard as lawSegment,
+  scopeCanAccessStatewideLeaderBoard as lawStatewide,
+  scopeCanAccessTeamBoard as lawTeamBoard,
+  type UnlockScopeLike,
+} from '../../shared/access/canAccessBoard.ts'
 
 const HEADER = 'x-ayc-leader-write-secret'
 
@@ -58,7 +66,6 @@ export function listRegisteredKeys(): RegisteredKey[] {
   for (const entry of categories) {
     const secret = env(entry.env)
     if (!secret) continue
-    // Skip duplicates of master so Chance’s key does not also register as a category seat.
     if (master && secretsMatch(secret, master)) continue
     keys.push({
       secret,
@@ -157,53 +164,38 @@ export function verifyUnlockCode(code: string):
   return { ok: true, scope: match.scope }
 }
 
+function asLawScope(scope: UnlockScope): UnlockScopeLike {
+  return scope
+}
+
+/** Phase 2G — key scope checks go through canAccessBoard product law. */
 export function scopeCanAccessTeamBoard(scope: UnlockScope, teamSlug: string): boolean {
-  if (scope.kind === 'master') return true
-  if (scope.kind === 'segment') return false
-  if (scope.teamSlug === teamSlug) return true
-  // Social Media Campaign Lead also unlocks Graphic Design secondary board.
-  if (scope.teamSlug === 'social-media' && teamSlug === 'graphic-design') return true
-  return false
+  return lawTeamBoard(asLawScope(scope), teamSlug)
 }
 
 export function scopeCanAccessStatewideLeaderBoard(scope: UnlockScope): boolean {
-  return scope.kind === 'master' || scope.kind === 'segment'
+  return lawStatewide(asLawScope(scope))
 }
 
 export function scopeCanAccessSegmentBoard(
   scope: UnlockScope,
   segment: 'high-school' | 'working-class',
 ): boolean {
-  if (scope.kind === 'master') return true
-  return scope.kind === 'segment' && scope.segment === segment
+  return lawSegment(asLawScope(scope), segment)
 }
 
-/** Location TEAM board — master, category leads (not GD), matching segment. */
 export function scopeCanAccessLocationTeamBoard(
   scope: UnlockScope,
   locationType: string,
+  locationId?: string,
 ): boolean {
-  if (scope.kind === 'master') return true
-  if (scope.kind === 'category') {
-    return scope.teamSlug !== 'graphic-design'
-  }
-  if (scope.kind === 'segment') {
-    if (scope.segment === 'high-school') return locationType === 'HIGH_SCHOOL'
-    if (scope.segment === 'working-class') return locationType === 'COUNTY'
-  }
-  return false
+  return lawLocationTeam(asLawScope(scope), locationType, locationId)
 }
 
-/** Location category board — master or matching category key (not GD / not segment). */
 export function scopeCanAccessLocationCategoryBoard(
   scope: UnlockScope,
   teamSlug: string,
+  locationId?: string,
 ): boolean {
-  if (scope.kind === 'master') return true
-  if (scope.kind === 'segment') return false
-  if (scope.kind === 'category') {
-    if (scope.teamSlug === 'graphic-design') return false
-    return scope.teamSlug === teamSlug
-  }
-  return false
+  return lawLocationCategory(asLawScope(scope), teamSlug, locationId)
 }

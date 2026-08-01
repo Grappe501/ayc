@@ -24,12 +24,13 @@
 - Hierarchical keys including optional `AYC_KEY_GRAPHIC_DESIGN`  
 - Location TEAM + five location category boards per location (`/leader/locations/*`)  
 - HS / WC segment workspaces with develop-local-leads queues + location coverage  
+- Scope engine `canAccessBoard` + person leadership role grants (keys remain for unlock)  
 
 ## Phase 2 still deferred
 
 Canonical plan: `docs/master-build-plan/10-PHASE-2-MASTER-PLAN.md`
 
-- Person-linked `canAccessBoard` (2G) — keys remain until then  
+- Per-person unlock / OAuth accounts (identity path after keys)  
 - Membership applications inbox (2B), notify email (2C)  
 - Nested calendars (CAL track), reports hub (2H)  
 - Location-level Graphic Design boards (GD stays statewide)
