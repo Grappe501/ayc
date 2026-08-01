@@ -6,21 +6,24 @@
   min-height: var(--touch);
   display: inline-flex;
   align-items: center;
-  padding: 0.7rem 1.1rem;
+  padding: 0.7rem 1.15rem;
   border-radius: var(--radius-pill);
-  background: var(--color-secondary);
+  background: linear-gradient(180deg, var(--color-secondary-soft), var(--color-secondary));
   color: var(--color-text-inverse);
   text-decoration: none;
   font-weight: 700;
   font-size: var(--text-small);
-  box-shadow: var(--shadow-md);
-  transition: background var(--duration) var(--ease), transform var(--duration-fast) var(--ease);
+  box-shadow: var(--shadow-lift), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition:
+    background var(--duration) var(--ease),
+    transform var(--duration-fast) var(--ease),
+    box-shadow var(--duration) var(--ease);
 }
 
 .beta-fab:hover {
   color: var(--color-text-inverse);
-  background: var(--color-secondary-deep);
-  transform: translateY(-1px);
+  background: linear-gradient(180deg, var(--color-secondary), var(--color-secondary-deep));
+  transform: translateY(-2px);
 }
 
 @media (prefers-reduced-motion: reduce) {

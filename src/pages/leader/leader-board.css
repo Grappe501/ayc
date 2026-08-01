@@ -68,16 +68,23 @@
   color: var(--color-text);
   text-decoration: none;
   font-size: var(--text-small);
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--duration-fast) var(--ease),
+    background var(--duration-fast) var(--ease),
+    box-shadow var(--duration-fast) var(--ease);
 }
 
 .team-board-switcher__link:hover {
-  border-color: var(--color-clay);
+  border-color: var(--color-secondary);
+  box-shadow: var(--shadow-sm);
 }
 
 .team-board-switcher__link--active {
-  border-color: var(--color-clay);
-  background: var(--color-clay-wash);
+  border-color: var(--color-secondary);
+  background: var(--color-secondary-wash);
   font-weight: 600;
+  box-shadow: var(--shadow-sm);
 }
 
 .team-board-switcher__mark {
@@ -136,6 +143,11 @@
   background: var(--color-surface);
   color: var(--color-text);
   cursor: pointer;
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--duration-fast) var(--ease),
+    background var(--duration-fast) var(--ease),
+    box-shadow var(--duration-fast) var(--ease);
 }
 
 .gap-fill-queue__item span {
@@ -144,8 +156,9 @@
 }
 
 .gap-fill-queue__item--active {
-  border-color: var(--color-clay);
-  background: var(--color-clay-wash);
+  border-color: var(--color-secondary);
+  background: var(--color-secondary-wash);
+  box-shadow: var(--shadow-sm);
 }
 
 .leader-attention {
@@ -165,6 +178,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
+  box-shadow: var(--shadow-sm), var(--shadow-inset);
 }
 
 .leader-roster-table {
@@ -185,12 +199,16 @@
   font-size: var(--text-micro);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--color-text-muted);
-  background: var(--color-clay-wash);
+  color: var(--color-primary-deep);
+  background: linear-gradient(180deg, rgba(46, 90, 61, 0.08), rgba(46, 90, 61, 0.14));
+}
+
+.leader-roster-table tbody tr:hover td {
+  background: rgba(46, 90, 61, 0.03);
 }
 
 .leader-gap {
-  color: var(--color-clay);
+  color: var(--color-secondary);
   font-size: var(--text-small);
   font-weight: 600;
 }

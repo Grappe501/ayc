@@ -18,6 +18,7 @@
   gap: 0.5rem;
   max-height: 36rem;
   overflow: auto;
+  padding-right: 0.15rem;
 }
 
 .feedback-inbox__item {
@@ -31,11 +32,22 @@
   background: var(--color-surface);
   color: var(--color-text);
   cursor: pointer;
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--duration-fast) var(--ease),
+    background var(--duration-fast) var(--ease),
+    box-shadow var(--duration-fast) var(--ease);
+}
+
+.feedback-inbox__item:hover {
+  border-color: rgba(46, 90, 61, 0.28);
+  box-shadow: var(--shadow-sm);
 }
 
 .feedback-inbox__item--active {
-  border-color: var(--color-clay);
-  background: var(--color-clay-wash);
+  border-color: var(--color-secondary);
+  background: var(--color-secondary-wash);
+  box-shadow: var(--shadow-sm);
 }
 
 .feedback-inbox__item-top {
@@ -62,9 +74,11 @@
 .feedback-inbox__description {
   margin: 1rem 0;
   padding: 0.85rem 1rem;
-  border-left: 3px solid var(--color-tan);
-  background: rgba(215, 201, 177, 0.25);
+  border-left: 3px solid var(--color-primary);
+  background: var(--color-primary-wash);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
   white-space: pre-wrap;
+  box-shadow: var(--shadow-xs);
 }
 
 .feedback-inbox__form {

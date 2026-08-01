@@ -16,16 +16,22 @@ body {
   line-height: var(--leading-body);
   color: var(--color-text);
   background:
-    radial-gradient(ellipse 70% 45% at 0% -8%, rgba(46, 90, 61, 0.14), transparent 55%),
-    radial-gradient(ellipse 50% 40% at 100% 0%, rgba(106, 90, 205, 0.1), transparent 50%),
-    radial-gradient(ellipse 40% 30% at 85% 100%, rgba(255, 107, 53, 0.08), transparent 55%),
-    linear-gradient(180deg, #ffffff 0%, var(--color-bg) 45%, #ececec 100%);
+    radial-gradient(ellipse 72% 48% at 0% -6%, rgba(46, 90, 61, 0.16), transparent 56%),
+    radial-gradient(ellipse 48% 38% at 100% 0%, rgba(106, 90, 205, 0.11), transparent 52%),
+    radial-gradient(ellipse 42% 32% at 88% 100%, rgba(255, 107, 53, 0.09), transparent 55%),
+    linear-gradient(180deg, #ffffff 0%, var(--color-bg) 38%, #ebebeb 100%);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 #root {
   min-height: 100vh;
+}
+
+::selection {
+  background: rgba(46, 90, 61, 0.22);
+  color: var(--color-text);
 }
 
 img {
@@ -36,6 +42,7 @@ img {
 a {
   color: var(--color-tertiary);
   text-decoration: none;
+  transition: color var(--duration-fast) var(--ease);
 }
 
 a:hover {
@@ -52,6 +59,7 @@ h4 {
   line-height: var(--leading-tight);
   color: var(--color-primary-deep);
   margin: 0 0 var(--space-4);
+  text-wrap: balance;
 }
 
 h1 {
@@ -68,6 +76,7 @@ h3 {
 
 p {
   margin: 0 0 var(--space-4);
+  text-wrap: pretty;
 }
 
 button,
@@ -97,7 +106,7 @@ textarea {
 @keyframes ayc-fade-up {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
