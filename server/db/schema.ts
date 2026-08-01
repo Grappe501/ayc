@@ -177,6 +177,27 @@ export const auditEvents = pgTable(
   ],
 )
 
+export const personMergeHistory = pgTable(
+  'person_merge_history',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    survivingPersonId: uuid('surviving_person_id')
+      .notNull()
+      .references(() => people.id),
+    mergedPersonId: uuid('merged_person_id')
+      .notNull()
+      .references(() => people.id),
+    mergedAt: timestamp('merged_at', { withTimezone: true }).notNull().defaultNow(),
+    mergedByActor: text('merged_by_actor'),
+    reason: text('reason'),
+    summary: text('summary'),
+  },
+  (table) => [
+    uniqueIndex('person_merge_history_merged_uidx').on(table.mergedPersonId),
+    index('person_merge_history_surviving_idx').on(table.survivingPersonId, table.mergedAt),
+  ],
+)
+
 export const schemaMigrations = pgTable('schema_migrations', {
   id: text('id').primaryKey(),
   appliedAt: timestamp('applied_at', { withTimezone: true }).notNull().defaultNow(),

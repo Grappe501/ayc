@@ -27,5 +27,12 @@ describe('SQL migrations', () => {
     expect(files[0]).toBe('000_placeholder.sql')
     expect(files).toContain('001_init.sql')
     expect(files).toContain('002_join_form_source.sql')
+    expect(files).toContain('003_person_merge.sql')
+  })
+
+  it('defines person_merge_history in 003_person_merge', () => {
+    const sql = readFileSync(path.join(migrationsDir, '003_person_merge.sql'), 'utf8')
+    expect(sql).toContain('CREATE TABLE IF NOT EXISTS person_merge_history')
+    expect(sql).toContain('PERSON_MERGED')
   })
 })

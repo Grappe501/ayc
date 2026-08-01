@@ -107,6 +107,9 @@ function LeaderBoard() {
             <Button to="/leader/gaps" variant="primary">
               Fill contact gaps
             </Button>
+            <Button to="/leader/duplicates" variant="secondary">
+              Review duplicates
+            </Button>
             <Button to="/leader/feedback" variant="secondary">
               Feedback inbox
             </Button>
@@ -169,32 +172,28 @@ function LeaderBoard() {
       </Section>
 
       <Section id="attention" title="Needs attention">
-        {attention.missingContact === 0 &&
-        attention.prospective === 0 &&
-        attention.joinForm === 0 ? (
-          <p className="field__hint">Nothing needs attention right now.</p>
-        ) : (
-          <div className="leader-attention">
-            {attention.joinForm > 0 ? (
-              <Card>
-                <Tag>Join form</Tag>
-                <h3>{attention.joinForm} new join applications</h3>
-                <p>
-                  Public `/join` signups land here as <strong>Prospective</strong> on their chosen
-                  team board. Open the record, confirm details, then activate.
-                </p>
-                <Button
-                  type="button"
-                  variant="primary"
-                  onClick={() => {
-                    setStatusFilter('PROSPECTIVE')
-                    setGapsOnly(false)
-                  }}
-                >
-                  Show join prospectives
-                </Button>
-              </Card>
-            ) : null}
+        <div className="leader-attention">
+          {attention.joinForm > 0 ? (
+            <Card>
+              <Tag>Join form</Tag>
+              <h3>{attention.joinForm} new join applications</h3>
+              <p>
+                Public `/join` signups land here as <strong>Prospective</strong> on their chosen
+                team board. Open the record, confirm details, then activate.
+              </p>
+              <Button
+                type="button"
+                variant="primary"
+                onClick={() => {
+                  setStatusFilter('PROSPECTIVE')
+                  setGapsOnly(false)
+                }}
+              >
+                Show join prospectives
+              </Button>
+            </Card>
+          ) : null}
+          {attention.missingContact > 0 ? (
             <Card>
               <Tag>Contact gaps</Tag>
               <h3>{attention.missingContact} missing phone & email</h3>
@@ -215,6 +214,18 @@ function LeaderBoard() {
                 </Button>
               </div>
             </Card>
+          ) : null}
+          <Card>
+            <Tag>Duplicates</Tag>
+            <h3>Review possible duplicate people</h3>
+            <p>
+              Exact email/phone and same-name matches can be merged into one survivor record.
+            </p>
+            <Button to="/leader/duplicates" variant="primary">
+              Open duplicate review
+            </Button>
+          </Card>
+          {attention.prospective > 0 ? (
             <Card>
               <Tag>Prospective</Tag>
               <h3>{attention.prospective} prospective records</h3>
@@ -230,8 +241,8 @@ function LeaderBoard() {
                 Show prospective
               </Button>
             </Card>
-          </div>
-        )}
+          ) : null}
+        </div>
       </Section>
 
       <Section id="roster" title="Contact list">

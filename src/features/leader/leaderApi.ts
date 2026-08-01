@@ -332,3 +332,55 @@ export function restoreContact(body: { id: string; status: string }) {
     { method: 'POST', body: JSON.stringify(body) },
   )
 }
+
+export type DuplicateQueuePerson = {
+  id: string
+  displayName: string
+  firstName: string
+  lastName: string
+  preferredName: string | null
+  status: string
+  source: string
+  createdAt: string
+  email: string | null
+  phone: string | null
+  location: { id: string; code: string; name: string } | null
+  primaryTeam: { id: string; name: string; slug: string; position: string } | null
+}
+
+export type DuplicateQueueItem = {
+  key: string
+  result: 'EXACT_MATCH' | 'LIKELY_MATCH' | 'POSSIBLE_MATCH'
+  reasons: string[]
+  suggestedSurvivorId: string
+  left: DuplicateQueuePerson
+  right: DuplicateQueuePerson
+}
+
+export function fetchDuplicateQueue() {
+  return request<{
+    total: number
+    exact: number
+    likely: number
+    possible: number
+    items: DuplicateQueueItem[]
+  }>('duplicate-queue')
+}
+
+export function mergeContacts(body: {
+  survivingPersonId: string
+  mergedPersonId: string
+  reason?: string
+}) {
+  return request<{
+    survivingPersonId: string
+    mergedPersonId: string
+    summary: string
+    moved: {
+      contactMethods: number
+      affiliations: number
+      teamAssignments: number
+    }
+    contact: ContactDetail | null
+  }>('merge-contacts', { method: 'POST', body: JSON.stringify(body) })
+}
