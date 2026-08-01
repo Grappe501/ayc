@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useEffect, useState, type FormEvent } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import {
   Button,
   Card,
@@ -9,69 +9,34 @@ import {
   PageHeader,
   Section,
   Select,
-  Tag,
   Textarea,
 } from '@/components/ui'
 import { TEAMS } from '@/content/ayc'
+import { CalendarBoard } from '@/features/calendar/CalendarBoard'
+import {
+  rangeForView,
+  startOfMonth,
+  type CalendarViewMode,
+} from '@/features/calendar/calendarDates'
 import { RequireLeaderAccess } from '@/features/leader/RequireLeaderAccess'
 import { clearLeaderSession } from '@/features/leader/leaderSession'
 import {
   createCalendarEvent,
   downloadCalendarIcs,
   fetchCalendarEvents,
-  fetchEventRsvps,
-  fetchLeaderRoster,
-  inviteEventRsvps,
-  removeEventRsvp,
-  setEventRsvp,
-  updateCalendarEvent,
   type CalendarBoardRef,
   type CalendarEventItem,
-  type CalendarRsvpCounts,
-  type CalendarRsvpItem,
-  type LeaderRosterRow,
 } from '@/features/leader/leaderApi'
 import './leader-board.css'
 import './calendar.css'
-
-function formatRsvpCounts(counts: CalendarRsvpCounts) {
-  if (counts.total === 0) return 'No RSVPs'
-  return `${counts.yes} yes · ${counts.maybe} maybe · ${counts.no} no · ${counts.invited} invited`
-}
-
-function startOfMonth(date: Date) {
-  return new Date(date.getFullYear(), date.getMonth(), 1)
-}
-
-function endOfMonth(date: Date) {
-  return new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59, 999)
-}
 
 function toLocalInputValue(date: Date) {
   const pad = (n: number) => String(n).padStart(2, '0')
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`
 }
 
-function formatWhen(event: CalendarEventItem) {
-  const start = new Date(event.startsAt)
-  const end = new Date(event.endsAt)
-  if (event.allDay) {
-    return start.toLocaleDateString(undefined, {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-    })
-  }
-  return `${start.toLocaleString(undefined, {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-  })} – ${end.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}`
-}
-
 function CalendarHub() {
+  const navigate = useNavigate()
   const [params, setParams] = useSearchParams()
   const boardSlug = params.get('board') ?? (params.get('locationId') ? undefined : 'main')
   const locationId = params.get('locationId') ?? undefined
@@ -79,7 +44,7 @@ function CalendarHub() {
   const mode = params.get('mode') === 'own' ? 'own' : 'rollup'
 
   const [cursor, setCursor] = useState(() => startOfMonth(new Date()))
-  const [view, setView] = useState<'month' | 'list'>('list')
+  const [view, setView] = useState<CalendarViewMode>('month')
   const [board, setBoard] = useState<CalendarBoardRef | null>(null)
   const [events, setEvents] = useState<CalendarEventItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -87,12 +52,6 @@ function CalendarHub() {
   const [busy, setBusy] = useState(false)
   const [toast, setToast] = useState('')
   const [reload, setReload] = useState(0)
-  const [selectedEventId, setSelectedEventId] = useState<string | null>(null)
-  const [rsvps, setRsvps] = useState<CalendarRsvpItem[]>([])
-  const [rsvpCounts, setRsvpCounts] = useState<CalendarRsvpCounts | null>(null)
-  const [rsvpLoading, setRsvpLoading] = useState(false)
-  const [inviteQ, setInviteQ] = useState('')
-  const [inviteResults, setInviteResults] = useState<LeaderRosterRow[]>([])
 
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -122,15 +81,14 @@ function CalendarHub() {
     ;(async () => {
       setLoading(true)
       setError('')
-      const from = startOfMonth(cursor).toISOString()
-      const to = endOfMonth(cursor).toISOString()
+      const { from, to } = rangeForView(view, cursor)
       const result = await fetchCalendarEvents({
         boardSlug,
         locationId,
         teamSlug,
         mode,
-        from,
-        to,
+        from: from.toISOString(),
+        to: to.toISOString(),
       })
       if (cancelled) return
       if (!result.ok) {
@@ -147,74 +105,7 @@ function CalendarHub() {
     return () => {
       cancelled = true
     }
-  }, [boardSlug, locationId, teamSlug, mode, cursor, reload])
-
-  const selectedEvent = events.find((item) => item.id === selectedEventId) ?? null
-
-  useEffect(() => {
-    if (!selectedEventId) {
-      setRsvps([])
-      setRsvpCounts(null)
-      return
-    }
-    let cancelled = false
-    ;(async () => {
-      setRsvpLoading(true)
-      const result = await fetchEventRsvps(selectedEventId)
-      if (cancelled) return
-      if (!result.ok) {
-        setError(result.error.message)
-        setRsvpLoading(false)
-        return
-      }
-      setRsvps(result.data.rsvps)
-      setRsvpCounts(result.data.counts)
-      setRsvpLoading(false)
-    })()
-    return () => {
-      cancelled = true
-    }
-  }, [selectedEventId, reload])
-
-  useEffect(() => {
-    const q = inviteQ.trim()
-    if (!q || q.length < 2) {
-      setInviteResults([])
-      return
-    }
-    const handle = window.setTimeout(() => {
-      void (async () => {
-        const result = await fetchLeaderRoster({ q })
-        if (!result.ok) return
-        const already = new Set(rsvps.map((row) => row.personId))
-        setInviteResults(
-          result.data.people.filter((person) => !already.has(person.id)).slice(0, 8),
-        )
-      })()
-    }, 300)
-    return () => window.clearTimeout(handle)
-  }, [inviteQ, rsvps])
-
-  const days = useMemo(() => {
-    const first = startOfMonth(cursor)
-    const startWeekday = first.getDay()
-    const daysInMonth = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate()
-    const cells: Array<{ date: Date | null; events: CalendarEventItem[] }> = []
-    for (let i = 0; i < startWeekday; i += 1) cells.push({ date: null, events: [] })
-    for (let day = 1; day <= daysInMonth; day += 1) {
-      const date = new Date(cursor.getFullYear(), cursor.getMonth(), day)
-      const dayEvents = events.filter((event) => {
-        const start = new Date(event.startsAt)
-        return (
-          start.getFullYear() === date.getFullYear() &&
-          start.getMonth() === date.getMonth() &&
-          start.getDate() === date.getDate()
-        )
-      })
-      cells.push({ date, events: dayEvents })
-    }
-    return cells
-  }, [cursor, events])
+  }, [boardSlug, locationId, teamSlug, mode, cursor, view, reload])
 
   function setBoardParam(next: string) {
     const nextParams = new URLSearchParams()
@@ -225,6 +116,15 @@ function CalendarHub() {
     }
     if (mode === 'own') nextParams.set('mode', 'own')
     setParams(nextParams)
+  }
+
+  function openEvent(item: { id: string; startsAt: string }) {
+    const qs = new URLSearchParams()
+    if (boardSlug) qs.set('board', boardSlug)
+    if (locationId) qs.set('locationId', locationId)
+    if (teamSlug) qs.set('teamSlug', teamSlug)
+    qs.set('occurrence', item.startsAt)
+    navigate(`/leader/calendar/event/${item.id}?${qs.toString()}`)
   }
 
   async function onCreate(event: FormEvent) {
@@ -264,56 +164,8 @@ function CalendarHub() {
     setRecurrenceCount('')
     setRecurrenceUntil('')
     setToast(
-      recurrenceFrequency === 'NONE'
-        ? visibility === 'PUBLIC'
-          ? 'Public event created.'
-          : 'Event created on this board calendar.'
-        : visibility === 'PUBLIC'
-          ? 'Public recurring event created.'
-          : 'Recurring event created.',
+      visibility === 'PUBLIC' ? 'Public event created.' : 'Event created on this board calendar.',
     )
-    setReload((n) => n + 1)
-  }
-
-  async function toggleVisibility(item: CalendarEventItem) {
-    const next = item.visibility === 'PUBLIC' ? 'INTERNAL' : 'PUBLIC'
-    setBusy(true)
-    setError('')
-    const result = await updateCalendarEvent({
-      id: item.id,
-      visibility: next,
-    })
-    setBusy(false)
-    if (!result.ok) {
-      setError(result.error.message)
-      return
-    }
-    setToast(next === 'PUBLIC' ? 'Event is now public.' : 'Event is internal only.')
-    setReload((n) => n + 1)
-  }
-
-  async function cancelEvent(item: CalendarEventItem, scope: 'one' | 'series') {
-    setBusy(true)
-    setError('')
-    const result = await updateCalendarEvent({
-      id: item.id,
-      cancelScope: item.isRecurring ? scope : 'series',
-      occurrenceStartsAt: item.occurrenceStartsAt,
-      status: scope === 'series' || !item.isRecurring ? 'CANCELLED' : undefined,
-    })
-    setBusy(false)
-    if (!result.ok) {
-      setError(result.error.message)
-      return
-    }
-    setToast(
-      scope === 'one' && item.isRecurring
-        ? 'This occurrence cancelled.'
-        : 'Event series cancelled.',
-    )
-    if (selectedEventId === item.id && scope === 'series') {
-      setSelectedEventId(null)
-    }
     setReload((n) => n + 1)
   }
 
@@ -322,7 +174,7 @@ function CalendarHub() {
       <PageHeader
         eyebrow="Nested calendars"
         title={board ? board.calendarName : 'Calendar'}
-        lede="Events are written once to a source board. Higher boards roll up descendants by query — nothing is copied."
+        lede="Month, week, and day views. Click an event title to open full details and RSVPs."
         actions={
           <>
             <Button to="/calendar" variant="secondary">
@@ -330,9 +182,6 @@ function CalendarHub() {
             </Button>
             <Button to="/leader" variant="secondary">
               Leader Board
-            </Button>
-            <Button to="/leader/reports" variant="secondary">
-              Reports
             </Button>
             <Button
               type="button"
@@ -384,72 +233,38 @@ function CalendarHub() {
             <option value="own">This board only</option>
           </Select>
         </Field>
-        <Field id="cal-view" label="Display">
-          <Select
-            id="cal-view"
-            value={view}
-            onChange={(e) => setView(e.target.value as 'month' | 'list')}
+        <div className="btn-row" style={{ alignSelf: 'end' }}>
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={busy || loading}
+            onClick={() => {
+              void (async () => {
+                setBusy(true)
+                setError('')
+                const { from } = rangeForView(view, cursor)
+                const to = new Date(from)
+                to.setMonth(to.getMonth() + 6)
+                const result = await downloadCalendarIcs({
+                  boardSlug,
+                  locationId,
+                  teamSlug,
+                  mode,
+                  from: from.toISOString(),
+                  to: to.toISOString(),
+                })
+                setBusy(false)
+                if (!result.ok) {
+                  setError(result.error.message)
+                  return
+                }
+                setToast('ICS calendar downloaded.')
+              })()
+            }}
           >
-            <option value="list">List</option>
-            <option value="month">Month</option>
-          </Select>
-        </Field>
-      </div>
-
-      <div className="btn-row">
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={() =>
-            setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))
-          }
-        >
-          Previous month
-        </Button>
-        <strong>
-          {cursor.toLocaleString(undefined, { month: 'long', year: 'numeric' })}
-        </strong>
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={() =>
-            setCursor(new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1))
-          }
-        >
-          Next month
-        </Button>
-        <Button type="button" variant="secondary" onClick={() => setCursor(startOfMonth(new Date()))}>
-          Today
-        </Button>
-        <Button
-          type="button"
-          variant="secondary"
-          disabled={busy || loading}
-          onClick={() => {
-            void (async () => {
-              setBusy(true)
-              setError('')
-              const result = await downloadCalendarIcs({
-                boardSlug,
-                locationId,
-                teamSlug,
-                mode,
-                from: startOfMonth(cursor).toISOString(),
-                to: endOfMonth(
-                  new Date(cursor.getFullYear(), cursor.getMonth() + 5, 1),
-                ).toISOString(),
-              })
-              setBusy(false)
-              if (!result.ok) {
-                setError(result.error.message)
-                return
-              }
-              setToast('ICS calendar downloaded.')
-            })()
-          }}
-        >
-          Download ICS
-        </Button>
+            Download ICS
+          </Button>
+        </div>
       </div>
 
       {toast ? (
@@ -462,293 +277,36 @@ function CalendarHub() {
           {error}
         </div>
       ) : null}
-      {loading ? <LoadingState label="Loading calendar…" /> : null}
+      {loading && !board ? <LoadingState label="Loading calendar…" /> : null}
 
-      {!loading && board ? (
+      {board ? (
         <div className="calendar-layout">
-          <Section title={view === 'month' ? 'Month' : 'Upcoming in this month'}>
-            {view === 'list' ? (
-              events.length === 0 ? (
-                <p className="field__hint">No events in this month for this rollup.</p>
-              ) : (
-                <ul className="calendar-event-list">
-                  {events.map((item) => (
-                    <li
-                      key={item.occurrenceKey}
-                      className={
-                        item.id === selectedEventId
-                          ? 'calendar-event-list__item calendar-event-list__item--active'
-                          : 'calendar-event-list__item'
-                      }
-                    >
-                      <div>
-                        <strong>{item.title}</strong>
-                        <p className="field__hint">{formatWhen(item)}</p>
-                        {item.locationText ? (
-                          <p className="field__hint">{item.locationText}</p>
-                        ) : null}
-                        <div className="btn-row">
-                          <Tag>Belongs to {item.sourceBoard.name}</Tag>
-                          <Tag>
-                            {item.visibility === 'PUBLIC' ? 'Public' : 'Internal'}
-                          </Tag>
-                          {item.recurrenceLabel ? (
-                            <Tag>{item.recurrenceLabel}</Tag>
-                          ) : null}
-                          <Tag>{formatRsvpCounts(item.rsvpCounts)}</Tag>
-                        </div>
-                      </div>
-                      <div className="btn-row">
-                        <Button
-                          type="button"
-                          variant={item.id === selectedEventId ? 'primary' : 'secondary'}
-                          onClick={() => setSelectedEventId(item.id)}
-                        >
-                          RSVPs
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="secondary"
-                          disabled={busy}
-                          onClick={() => void toggleVisibility(item)}
-                        >
-                          {item.visibility === 'PUBLIC' ? 'Make internal' : 'Make public'}
-                        </Button>
-                        {item.url ? (
-                          <a
-                            className="btn btn--secondary"
-                            href={item.url}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            Link
-                          </a>
-                        ) : null}
-                        {item.isRecurring ? (
-                          <>
-                            <Button
-                              type="button"
-                              variant="secondary"
-                              disabled={busy}
-                              onClick={() => void cancelEvent(item, 'one')}
-                            >
-                              Cancel day
-                            </Button>
-                            <Button
-                              type="button"
-                              variant="secondary"
-                              disabled={busy}
-                              onClick={() => void cancelEvent(item, 'series')}
-                            >
-                              Cancel series
-                            </Button>
-                          </>
-                        ) : (
-                          <Button
-                            type="button"
-                            variant="secondary"
-                            disabled={busy}
-                            onClick={() => void cancelEvent(item, 'series')}
-                          >
-                            Cancel
-                          </Button>
-                        )}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )
-            ) : (
-              <div className="calendar-month">
-                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((label) => (
-                  <div key={label} className="calendar-month__dow">
-                    {label}
-                  </div>
-                ))}
-                {days.map((cell, index) => (
-                  <div
-                    key={index}
-                    className={
-                      cell.date
-                        ? 'calendar-month__cell'
-                        : 'calendar-month__cell calendar-month__cell--empty'
-                    }
-                  >
-                    {cell.date ? (
-                      <>
-                        <div className="calendar-month__day">{cell.date.getDate()}</div>
-                        {cell.events.slice(0, 3).map((item) => (
-                          <button
-                            key={item.occurrenceKey}
-                            type="button"
-                            className="calendar-month__event"
-                            title={`${item.sourceBoard.name} · ${item.recurrenceLabel ?? 'Once'} · ${formatRsvpCounts(item.rsvpCounts)}`}
-                            onClick={() => setSelectedEventId(item.id)}
-                          >
-                            {item.title}
-                          </button>
-                        ))}
-                        {cell.events.length > 3 ? (
-                          <div className="field__hint">+{cell.events.length - 3} more</div>
-                        ) : null}
-                      </>
-                    ) : null}
-                  </div>
-                ))}
-              </div>
-            )}
-          </Section>
-
-          <Section title={selectedEvent ? `RSVPs · ${selectedEvent.title}` : 'RSVPs'}>
-            <Card>
-              {!selectedEvent ? (
-                <p className="field__hint">
-                  Select an event (RSVPs button or month cell) to invite people and mark responses.
-                </p>
-              ) : (
-                <>
-                  <p className="field__hint">{formatWhen(selectedEvent)}</p>
-                  {rsvpCounts ? (
-                    <p className="field__hint">{formatRsvpCounts(rsvpCounts)}</p>
-                  ) : null}
-                  {rsvpLoading ? <LoadingState label="Loading RSVPs…" /> : null}
-                  {!rsvpLoading ? (
-                    <ul className="calendar-rsvp-list">
-                      {rsvps.length === 0 ? (
-                        <li className="field__hint">No one invited yet.</li>
-                      ) : (
-                        rsvps.map((row) => (
-                          <li key={row.id}>
-                            <div>
-                              <Button
-                                to={`/leader/contacts/${row.personId}`}
-                                variant="secondary"
-                              >
-                                {row.person.displayName}
-                              </Button>
-                            </div>
-                            <div className="btn-row">
-                              <Select
-                                aria-label={`RSVP for ${row.person.displayName}`}
-                                value={row.status}
-                                disabled={busy}
-                                onChange={(e) => {
-                                  void (async () => {
-                                    setBusy(true)
-                                    setError('')
-                                    const result = await setEventRsvp({
-                                      eventId: selectedEvent.id,
-                                      personId: row.personId,
-                                      status: e.target.value as
-                                        | 'INVITED'
-                                        | 'YES'
-                                        | 'NO'
-                                        | 'MAYBE',
-                                    })
-                                    setBusy(false)
-                                    if (!result.ok) {
-                                      setError(result.error.message)
-                                      return
-                                    }
-                                    setRsvps(result.data.rsvps)
-                                    setRsvpCounts(result.data.counts)
-                                    setReload((n) => n + 1)
-                                  })()
-                                }}
-                              >
-                                <option value="INVITED">Invited</option>
-                                <option value="YES">Yes</option>
-                                <option value="MAYBE">Maybe</option>
-                                <option value="NO">No</option>
-                              </Select>
-                              <Button
-                                type="button"
-                                variant="secondary"
-                                disabled={busy}
-                                onClick={() => {
-                                  void (async () => {
-                                    setBusy(true)
-                                    const result = await removeEventRsvp(
-                                      selectedEvent.id,
-                                      row.personId,
-                                    )
-                                    setBusy(false)
-                                    if (!result.ok) {
-                                      setError(result.error.message)
-                                      return
-                                    }
-                                    setRsvps(result.data.rsvps)
-                                    setRsvpCounts(result.data.counts)
-                                    setReload((n) => n + 1)
-                                  })()
-                                }}
-                              >
-                                Remove
-                              </Button>
-                            </div>
-                          </li>
-                        ))
-                      )}
-                    </ul>
-                  ) : null}
-
-                  <Field id="rsvp-invite" label="Invite from roster">
-                    <Input
-                      id="rsvp-invite"
-                      value={inviteQ}
-                      onChange={(e) => setInviteQ(e.target.value)}
-                      placeholder="Search name…"
-                    />
-                  </Field>
-                  {inviteResults.length > 0 ? (
-                    <ul className="calendar-invite-list">
-                      {inviteResults.map((person) => (
-                        <li key={person.id}>
-                          <span>{person.displayName}</span>
-                          <Button
-                            type="button"
-                            variant="primary"
-                            disabled={busy}
-                            onClick={() => {
-                              void (async () => {
-                                setBusy(true)
-                                setError('')
-                                const result = await inviteEventRsvps(selectedEvent.id, [
-                                  person.id,
-                                ])
-                                setBusy(false)
-                                if (!result.ok) {
-                                  setError(result.error.message)
-                                  return
-                                }
-                                setRsvps(result.data.rsvps)
-                                setRsvpCounts(result.data.counts)
-                                setInviteQ('')
-                                setInviteResults([])
-                                setToast(
-                                  result.data.invited
-                                    ? 'Invited.'
-                                    : 'Already on the RSVP list.',
-                                )
-                                setReload((n) => n + 1)
-                              })()
-                            }}
-                          >
-                            Invite
-                          </Button>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
-                </>
-              )}
-            </Card>
+          <Section title="Calendar">
+            <CalendarBoard
+              events={events.map((item) => ({
+                occurrenceKey: item.occurrenceKey,
+                id: item.id,
+                title: item.title,
+                startsAt: item.startsAt,
+                endsAt: item.endsAt,
+                allDay: item.allDay,
+                locationText: item.locationText,
+                meta: `${item.sourceBoard.name}${item.visibility === 'PUBLIC' ? ' · Public' : ''}`,
+              }))}
+              view={view}
+              cursor={cursor}
+              onCursorChange={setCursor}
+              onViewChange={setView}
+              loading={loading}
+              onEventClick={openEvent}
+            />
           </Section>
 
           <Section title="Create event on this board">
             <Card>
               <p className="field__hint">
-                Source: <strong>{board.name}</strong>. Parents will see it in rollup views.
+                Source: <strong>{board.name}</strong>. Click any event on the calendar for details
+                and RSVPs.
               </p>
               <form onSubmit={onCreate} className="calendar-create">
                 <Field id="cal-title" label="Title">
@@ -819,18 +377,7 @@ function CalendarHub() {
                       >
                         {[1, 2, 3, 4].map((n) => (
                           <option key={n} value={String(n)}>
-                            {n}{' '}
-                            {recurrenceFrequency === 'DAILY'
-                              ? n === 1
-                                ? 'day'
-                                : 'days'
-                              : recurrenceFrequency === 'WEEKLY'
-                                ? n === 1
-                                  ? 'week'
-                                  : 'weeks'
-                                : n === 1
-                                  ? 'month'
-                                  : 'months'}
+                            {n}
                           </option>
                         ))}
                       </Select>
@@ -843,7 +390,6 @@ function CalendarHub() {
                         max={365}
                         value={recurrenceCount}
                         onChange={(e) => setRecurrenceCount(e.target.value)}
-                        placeholder="e.g. 8"
                       />
                     </Field>
                     <Field id="cal-until" label="Or end on date (optional)">

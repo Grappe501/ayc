@@ -37,3 +37,4 @@
 | AYC-PHASE-2-CAL-PUBLIC | Complete |
 | AYC-PHASE-2-AUTH-ACCOUNTS | Complete (invite/claim Supabase Auth) |
 | AYC-PHASE-2-DIRECTORY-PROFILES | Complete |
+| AYC-PHASE-2-CAL-VIEWS | Complete (month/week/day + embeds + event detail) |

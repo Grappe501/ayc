@@ -12,6 +12,7 @@ import {
   Tag,
 } from '@/components/ui'
 import { TEAMS } from '@/content/ayc'
+import { BoardCalendarPanel } from '@/features/calendar/BoardCalendarPanel'
 import { AssignTeamDialog } from '@/features/leader/AssignTeamDialog'
 import { LeaderRosterList } from '@/features/leader/LeaderRosterList'
 import { teamBoardPath } from '@/features/leader/accessScope'
@@ -209,6 +210,8 @@ function LeaderBoard() {
         <StatCard value={String(stats.volunteers)} label="Volunteers" />
         <StatCard value={String(stats.locationsRepresented)} label="Locations Represented" />
       </div>
+
+      <BoardCalendarPanel boardSlug="main" title="Main calendar" />
 
       <Section id="hierarchy" title="Leadership hierarchy">
         <p className="field__hint" style={{ marginBottom: '1rem' }}>

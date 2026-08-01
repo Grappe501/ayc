@@ -12,6 +12,7 @@ import {
   StatCard,
   Tag,
 } from '@/components/ui'
+import { BoardCalendarPanel } from '@/features/calendar/BoardCalendarPanel'
 import { AssignTeamDialog } from '@/features/leader/AssignTeamDialog'
 import { LeaderRosterList } from '@/features/leader/LeaderRosterList'
 import { RequireLeaderAccess } from '@/features/leader/RequireLeaderAccess'
@@ -260,6 +261,11 @@ function LocationTeamBoard({ locationId }: { locationId: string }) {
         <StatCard value={String(stats.prospective)} label="Prospectives" />
       </div>
 
+      <BoardCalendarPanel
+        locationId={location.id}
+        title={`${location.name} calendar`}
+      />
+
       <Section id="category-boards" title="Category boards at this location">
         <div className="team-board-hub">
           {LOCATION_CATEGORY_TEAMS.map((team) => (
@@ -411,6 +417,12 @@ function LocationCategoryBoard({
         <StatCard value={String(summary.volunteers)} label="Volunteers" />
         <StatCard value={String(summary.missingContact)} label="Contact gaps" />
       </div>
+
+      <BoardCalendarPanel
+        locationId={location.id}
+        teamSlug={teamSlug}
+        title={`${location.name} · ${teamMeta.name} calendar`}
+      />
 
       <Section id="roster" title={`${teamMeta.name} at ${location.name}`}>
         <LocationFilters

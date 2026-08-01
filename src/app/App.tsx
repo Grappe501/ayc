@@ -4,6 +4,7 @@ import { HomePage } from '@/pages/landing/HomePage'
 import { ContactDetailPage } from '@/pages/leader/ContactDetailPage'
 import { ApplicationsInboxPage } from '@/pages/leader/ApplicationsInboxPage'
 import { FeedbackInboxPage } from '@/pages/leader/FeedbackInboxPage'
+import { CalendarEventDetailPage } from '@/pages/leader/CalendarEventDetailPage'
 import { CalendarPage } from '@/pages/leader/CalendarPage'
 import { ReportsPage } from '@/pages/leader/ReportsPage'
 import { DuplicateMergePage } from '@/pages/leader/DuplicateMergePage'
@@ -19,6 +20,7 @@ import { GraphicDesignBoardPage, TeamBoardPage } from '@/pages/leader/TeamBoardP
 import { ClaimPage } from '@/pages/auth/ClaimPage'
 import { LoginPage } from '@/pages/auth/LoginPage'
 import { PublicCalendarPage } from '@/pages/calendar/PublicCalendarPage'
+import { PublicEventDetailPage } from '@/pages/calendar/PublicEventDetailPage'
 import { DirectoryPage } from '@/pages/directory/DirectoryPage'
 import { DirectoryPersonPage } from '@/pages/directory/DirectoryPersonPage'
 import { FeedbackPage } from '@/pages/feedback/FeedbackPage'
@@ -39,6 +41,10 @@ export function App() {
         <Route path="/leader/reports" element={<ReportsPage />} />
         <Route path="/leader/calendar" element={<CalendarPage />} />
         <Route
+          path="/leader/calendar/event/:eventId"
+          element={<CalendarEventDetailPage />}
+        />
+        <Route
           path="/leader/teams/social-media/graphic-design"
           element={<GraphicDesignBoardPage />}
         />
@@ -54,6 +60,7 @@ export function App() {
         <Route path="/directory" element={<DirectoryPage />} />
         <Route path="/directory/:personId" element={<DirectoryPersonPage />} />
         <Route path="/calendar" element={<PublicCalendarPage />} />
+        <Route path="/calendar/event/:eventId" element={<PublicEventDetailPage />} />
         <Route path="/feedback" element={<FeedbackPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/claim" element={<ClaimPage />} />

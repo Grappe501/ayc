@@ -18,7 +18,9 @@
 | `/directory` | Complete | People / teams / locations views |
 | `/directory/:personId` | Complete | Directory person (masked) |
 | `/feedback` | Complete | Beta feedback |
-| `/calendar` | Complete | Public events (`visibility=PUBLIC`) + ICS subscribe |
+| `/calendar` | Complete | Public events — month/week/day grid + ICS subscribe |
+| `/calendar/event/:eventId` | Complete | Public event drill-down |
+| `/leader/calendar/event/:eventId` | Complete | Leader event detail + RSVPs |
 | `/login` | Complete | Personal account login (Supabase Auth) |
 | `/claim` | Complete | Claim invite + set password (invite-only) |
 | `/join` | Complete | Public join → creates `PROSPECTIVE` person (`JOIN_FORM`) on chosen team + feedback notify |

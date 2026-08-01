@@ -1,0 +1,207 @@
+.cal-board {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.cal-board__toolbar {
+  display: grid;
+  gap: var(--space-3);
+  align-items: end;
+}
+
+@media (min-width: 720px) {
+  .cal-board__toolbar {
+    grid-template-columns: 9rem 1fr;
+  }
+}
+
+.cal-board__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.cal-board__label {
+  min-width: 10rem;
+  text-align: center;
+}
+
+.cal-board__month {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.3rem;
+}
+
+.cal-board__dow {
+  font-size: var(--text-small);
+  color: var(--color-text-muted-on-light);
+  padding: 0.25rem;
+  font-weight: 600;
+}
+
+.cal-board__month-cell {
+  min-height: 6.5rem;
+  border: 1px solid var(--color-border-on-light);
+  border-radius: var(--radius-md);
+  padding: 0.3rem;
+  background: var(--color-surface);
+}
+
+.cal-board--compact .cal-board__month-cell {
+  min-height: 4.5rem;
+}
+
+.cal-board__month-cell--empty {
+  background: transparent;
+  border-color: transparent;
+}
+
+.cal-board__month-cell--today {
+  outline: 2px solid var(--color-accent, #c4a35a);
+  outline-offset: -2px;
+}
+
+.cal-board__daynum {
+  display: inline-flex;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: var(--text-small);
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 0.2rem;
+  color: inherit;
+}
+
+.cal-board__chip {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  cursor: pointer;
+  font-size: 0.7rem;
+  line-height: 1.25;
+  padding: 0.15rem 0.3rem;
+  margin-bottom: 0.15rem;
+  border-radius: 0.25rem;
+  background: color-mix(in srgb, var(--color-accent, #c4a35a) 22%, transparent);
+  color: inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cal-board__chip:hover,
+.cal-board__block:hover {
+  filter: brightness(0.97);
+}
+
+.cal-board__week,
+.cal-board__day {
+  border: 1px solid var(--color-border-on-light);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+.cal-board__week-head,
+.cal-board__allday-row,
+.cal-board__week-body,
+.cal-board__day-body {
+  display: grid;
+  grid-template-columns: 3.5rem repeat(7, minmax(0, 1fr));
+}
+
+.cal-board__allday-row--day,
+.cal-board__day-body {
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+}
+
+.cal-board__gutter {
+  font-size: 0.7rem;
+  color: var(--color-text-muted-on-light);
+  padding: 0.35rem;
+  border-right: 1px solid var(--color-border-on-light);
+}
+
+.cal-board__week-dayhead {
+  border: 0;
+  border-left: 1px solid var(--color-border-on-light);
+  background: transparent;
+  padding: 0.45rem 0.25rem;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  display: grid;
+  gap: 0.15rem;
+  justify-items: center;
+}
+
+.cal-board__week-dayhead--today strong {
+  text-decoration: underline;
+}
+
+.cal-board__allday-cell {
+  min-height: 2rem;
+  border-left: 1px solid var(--color-border-on-light);
+  border-top: 1px solid var(--color-border-on-light);
+  padding: 0.2rem;
+}
+
+.cal-board__week-body,
+.cal-board__day-body {
+  position: relative;
+  min-height: 28rem;
+}
+
+.cal-board--compact .cal-board__week-body,
+.cal-board--compact .cal-board__day-body {
+  min-height: 18rem;
+}
+
+.cal-board__hours {
+  display: grid;
+  grid-template-rows: repeat(17, minmax(0, 1fr));
+  border-right: 1px solid var(--color-border-on-light);
+}
+
+.cal-board__hour {
+  font-size: 0.65rem;
+  color: var(--color-text-muted-on-light);
+  padding: 0.15rem 0.25rem;
+  border-top: 1px solid color-mix(in srgb, var(--color-border-on-light) 70%, transparent);
+}
+
+.cal-board__week-col,
+.cal-board__day-col {
+  position: relative;
+  display: grid;
+  grid-template-rows: repeat(17, minmax(0, 1fr));
+  border-left: 1px solid var(--color-border-on-light);
+}
+
+.cal-board__slot {
+  border-top: 1px solid color-mix(in srgb, var(--color-border-on-light) 70%, transparent);
+}
+
+.cal-board__block {
+  position: absolute;
+  left: 0.15rem;
+  right: 0.15rem;
+  z-index: 1;
+  border: 0;
+  border-radius: 0.3rem;
+  padding: 0.2rem 0.35rem;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  background: color-mix(in srgb, var(--color-accent, #c4a35a) 35%, var(--color-surface));
+  color: inherit;
+  overflow: hidden;
+  display: grid;
+  align-content: start;
+  gap: 0.1rem;
+}

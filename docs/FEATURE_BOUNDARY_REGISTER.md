@@ -32,6 +32,7 @@
 - Calendar recurrence — daily/weekly/monthly series with occurrence cancel exceptions  
 - Calendar ICS export — leader-authenticated `.ics` download (RRULE + EXDATE)  
 - Public calendar — `/calendar` + unauthenticated ICS of `visibility=PUBLIC` events only  
+- Calendar month/week/day grids with scroll navigation + event detail drill-down (leader + public); board page embeds  
 - Personal login (invite/claim) — Supabase Auth email+password; `user_accounts` ↔ `people`  
 - Directory Profiles — photo, narrative, public/private notes on `/directory/:personId`  
 

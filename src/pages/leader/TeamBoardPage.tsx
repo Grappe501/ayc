@@ -12,6 +12,7 @@ import {
   StatCard,
   Tag,
 } from '@/components/ui'
+import { BoardCalendarPanel } from '@/features/calendar/BoardCalendarPanel'
 import { AssignTeamDialog } from '@/features/leader/AssignTeamDialog'
 import { LeaderRosterList } from '@/features/leader/LeaderRosterList'
 import { RequireLeaderAccess } from '@/features/leader/RequireLeaderAccess'
@@ -220,6 +221,8 @@ function TeamBoard({ teamSlug }: { teamSlug: TeamBoardSlug }) {
           label="Locations"
         />
       </div>
+
+      <BoardCalendarPanel boardSlug={teamSlug} title={`${meta.name} calendar`} />
 
       <TeamMissionPanel teamSlug={teamSlug} digest={digest} />
 

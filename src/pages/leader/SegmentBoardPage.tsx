@@ -12,6 +12,7 @@ import {
   StatCard,
   Tag,
 } from '@/components/ui'
+import { BoardCalendarPanel } from '@/features/calendar/BoardCalendarPanel'
 import { RequireLeaderAccess } from '@/features/leader/RequireLeaderAccess'
 import { clearLeaderSession } from '@/features/leader/leaderSession'
 import { pipelineTagLabel } from '@/features/leader/pipelineLabels'
@@ -215,6 +216,8 @@ function SegmentBoard({ segment }: { segment: SegmentSlug }) {
           label="Develop-lead queue"
         />
       </div>
+
+      <BoardCalendarPanel boardSlug={segment} title={`${meta.title} calendar`} />
 
       <Section id="role" title="Your charge">
         <Card>
