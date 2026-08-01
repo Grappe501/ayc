@@ -39,6 +39,9 @@ export const handler: Handler = async (event) => {
         teamSlug: event.queryStringParameters?.team ?? undefined,
         status: event.queryStringParameters?.status ?? undefined,
         gapsOnly: event.queryStringParameters?.gaps === '1',
+        textReadyOnly: event.queryStringParameters?.textReady === '1',
+        needsPreferredOnly: event.queryStringParameters?.needsPreferred === '1',
+        preferred: event.queryStringParameters?.preferred ?? undefined,
       })
       return ok(result)
     })

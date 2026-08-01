@@ -37,13 +37,18 @@ function LeaderBoard() {
     missingContact: 0,
     prospective: 0,
     joinForm: 0,
+    needsPreferred: 0,
+    textReady: 0,
   })
   const [teams, setTeams] = useState<Array<{ id: string; name: string; slug: string }>>([])
   const [q, setQ] = useState('')
   const [searchDraft, setSearchDraft] = useState('')
   const [teamFilter, setTeamFilter] = useState('')
   const [statusFilter, setStatusFilter] = useState('ALL')
+  const [preferredFilter, setPreferredFilter] = useState('ALL')
   const [gapsOnly, setGapsOnly] = useState(false)
+  const [textReadyOnly, setTextReadyOnly] = useState(false)
+  const [needsPreferredOnly, setNeedsPreferredOnly] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [assignPerson, setAssignPerson] = useState<LeaderRosterRow | null>(null)
@@ -64,7 +69,10 @@ function LeaderBoard() {
           q: q || undefined,
           team: teamFilter || undefined,
           status: statusFilter === 'ALL' ? undefined : statusFilter,
+          preferred: preferredFilter === 'ALL' ? undefined : preferredFilter,
           gapsOnly,
+          textReadyOnly,
+          needsPreferredOnly,
         }),
         fetchTeams(),
       ])
@@ -89,7 +97,7 @@ function LeaderBoard() {
     return () => {
       cancelled = true
     }
-  }, [q, teamFilter, statusFilter, gapsOnly])
+  }, [q, teamFilter, statusFilter, preferredFilter, gapsOnly, textReadyOnly, needsPreferredOnly])
 
   const chance = useMemo(
     () => people.find((p) => p.firstName === 'Chance' && p.lastName === 'Bradford'),
@@ -236,12 +244,52 @@ function LeaderBoard() {
                 onClick={() => {
                   setStatusFilter('PROSPECTIVE')
                   setGapsOnly(false)
+                  setNeedsPreferredOnly(false)
+                  setTextReadyOnly(false)
                 }}
               >
                 Show prospective
               </Button>
             </Card>
           ) : null}
+          {attention.needsPreferred > 0 ? (
+            <Card>
+              <Tag>Preferred contact</Tag>
+              <h3>{attention.needsPreferred} need preferred method</h3>
+              <p>
+                They have phone or email, but preferred contact is still Unknown. Set Text / Email
+                / Either so outreach is clear.
+              </p>
+              <Button
+                type="button"
+                variant="primary"
+                onClick={() => {
+                  setNeedsPreferredOnly(true)
+                  setTextReadyOnly(false)
+                  setGapsOnly(false)
+                  setStatusFilter('ALL')
+                }}
+              >
+                Show needs preferred
+              </Button>
+            </Card>
+          ) : null}
+          <Card>
+            <Tag>Text-ready</Tag>
+            <h3>{attention.textReady} text-ready contacts</h3>
+            <p>Phone on file and prefer Text or Either — ready for outreach lists.</p>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => {
+                setTextReadyOnly(true)
+                setNeedsPreferredOnly(false)
+                setGapsOnly(false)
+              }}
+            >
+              Show text-ready
+            </Button>
+          </Card>
         </div>
       </Section>
 
@@ -281,6 +329,19 @@ function LeaderBoard() {
               <option value="INACTIVE">Inactive</option>
             </Select>
           </Field>
+          <Field id="roster-preferred" label="Preferred contact">
+            <Select
+              id="roster-preferred"
+              value={preferredFilter}
+              onChange={(e) => setPreferredFilter(e.target.value)}
+            >
+              <option value="ALL">Any</option>
+              <option value="TEXT">Text</option>
+              <option value="EMAIL">Email</option>
+              <option value="EITHER">Either</option>
+              <option value="UNKNOWN">Unknown</option>
+            </Select>
+          </Field>
           <label className="field" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <input
               type="checkbox"
@@ -288,6 +349,28 @@ function LeaderBoard() {
               onChange={(e) => setGapsOnly(e.target.checked)}
             />
             Gaps only
+          </label>
+          <label className="field" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <input
+              type="checkbox"
+              checked={textReadyOnly}
+              onChange={(e) => {
+                setTextReadyOnly(e.target.checked)
+                if (e.target.checked) setNeedsPreferredOnly(false)
+              }}
+            />
+            Text-ready only
+          </label>
+          <label className="field" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <input
+              type="checkbox"
+              checked={needsPreferredOnly}
+              onChange={(e) => {
+                setNeedsPreferredOnly(e.target.checked)
+                if (e.target.checked) setTextReadyOnly(false)
+              }}
+            />
+            Needs preferred
           </label>
         </div>
 

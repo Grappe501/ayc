@@ -27,3 +27,4 @@
 | 2026-07-31 | Green canvas theme | Page background `#2E5A3D` with light text; light surfaces keep dark text |
 | 2026-07-31 | Join → Prospective pipeline | `/join` creates people with status `PROSPECTIVE`, source `JOIN_FORM`, on selected team board |
 | 2026-07-31 | Duplicate merge (#4) | `/leader/duplicates` queue + merge into survivor; `person_merge_history` + `PERSON_MERGED` audit |
+| 2026-07-31 | Text-ready flags (#5) | Preferred contact surfaced on roster; text-ready = phone + TEXT/EITHER (+ phone consent when marked) |

@@ -30,6 +30,8 @@ function GapFillBoard() {
   const [error, setError] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
+  const [preferredContactMethod, setPreferredContactMethod] = useState('UNKNOWN')
+  const [textReady, setTextReady] = useState(false)
   const [busy, setBusy] = useState(false)
   const [filledSession, setFilledSession] = useState(0)
   const [toast, setToast] = useState('')
@@ -53,6 +55,8 @@ function GapFillBoard() {
     setIndex(0)
     setEmail('')
     setPhone('')
+    setPreferredContactMethod('UNKNOWN')
+    setTextReady(false)
     setLoading(false)
   }
 
@@ -75,6 +79,8 @@ function GapFillBoard() {
     }
     setEmail('')
     setPhone('')
+    setPreferredContactMethod('UNKNOWN')
+    setTextReady(false)
     setToast('')
     setError('')
   }
@@ -86,13 +92,22 @@ function GapFillBoard() {
     setError('')
     setToast('')
     try {
-      const result = await fillContactGap(current.id, { email, phone })
+      const result = await fillContactGap(current.id, {
+        email,
+        phone,
+        preferredContactMethod,
+        textReady,
+      })
       if (!result.ok) {
         setError(result.error.message)
         return
       }
       setFilledSession((n) => n + 1)
-      setToast(`Saved ${result.displayName}`)
+      setToast(
+        result.contact.textReady
+          ? `Saved ${result.displayName} (text-ready)`
+          : `Saved ${result.displayName}`,
+      )
       setQueue((prev) => {
         const next = prev.filter((p) => p.id !== current.id)
         setIndex((i) => (i >= next.length ? Math.max(0, next.length - 1) : i))
@@ -100,6 +115,8 @@ function GapFillBoard() {
       })
       setEmail('')
       setPhone('')
+      setPreferredContactMethod('UNKNOWN')
+      setTextReady(false)
     } catch {
       setError('Something went wrong. Please try again.')
     } finally {
@@ -222,6 +239,34 @@ function GapFillBoard() {
                     placeholder="name@example.com"
                   />
                 </Field>
+                <Field id="gap-preferred" label="Preferred contact">
+                  <Select
+                    id="gap-preferred"
+                    value={preferredContactMethod}
+                    onChange={(e) => setPreferredContactMethod(e.target.value)}
+                  >
+                    <option value="UNKNOWN">Unknown</option>
+                    <option value="TEXT">Text</option>
+                    <option value="EMAIL">Email</option>
+                    <option value="EITHER">Either</option>
+                  </Select>
+                </Field>
+                <label
+                  className="field"
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={textReady}
+                    onChange={(e) => {
+                      setTextReady(e.target.checked)
+                      if (e.target.checked && preferredContactMethod === 'UNKNOWN') {
+                        setPreferredContactMethod(email.trim() ? 'EITHER' : 'TEXT')
+                      }
+                    }}
+                  />
+                  Text-ready (OK to text this number)
+                </label>
                 <p className="field__hint">Enter at least one. Both is better.</p>
                 <div className="btn-row">
                   <Button type="submit" variant="primary" disabled={busy}>
@@ -256,6 +301,8 @@ function GapFillBoard() {
                       setIndex(i)
                       setEmail('')
                       setPhone('')
+                      setPreferredContactMethod('UNKNOWN')
+                      setTextReady(false)
                       setError('')
                       setToast('')
                     }}

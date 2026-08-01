@@ -95,6 +95,9 @@ export type LeaderRosterRow = {
   preferredName: string | null
   status: string
   source: string
+  preferredContactMethod: string
+  textReady: boolean
+  needsPreferred: boolean
   createdAt: string
   updatedAt: string
   hasEmail: boolean
@@ -129,6 +132,9 @@ export function fetchLeaderRoster(params?: {
   team?: string
   status?: string
   gapsOnly?: boolean
+  textReadyOnly?: boolean
+  needsPreferredOnly?: boolean
+  preferred?: string
 }) {
   const qs = new URLSearchParams()
   qs.set('view', 'roster')
@@ -136,9 +142,18 @@ export function fetchLeaderRoster(params?: {
   if (params?.team) qs.set('team', params.team)
   if (params?.status) qs.set('status', params.status)
   if (params?.gapsOnly) qs.set('gaps', '1')
+  if (params?.textReadyOnly) qs.set('textReady', '1')
+  if (params?.needsPreferredOnly) qs.set('needsPreferred', '1')
+  if (params?.preferred) qs.set('preferred', params.preferred)
   return request<{
     total: number
-    attention: { missingContact: number; prospective: number; joinForm: number }
+    attention: {
+      missingContact: number
+      prospective: number
+      joinForm: number
+      needsPreferred: number
+      textReady: number
+    }
     people: LeaderRosterRow[]
   }>(`contacts?${qs.toString()}`)
 }
@@ -254,11 +269,18 @@ export type ContactDetail = {
   status: string
   source: string
   preferredContactMethod: string | null
+  textReady: boolean
+  needsPreferred: boolean
   createdAt: string
   updatedAt: string
   archivedAt: string | null
   email: { value: string; normalized: string; isVerified: boolean } | null
-  phone: { value: string; normalized: string; isVerified: boolean } | null
+  phone: {
+    value: string
+    normalized: string
+    isVerified: boolean
+    consentStatus?: string
+  } | null
   location: {
     id: string
     name: string
@@ -331,6 +353,17 @@ export function restoreContact(body: { id: string; status: string }) {
     'restore-contact',
     { method: 'POST', body: JSON.stringify(body) },
   )
+}
+
+export function updateContactFlags(body: {
+  id: string
+  preferredContactMethod?: string
+  textReady?: boolean
+}) {
+  return request<{ status: 'updated'; contact: ContactDetail | null }>('contact-flags', {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  })
 }
 
 export type DuplicateQueuePerson = {

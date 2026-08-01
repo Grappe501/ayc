@@ -8,6 +8,7 @@ import {
   personTeamAssignments,
   teams,
 } from '../db/schema.ts'
+import { computeContactReachFlags } from '../domain/textReady.ts'
 import { listAuditEventsForEntity } from './audit.ts'
 
 export type ContactDetail = {
@@ -20,11 +21,18 @@ export type ContactDetail = {
   status: string
   source: string
   preferredContactMethod: string | null
+  textReady: boolean
+  needsPreferred: boolean
   createdAt: Date
   updatedAt: Date
   archivedAt: Date | null
   email: { value: string; normalized: string; isVerified: boolean } | null
-  phone: { value: string; normalized: string; isVerified: boolean } | null
+  phone: {
+    value: string
+    normalized: string
+    isVerified: boolean
+    consentStatus: string
+  } | null
   location: {
     id: string
     name: string
@@ -130,6 +138,12 @@ export async function getContactDetail(
     }))
 
   const audit = await listAuditEventsForEntity(db, 'PERSON', personId)
+  const flags = computeContactReachFlags({
+    hasEmail: Boolean(emailRow),
+    hasPhone: Boolean(phoneRow),
+    preferredContactMethod: person.preferredContactMethod,
+    phoneConsent: phoneRow?.consentStatus ?? null,
+  })
 
   return {
     id: person.id,
@@ -140,7 +154,9 @@ export async function getContactDetail(
     displayName: person.displayName,
     status: person.status,
     source: person.source,
-    preferredContactMethod: person.preferredContactMethod,
+    preferredContactMethod: flags.preferredContactMethod,
+    textReady: flags.textReady,
+    needsPreferred: flags.needsPreferred,
     createdAt: person.createdAt,
     updatedAt: person.updatedAt,
     archivedAt: person.archivedAt,
@@ -156,6 +172,7 @@ export async function getContactDetail(
           value: phoneRow.contactValue,
           normalized: phoneRow.normalizedValue,
           isVerified: phoneRow.isVerified,
+          consentStatus: phoneRow.consentStatus,
         }
       : null,
     location: affiliation

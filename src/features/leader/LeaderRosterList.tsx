@@ -1,5 +1,6 @@
 import { Badge, Button, Card, EmptyState, Tag } from '@/components/ui'
 import type { LeaderRosterRow } from '@/features/leader/leaderApi'
+import { preferredLabel } from '@/features/leader/textReadyLabels'
 import { positionOnTeam } from '@/features/leader/teamBoards'
 
 function labelStatus(status: string) {
@@ -102,8 +103,16 @@ export function LeaderRosterList({
                       <span className="leader-gap">Needs phone/email</span>
                     ) : (
                       <>
-                        {person.hasEmail ? 'Email · ' : ''}
-                        {person.hasPhone ? 'Phone' : ''}
+                        <div>
+                          {person.hasEmail ? 'Email' : null}
+                          {person.hasEmail && person.hasPhone ? ' · ' : null}
+                          {person.hasPhone ? 'Phone' : null}
+                        </div>
+                        <div className="field__hint">
+                          Prefers {preferredLabel(person.preferredContactMethod)}
+                          {person.textReady ? ' · Text-ready' : null}
+                          {person.needsPreferred ? ' · Set preferred' : null}
+                        </div>
                       </>
                     )}
                   </td>
@@ -112,6 +121,7 @@ export function LeaderRosterList({
                     {person.source === 'JOIN_FORM' ? (
                       <div className="field__hint">Joined via form</div>
                     ) : null}
+                    {person.textReady ? <div className="field__hint">Text-ready</div> : null}
                   </td>
                   <td>
                     <div className="btn-row">
@@ -143,6 +153,8 @@ export function LeaderRosterList({
             <Card key={person.id}>
               <Tag>{labelStatus(person.status)}</Tag>
               {person.source === 'JOIN_FORM' ? <Tag>Joined via form</Tag> : null}
+              {person.textReady ? <Tag>Text-ready</Tag> : null}
+              {person.needsPreferred ? <Tag>Needs preferred</Tag> : null}
               <h3>{person.displayName}</h3>
               <p>
                 {person.location
@@ -160,7 +172,11 @@ export function LeaderRosterList({
               </p>
               {person.missingContact ? (
                 <p className="leader-gap">Needs phone/email</p>
-              ) : null}
+              ) : (
+                <p className="field__hint">
+                  Prefers {preferredLabel(person.preferredContactMethod)}
+                </p>
+              )}
               <div className="btn-row">
                 <Button to={`/leader/contacts/${person.id}`} variant="secondary">
                   {person.missingContact ? 'Fill contact' : 'Open'}

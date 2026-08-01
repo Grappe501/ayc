@@ -1,6 +1,7 @@
 import {
   fetchContact,
   updateContact,
+  updateContactFlags,
   type ApiError,
   type ContactDetail,
 } from '@/features/leader/leaderApi'
@@ -15,7 +16,17 @@ const AFFILIATION = {
   COUNTY: 'COUNTY_RESIDENCE',
 } as const
 
-function preferredFrom(email: string | null, phone: string | null) {
+function preferredFrom(
+  email: string | null,
+  phone: string | null,
+  preferred?: string | null,
+  textReady?: boolean,
+) {
+  if (preferred === 'TEXT' || preferred === 'EMAIL' || preferred === 'EITHER' || preferred === 'UNKNOWN') {
+    if (textReady && preferred === 'EMAIL') return email ? 'EITHER' : 'TEXT'
+    if (textReady && preferred === 'UNKNOWN') return email ? 'EITHER' : 'TEXT'
+    return preferred
+  }
   if (email && phone) return 'EITHER'
   if (phone) return 'TEXT'
   if (email) return 'EMAIL'
@@ -25,7 +36,12 @@ function preferredFrom(email: string | null, phone: string | null) {
 /** Load a contact and patch only phone/email (keeps name, location, teams). */
 export async function fillContactGap(
   personId: string,
-  input: { email: string; phone: string },
+  input: {
+    email: string
+    phone: string
+    preferredContactMethod?: string
+    textReady?: boolean
+  },
 ): Promise<FillResult> {
   const detail = await fetchContact(personId)
   if (!detail.ok) {
@@ -74,6 +90,13 @@ export async function fillContactGap(
       ? 'PROSPECTIVE'
       : (contact.status as 'ACTIVE' | 'PROSPECTIVE' | 'INACTIVE')
 
+  const preferredContactMethod = preferredFrom(
+    email,
+    phone,
+    input.preferredContactMethod,
+    input.textReady,
+  )
+
   const result = await updateContact(personId, {
     firstName: contact.firstName,
     middleName: contact.middleName,
@@ -81,7 +104,7 @@ export async function fillContactGap(
     lastName: contact.lastName,
     email,
     phone,
-    preferredContactMethod: preferredFrom(email, phone),
+    preferredContactMethod,
     status,
     source: contact.source || 'LEADER_ENTRY',
     location: {
@@ -101,7 +124,18 @@ export async function fillContactGap(
     return { ok: false, error: result.error, status: result.status }
   }
 
-  const updated = result.data.contact
+  let updated = result.data.contact
+  if (input.textReady && phone) {
+    const flags = await updateContactFlags({
+      id: personId,
+      preferredContactMethod,
+      textReady: true,
+    })
+    if (flags.ok && flags.data.contact) {
+      updated = flags.data.contact
+    }
+  }
+
   if (!updated) {
     return {
       ok: false,

@@ -8,6 +8,7 @@ import {
   personTeamAssignments,
   teams,
 } from '../db/schema.ts'
+import { computeContactReachFlags } from '../domain/textReady.ts'
 import { insertAuditEvent } from '../repos/audit.ts'
 import type { ActorContext } from '../repos/people.ts'
 import { getTeamById } from '../repos/teams.ts'
@@ -18,6 +19,9 @@ export type LeaderRosterFilters = {
   teamSlug?: string
   status?: string
   gapsOnly?: boolean
+  textReadyOnly?: boolean
+  needsPreferredOnly?: boolean
+  preferred?: string
   limit?: number
 }
 
@@ -29,6 +33,9 @@ export type LeaderRosterRow = {
   preferredName: string | null
   status: string
   source: string
+  preferredContactMethod: string
+  textReady: boolean
+  needsPreferred: boolean
   createdAt: Date
   updatedAt: Date
   hasEmail: boolean
@@ -49,7 +56,13 @@ export async function listLeaderRoster(
   filters: LeaderRosterFilters = {},
 ): Promise<{
   total: number
-  attention: { missingContact: number; prospective: number; joinForm: number }
+  attention: {
+    missingContact: number
+    prospective: number
+    joinForm: number
+    needsPreferred: number
+    textReady: number
+  }
   people: LeaderRosterRow[]
 }> {
   const rows = await db
@@ -61,6 +74,7 @@ export async function listLeaderRoster(
       displayName: people.displayName,
       status: people.status,
       source: people.source,
+      preferredContactMethod: people.preferredContactMethod,
       createdAt: people.createdAt,
       updatedAt: people.updatedAt,
       locationId: locations.id,
@@ -89,15 +103,26 @@ export async function listLeaderRoster(
     .select({
       personId: personContactMethods.personId,
       contactType: personContactMethods.contactType,
+      consentStatus: personContactMethods.consentStatus,
     })
     .from(personContactMethods)
     .where(isNull(personContactMethods.archivedAt))
 
-  const methodMap = new Map<string, { email: boolean; phone: boolean }>()
+  const methodMap = new Map<
+    string,
+    { email: boolean; phone: boolean; phoneConsent: string | null }
+  >()
   for (const method of methods) {
-    const current = methodMap.get(method.personId) ?? { email: false, phone: false }
+    const current = methodMap.get(method.personId) ?? {
+      email: false,
+      phone: false,
+      phoneConsent: null,
+    }
     if (method.contactType === 'EMAIL') current.email = true
-    if (method.contactType === 'MOBILE_PHONE') current.phone = true
+    if (method.contactType === 'MOBILE_PHONE') {
+      current.phone = true
+      current.phoneConsent = method.consentStatus
+    }
     methodMap.set(method.personId, current)
   }
 
@@ -135,9 +160,19 @@ export async function listLeaderRoster(
   }
 
   let peopleRows: LeaderRosterRow[] = rows.map((row) => {
-    const contact = methodMap.get(row.id) ?? { email: false, phone: false }
+    const contact = methodMap.get(row.id) ?? {
+      email: false,
+      phone: false,
+      phoneConsent: null,
+    }
     const teamsForPerson = assignMap.get(row.id) ?? { primary: null, additional: [] }
     const missingContact = !contact.email && !contact.phone
+    const flags = computeContactReachFlags({
+      hasEmail: contact.email,
+      hasPhone: contact.phone,
+      preferredContactMethod: row.preferredContactMethod,
+      phoneConsent: contact.phoneConsent,
+    })
     return {
       id: row.id,
       displayName:
@@ -148,6 +183,9 @@ export async function listLeaderRoster(
       preferredName: row.preferredName,
       status: row.status,
       source: row.source,
+      preferredContactMethod: flags.preferredContactMethod,
+      textReady: flags.textReady,
+      needsPreferred: flags.needsPreferred,
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
       hasEmail: contact.email,
@@ -175,8 +213,31 @@ export async function listLeaderRoster(
     )
   }
 
+  // Attention reflects the board/team scope before list filters (gaps / preferred / search).
+  const attention = {
+    missingContact: peopleRows.filter((p) => p.missingContact).length,
+    prospective: peopleRows.filter((p) => p.status === 'PROSPECTIVE').length,
+    joinForm: peopleRows.filter(
+      (p) => p.status === 'PROSPECTIVE' && p.source === 'JOIN_FORM',
+    ).length,
+    needsPreferred: peopleRows.filter((p) => p.needsPreferred).length,
+    textReady: peopleRows.filter((p) => p.textReady).length,
+  }
+
   if (filters.gapsOnly) {
     peopleRows = peopleRows.filter((p) => p.missingContact || !p.primaryTeam)
+  }
+
+  if (filters.textReadyOnly) {
+    peopleRows = peopleRows.filter((p) => p.textReady)
+  }
+
+  if (filters.needsPreferredOnly) {
+    peopleRows = peopleRows.filter((p) => p.needsPreferred)
+  }
+
+  if (filters.preferred && filters.preferred !== 'ALL') {
+    peopleRows = peopleRows.filter((p) => p.preferredContactMethod === filters.preferred)
   }
 
   if (filters.q?.trim()) {
@@ -187,6 +248,7 @@ export async function listLeaderRoster(
         p.firstName,
         p.lastName,
         p.preferredName,
+        p.preferredContactMethod,
         p.location?.name,
         p.location?.code,
         p.primaryTeam?.name,
@@ -196,14 +258,6 @@ export async function listLeaderRoster(
         .toLowerCase()
       return hay.includes(q)
     })
-  }
-
-  const attention = {
-    missingContact: peopleRows.filter((p) => p.missingContact).length,
-    prospective: peopleRows.filter((p) => p.status === 'PROSPECTIVE').length,
-    joinForm: peopleRows.filter(
-      (p) => p.status === 'PROSPECTIVE' && p.source === 'JOIN_FORM',
-    ).length,
   }
 
   const limit = filters.limit ?? 500

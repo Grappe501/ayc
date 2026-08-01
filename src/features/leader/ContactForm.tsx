@@ -8,6 +8,7 @@ import {
   fetchLocations,
   fetchTeams,
   updateContact,
+  updateContactFlags,
   type ApiError,
   type ContactDetail,
 } from '@/features/leader/leaderApi'
@@ -62,6 +63,7 @@ export function ContactForm({
   const [preferredContactMethod, setPreferredContactMethod] = useState(
     initial?.preferredContactMethod ?? 'UNKNOWN',
   )
+  const [textReady, setTextReady] = useState(Boolean(initial?.textReady))
   const [locationType, setLocationType] = useState<LocationType>(
     initial?.locationType ?? 'COLLEGE',
   )
@@ -139,6 +141,7 @@ export function ContactForm({
     setEmail('')
     setPhone('')
     setPreferredContactMethod('UNKNOWN')
+    setTextReady(false)
     setLocationQuery('')
     setSelectedLocation(null)
     setAdditionalTeamIds([])
@@ -199,8 +202,16 @@ export function ContactForm({
       return
     }
 
+    let preferred = preferredContactMethod
+    if (textReady && phone.trim()) {
+      if (preferred === 'UNKNOWN' || preferred === 'EMAIL') {
+        preferred = email.trim() ? 'EITHER' : 'TEXT'
+      }
+    }
+
     const payload = buildPayload(opts)
     if (!payload) return
+    payload.preferredContactMethod = preferred
 
     setBusy(true)
     try {
@@ -218,12 +229,21 @@ export function ContactForm({
         return
       }
 
+      const personId = result.data.personId
+      if (phone.trim() && (textReady || preferred === 'TEXT' || preferred === 'EITHER')) {
+        await updateContactFlags({
+          id: personId,
+          preferredContactMethod: preferred,
+          textReady,
+        })
+      }
+
       if (isEdit) {
         const updated = 'contact' in result.data ? result.data.contact : null
         if (updated) {
           onUpdated?.(updated)
           setSuccess({
-            personId: result.data.personId,
+            personId,
             displayName: result.data.displayName,
           })
           return
@@ -235,7 +255,7 @@ export function ContactForm({
         onSavedAnother?.()
         return
       }
-      setSuccess({ personId: result.data.personId, displayName: result.data.displayName })
+      setSuccess({ personId, displayName: result.data.displayName })
     } catch {
       setFormError('Something went wrong. Please try again.')
     } finally {
@@ -417,6 +437,22 @@ export function ContactForm({
                 <option value="UNKNOWN">Unknown</option>
               </Select>
             </Field>
+            <label
+              className="field"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            >
+              <input
+                type="checkbox"
+                checked={textReady}
+                onChange={(e) => {
+                  setTextReady(e.target.checked)
+                  if (e.target.checked && preferredContactMethod === 'UNKNOWN') {
+                    setPreferredContactMethod(email.trim() ? 'EITHER' : 'TEXT')
+                  }
+                }}
+              />
+              Text-ready (OK to text this number)
+            </label>
           </div>
         </Section>
 

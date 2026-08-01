@@ -161,6 +161,10 @@ function ContactDetailView() {
               ? statusLabel(contact.preferredContactMethod)
               : 'Unknown'}
           </p>
+          <p>
+            <strong>Text-ready:</strong> {contact.textReady ? 'Yes' : 'No'}
+            {contact.needsPreferred ? ' · Needs preferred method set' : ''}
+          </p>
         </Card>
       </Section>
 

@@ -2,10 +2,12 @@ import { describe, expect, it, vi, beforeEach } from 'vitest'
 
 const fetchContact = vi.fn()
 const updateContact = vi.fn()
+const updateContactFlags = vi.fn()
 
 vi.mock('@/features/leader/leaderApi', () => ({
   fetchContact: (...args: unknown[]) => fetchContact(...args),
   updateContact: (...args: unknown[]) => updateContact(...args),
+  updateContactFlags: (...args: unknown[]) => updateContactFlags(...args),
 }))
 
 import { fillContactGap } from './fillContactGap'
@@ -14,6 +16,7 @@ describe('fillContactGap', () => {
   beforeEach(() => {
     fetchContact.mockReset()
     updateContact.mockReset()
+    updateContactFlags.mockReset()
   })
 
   it('requires phone or email', async () => {

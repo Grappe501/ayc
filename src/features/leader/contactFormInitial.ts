@@ -10,6 +10,7 @@ export type ContactFormInitial = {
   email?: string | null
   phone?: string | null
   preferredContactMethod?: string | null
+  textReady?: boolean
   locationType: LocationType
   location: {
     id: string
@@ -39,6 +40,7 @@ export function initialFromDetail(detail: ContactDetail): ContactFormInitial | n
     email: detail.email?.value ?? null,
     phone: detail.phone?.value ?? null,
     preferredContactMethod: detail.preferredContactMethod ?? 'UNKNOWN',
+    textReady: detail.textReady,
     locationType,
     location: {
       id: detail.location.id,
