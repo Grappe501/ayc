@@ -160,7 +160,7 @@
 .landing-hero__copy {
   position: relative;
   z-index: 1;
-  max-width: min(64rem, 100%);
+  max-width: 42rem;
 }
 
 .landing-hero__eyebrow {
@@ -168,35 +168,40 @@
   letter-spacing: 0.16em;
 }
 
-.landing-hero__headline {
-  display: grid;
-  gap: var(--space-4);
-  align-items: start;
-  margin-bottom: var(--space-4);
-}
-
-@media (min-width: 800px) {
-  .landing-hero__headline {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: var(--space-5);
-  }
-}
-
 .landing-hero h1 {
   font-size: var(--text-hero);
   max-width: 18ch;
-  margin: 0;
+  margin: 0 0 var(--space-4);
   color: var(--color-text);
   text-shadow: 0 2px 18px rgba(0, 0, 0, 0.25);
 }
 
+/* Torch + diamond mark sits in the open green field, top-right */
 .landing-hero__mark {
-  width: clamp(7.5rem, 18vw, 11rem);
+  position: absolute;
+  top: clamp(0.5rem, 2vw, 1.25rem);
+  right: clamp(0.25rem, 2vw, 0.5rem);
+  z-index: 1;
+  width: clamp(8.5rem, 22vw, 13.5rem);
   height: auto;
-  justify-self: end;
   object-fit: contain;
   user-select: none;
   pointer-events: none;
+  /* Soften the artboard so the mark rests in the green field */
+  mix-blend-mode: multiply;
+  opacity: 0.92;
+}
+
+@media (max-width: 719px) {
+  .landing-hero {
+    padding-top: calc(var(--space-7) + 7.5rem);
+  }
+
+  .landing-hero__mark {
+    width: clamp(6.5rem, 34vw, 8.5rem);
+    top: 0.35rem;
+    right: 0.15rem;
+  }
 }
 
 .landing-hero__support {
