@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import {
   Badge,
@@ -31,6 +31,26 @@ function label(value: string) {
   return value.charAt(0) + value.slice(1).toLowerCase().replaceAll('_', ' ')
 }
 
+function isProfileEmpty(person: DirectoryPersonDetail) {
+  const p = person.profile
+  return !p.photoUrl && !p.hometown && !p.major && !p.interests && !p.narrative
+}
+
+function syncProfileFields(
+  data: DirectoryPersonDetail,
+  setters: {
+    setHometown: (v: string) => void
+    setMajor: (v: string) => void
+    setInterests: (v: string) => void
+    setNarrative: (v: string) => void
+  },
+) {
+  setters.setHometown(data.profile.hometown ?? '')
+  setters.setMajor(data.profile.major ?? '')
+  setters.setInterests(data.profile.interests ?? '')
+  setters.setNarrative(data.profile.narrative ?? '')
+}
+
 export function DirectoryPersonPage() {
   const { personId = '' } = useParams()
   const [person, setPerson] = useState<DirectoryPersonDetail | null>(null)
@@ -45,6 +65,7 @@ export function DirectoryPersonPage() {
   const [narrative, setNarrative] = useState('')
   const [noteBody, setNoteBody] = useState('')
   const [noteVisibility, setNoteVisibility] = useState<'PUBLIC' | 'PRIVATE'>('PUBLIC')
+  const autoEditForPerson = useRef<string | null>(null)
   const leader = hasLeaderSession()
 
   async function reload() {
@@ -55,10 +76,7 @@ export function DirectoryPersonPage() {
       return
     }
     setPerson(result.data)
-    setHometown(result.data.profile.hometown ?? '')
-    setMajor(result.data.profile.major ?? '')
-    setInterests(result.data.profile.interests ?? '')
-    setNarrative(result.data.profile.narrative ?? '')
+    syncProfileFields(result.data, { setHometown, setMajor, setInterests, setNarrative })
     setError('')
   }
 
@@ -66,6 +84,8 @@ export function DirectoryPersonPage() {
     let cancelled = false
     ;(async () => {
       setLoading(true)
+      setEditing(false)
+      autoEditForPerson.current = null
       const result = await fetchDirectoryPerson(personId)
       if (cancelled) return
       if (!result.ok) {
@@ -73,11 +93,16 @@ export function DirectoryPersonPage() {
         setPerson(null)
       } else {
         setPerson(result.data)
-        setHometown(result.data.profile.hometown ?? '')
-        setMajor(result.data.profile.major ?? '')
-        setInterests(result.data.profile.interests ?? '')
-        setNarrative(result.data.profile.narrative ?? '')
+        syncProfileFields(result.data, { setHometown, setMajor, setInterests, setNarrative })
         setError('')
+        if (
+          result.data.viewer.canEditProfile &&
+          isProfileEmpty(result.data) &&
+          autoEditForPerson.current !== result.data.id
+        ) {
+          autoEditForPerson.current = result.data.id
+          setEditing(true)
+        }
       }
       setLoading(false)
     })()
@@ -102,6 +127,19 @@ export function DirectoryPersonPage() {
   const canEdit = person.viewer.canEditProfile
   const publicNotes = person.notes.filter((n) => n.visibility === 'PUBLIC')
   const privateNotes = person.notes.filter((n) => n.visibility === 'PRIVATE')
+
+  function beginEdit() {
+    syncProfileFields(person!, { setHometown, setMajor, setInterests, setNarrative })
+    setEditing(true)
+    setToast('')
+    setError('')
+  }
+
+  function cancelEdit() {
+    syncProfileFields(person!, { setHometown, setMajor, setInterests, setNarrative })
+    setEditing(false)
+    setError('')
+  }
 
   async function onSaveProfile(event: FormEvent) {
     event.preventDefault()
@@ -165,36 +203,60 @@ export function DirectoryPersonPage() {
   }
 
   return (
-    <div className="directory-profile">
-      <PageHeader
-        eyebrow="Directory Profile"
-        title={person.displayName}
-        lede="Teams, location, and the story this leader shares with AYC."
-        actions={
-          <>
-            <Badge tone={person.status === 'ARCHIVED' ? 'gold' : 'green'}>
-              {label(person.status)}
-            </Badge>
-            <Button to="/directory" variant="secondary">
-              Back to Directory
-            </Button>
-            {leader ? (
-              <Button to={`/leader/contacts/${person.id}`} variant="secondary">
-                Edit Contact
+    <div className={`directory-profile${editing ? ' directory-profile--editing' : ''}`}>
+      <div className="directory-profile__masthead">
+        <PageHeader
+          eyebrow="Directory Profile"
+          title={person.displayName}
+          lede="Teams, location, and the story this leader shares with AYC."
+          actions={
+            <>
+              <Badge tone={person.status === 'ARCHIVED' ? 'gold' : 'green'}>
+                {label(person.status)}
+              </Badge>
+              <Button to="/directory" variant="secondary">
+                Back to Directory
               </Button>
-            ) : null}
-            {canEdit ? (
-              <Button
-                type="button"
-                variant="primary"
-                onClick={() => setEditing((value) => !value)}
-              >
-                {editing ? 'Cancel edit' : 'Edit profile'}
-              </Button>
-            ) : null}
-          </>
-        }
-      />
+              {leader ? (
+                <Button to={`/leader/contacts/${person.id}`} variant="secondary">
+                  Edit Contact
+                </Button>
+              ) : null}
+              {canEdit ? (
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={() => (editing ? cancelEdit() : beginEdit())}
+                >
+                  {editing ? 'Cancel edit' : 'Edit profile'}
+                </Button>
+              ) : null}
+            </>
+          }
+        />
+
+        <div className="directory-profile__photo">
+          {person.profile.photoUrl ? (
+            <img src={person.profile.photoUrl} alt={`${person.displayName} profile`} />
+          ) : (
+            <div className="directory-profile__photo-placeholder">
+              {editing ? 'Add a photo' : 'No photo yet'}
+            </div>
+          )}
+          {editing ? (
+            <label className="btn btn--secondary">
+              {person.profile.photoUrl ? 'Change photo' : 'Upload photo'}
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                hidden
+                disabled={busy}
+                onChange={(e) => void onPhoto(e.target.files?.[0] ?? null)}
+              />
+            </label>
+          ) : null}
+        </div>
+      </div>
 
       {toast ? (
         <div className="success-state" role="status">
@@ -207,70 +269,60 @@ export function DirectoryPersonPage() {
         </div>
       ) : null}
 
-      <div className="directory-profile__hero">
-        <Section title="Affiliations">
-          <Card>
-            <ul className="directory-profile__affiliations">
-              {person.location ? (
-                <li>
-                  <Tag>
-                    {person.location.code} · {person.location.name}
-                  </Tag>
-                </li>
-              ) : (
-                <li>
-                  <Tag>No location yet</Tag>
-                </li>
-              )}
-              {person.primaryTeam ? (
-                <li>
-                  <Tag>
-                    {person.primaryTeam.name} ·{' '}
-                    {person.primaryTeam.position === 'LEAD' ? 'Lead' : 'Volunteer'}
-                  </Tag>
-                </li>
-              ) : null}
-              {person.additionalTeams.map((team) => (
-                <li key={team.id}>
-                  <Tag>
-                    {team.name} · {team.position === 'LEAD' ? 'Lead' : 'Volunteer'}
-                  </Tag>
-                </li>
-              ))}
-            </ul>
-            {person.location?.city || person.location?.countyName ? (
-              <p className="field__hint">
-                {[person.location.city, person.location.countyName, label(person.location.locationType)]
-                  .filter(Boolean)
-                  .join(' · ')}
-              </p>
-            ) : null}
-            <p className="field__hint">
-              Affiliation changes are made by leaders in the contact record.
-            </p>
-          </Card>
-        </Section>
-
-        <div className="directory-profile__photo">
-          {person.profile.photoUrl ? (
-            <img src={person.profile.photoUrl} alt={`${person.displayName} profile`} />
-          ) : (
-            <div className="directory-profile__photo-placeholder">No photo yet</div>
-          )}
-          {canEdit ? (
-            <label className="btn btn--secondary">
-              Upload photo
-              <input
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                hidden
-                disabled={busy}
-                onChange={(e) => void onPhoto(e.target.files?.[0] ?? null)}
-              />
-            </label>
-          ) : null}
+      {editing ? (
+        <div className="directory-profile__edit-banner" role="status">
+          <p>
+            <strong>Editing profile.</strong> Update your photo, hometown, major, interests, and
+            narrative. Affiliations stay on the contact record.
+          </p>
+          <Button type="button" variant="secondary" onClick={cancelEdit} disabled={busy}>
+            Cancel
+          </Button>
         </div>
-      </div>
+      ) : null}
+
+      <Section title="Affiliations">
+        <Card>
+          <ul className="directory-profile__affiliations">
+            {person.location ? (
+              <li>
+                <Tag>
+                  {person.location.code} · {person.location.name}
+                </Tag>
+              </li>
+            ) : (
+              <li>
+                <Tag>No location yet</Tag>
+              </li>
+            )}
+            {person.primaryTeam ? (
+              <li>
+                <Tag>
+                  {person.primaryTeam.name} ·{' '}
+                  {person.primaryTeam.position === 'LEAD' ? 'Lead' : 'Volunteer'}
+                </Tag>
+              </li>
+            ) : null}
+            {person.additionalTeams.map((team) => (
+              <li key={team.id}>
+                <Tag>
+                  {team.name} · {team.position === 'LEAD' ? 'Lead' : 'Volunteer'}
+                </Tag>
+              </li>
+            ))}
+          </ul>
+          {person.location?.city || person.location?.countyName ? (
+            <p className="field__hint">
+              {[person.location.city, person.location.countyName, label(person.location.locationType)]
+                .filter(Boolean)
+                .join(' · ')}
+            </p>
+          ) : null}
+          <p className="field__hint">
+            Affiliation changes are made by leaders in the contact record.
+          </p>
+        </Card>
+      </Section>
 
       <Section title="About">
         <Card>
@@ -303,9 +355,14 @@ export function DirectoryPersonPage() {
                   placeholder="What you’re building with AYC, what you care about…"
                 />
               </Field>
-              <Button type="submit" variant="primary" disabled={busy}>
-                {busy ? 'Saving…' : 'Save profile'}
-              </Button>
+              <div className="directory-profile__edit-actions">
+                <Button type="submit" variant="primary" disabled={busy}>
+                  {busy ? 'Saving…' : 'Save profile'}
+                </Button>
+                <Button type="button" variant="secondary" disabled={busy} onClick={cancelEdit}>
+                  Cancel
+                </Button>
+              </div>
             </form>
           ) : (
             <>
@@ -322,6 +379,20 @@ export function DirectoryPersonPage() {
                 <strong>Narrative:</strong>
               </p>
               <p>{person.profile.narrative || 'No narrative yet.'}</p>
+              {canEdit && isProfileEmpty(person) ? (
+                <p className="field__hint" style={{ marginTop: '1rem' }}>
+                  Your story is empty.{' '}
+                  <Button type="button" variant="primary" onClick={beginEdit}>
+                    Start editing
+                  </Button>
+                </p>
+              ) : canEdit ? (
+                <p className="field__hint" style={{ marginTop: '1rem' }}>
+                  <Button type="button" variant="secondary" onClick={beginEdit}>
+                    Edit profile
+                  </Button>
+                </p>
+              ) : null}
             </>
           )}
         </Card>
