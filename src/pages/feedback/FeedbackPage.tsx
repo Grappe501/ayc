@@ -18,6 +18,8 @@ const PAGE_LABELS: Record<string, string> = {
   '/join': 'Join AYC',
   '/join/thanks': 'Join confirmation',
   '/login': 'Personal login',
+  '/forgot-password': 'Forgot password',
+  '/reset-password': 'Set new password',
   '/claim': 'Claim invite',
   '/leader': 'Leader Board / Workbench',
   '/leader/gaps': 'Gap fill',

@@ -98,6 +98,9 @@ export function LoginPage() {
             <Button type="submit" variant="primary" disabled={busy}>
               {busy ? 'Signing in…' : 'Log in'}
             </Button>
+            <Button to="/forgot-password" variant="secondary">
+              Forgot password
+            </Button>
           </div>
           <p className="field__hint">
             Need an account? Ask a leader to invite you, then{' '}

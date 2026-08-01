@@ -22,6 +22,8 @@
 | `/calendar/event/:eventId` | Complete | Public event drill-down |
 | `/leader/calendar/event/:eventId` | Complete | Leader event detail + RSVPs |
 | `/login` | Complete | Personal account login (Supabase Auth) |
+| `/forgot-password` | Complete | Request password reset email (invite accounts) |
+| `/reset-password` | Complete | Set new password from recovery link |
 | `/claim` | Complete | Claim invite + set password (invite-only) |
 | `/join` | Complete | Public join → `membership_applications` queue (person created on Accept) |
 | `/join/thanks` | Complete | Join confirmation + reference code |

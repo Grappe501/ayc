@@ -18,7 +18,9 @@ import {
 import { SegmentBoardPage } from '@/pages/leader/SegmentBoardPage'
 import { GraphicDesignBoardPage, TeamBoardPage } from '@/pages/leader/TeamBoardPage'
 import { ClaimPage } from '@/pages/auth/ClaimPage'
+import { ForgotPasswordPage } from '@/pages/auth/ForgotPasswordPage'
 import { LoginPage } from '@/pages/auth/LoginPage'
+import { ResetPasswordPage } from '@/pages/auth/ResetPasswordPage'
 import { PublicCalendarPage } from '@/pages/calendar/PublicCalendarPage'
 import { PublicEventDetailPage } from '@/pages/calendar/PublicEventDetailPage'
 import { DirectoryPage } from '@/pages/directory/DirectoryPage'
@@ -63,6 +65,8 @@ export function App() {
         <Route path="/calendar/event/:eventId" element={<PublicEventDetailPage />} />
         <Route path="/feedback" element={<FeedbackPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/claim" element={<ClaimPage />} />
         <Route path="/join" element={<JoinPage />} />
         <Route path="/join/thanks" element={<JoinThanksPage />} />

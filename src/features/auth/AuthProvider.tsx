@@ -49,14 +49,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    void refresh()
     const client = getSupabaseBrowserClient()
-    if (!client) return
-    const { data: sub } = client.auth.onAuthStateChange((_event, next) => {
+    if (!client) {
+      setReady(true)
+      return
+    }
+    const { data: sub } = client.auth.onAuthStateChange((event, next) => {
       setSession(next)
       if (next) void loadMe()
       else setMe(null)
+      // INITIAL_SESSION covers recovery hash/code exchange from /reset-password.
+      if (
+        event === 'INITIAL_SESSION' ||
+        event === 'SIGNED_IN' ||
+        event === 'SIGNED_OUT' ||
+        event === 'PASSWORD_RECOVERY' ||
+        event === 'TOKEN_REFRESHED' ||
+        event === 'USER_UPDATED'
+      ) {
+        setReady(true)
+      }
     })
+    void refresh()
     return () => sub.subscription.unsubscribe()
     // Mount-only: subscribe once; refresh/loadMe close over fresh setters.
     // eslint-disable-next-line react-hooks/exhaustive-deps

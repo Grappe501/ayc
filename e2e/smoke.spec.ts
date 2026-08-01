@@ -50,6 +50,12 @@ test.describe('public paths', () => {
       page.getByRole('heading', { name: /help build the workbench/i }),
     ).toBeVisible()
   })
+
+  test('forgot password loads', async ({ page }) => {
+    await page.goto('/forgot-password')
+    await expect(page.getByRole('heading', { name: /forgot password/i })).toBeVisible()
+    await expect(page.locator('#forgot-email')).toBeVisible()
+  })
 })
 
 test.describe('master unlock + board', () => {

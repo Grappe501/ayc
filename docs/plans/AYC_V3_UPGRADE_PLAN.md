@@ -89,7 +89,7 @@ Canonical mission remains locked (`docs/master-build-plan/02-AYC-VISION-CANONICA
 | A4 | Invite flows for category leads, segment leads, location leads | ContactDetail invite exists; extend to role grants | Invite = account + role |
 | A5 | Session clarity in UI: “Signed in as … · Boards: …” | Dual-auth confusion | Trust |
 | A6 | Optional Google OAuth **after** email/password is solid | Phase 2 deferred | Lower friction for 16–24 |
-| A7 | Password reset / recovery emails | Missing for claim accounts | Support load ↓ |
+| A7 | Password reset / recovery emails | **Shipped 2026-08-01** (`/forgot-password`, `/reset-password`) | Support load ↓ |
 | A8 | Audit log: who unlocked what, who accepted applications | Hardening | Accountability |
 
 **Exit criteria:** A category lead can log in with their account, open only their boards, edit their profile, and never needs the shared category key for normal work.
@@ -315,7 +315,7 @@ Do **not** pull these in without a new governing decision:
 3. Role-aware post-login home  
 4. Invite = account + role grant  
 5. UI session clarity (profile vs boards)  
-6. Password recovery  
+6. [x] Password recovery — 2026-08-01  
 7. Optional Google OAuth  
 8. Access audit log  
 
@@ -416,7 +416,8 @@ Do **not** pull these in without a new governing decision:
 2. ~~Ship Notify Chance (WS-C1)~~ — skipped for now  
 3. [x] Location TEAM mission module (WS-D1) (+ location category Tasks/Resources)  
 4. [x] OG image + PWA manifest (WS-B) — 2026-08-01  
-5. [x] Playwright smoke for public + master paths (WS-L) — 2026-08-01
+5. [x] Playwright smoke for public + master paths (WS-L) — 2026-08-01  
+6. [x] Password recovery (WS-A7) — 2026-08-01
 
 ---
 

@@ -24,6 +24,17 @@ Repo: https://github.com/Grappe501/ayc (`main`)
 
 Credentials are **not** stored in git. Share emergency board keys out-of-band (Steve / `.env` / Netlify env). Invite accounts for day-to-day board access.
 
+### Supabase Auth (password recovery)
+
+In Supabase → Authentication → URL configuration:
+
+- **Site URL:** `https://arkansasyouth.netlify.app`
+- **Redirect URLs** must include:
+  - `https://arkansasyouth.netlify.app/reset-password`
+  - `http://localhost:5173/reset-password` (local Vite)
+
+Without those allowlisted redirects, forgot-password emails will not land on `/reset-password`.
+
 ## Post-deploy checks (Vol VII §28)
 
 - [x] Home `/` loads (HTTP 200) publicly (no visitor password)

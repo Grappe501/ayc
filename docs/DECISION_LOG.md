@@ -48,6 +48,7 @@
 | 2026-08-01 | Calendar grid views | Shared month/week/day CalendarBoard with prev/next; event click → detail routes; embedded on Main + board pages |
 | 2026-08-01 | Migration 015 | `location_id` on `team_tasks` / `team_resources` applied on production Supabase |
 | 2026-08-01 | Playwright smoke | `e2e/smoke.spec.ts` covers public paths + master unlock + one category board; browsers on `H:\playwright-browsers` |
+| 2026-08-01 | Password recovery | Supabase `resetPasswordForEmail` → `/forgot-password` + `/reset-password`; invite-only accounts; no open signup |
 | 2026-07-31 | Green canvas theme | Page background `#2E5A3D` with light text; light surfaces keep dark text |
 | 2026-07-31 | Join → Prospective pipeline | `/join` creates people with status `PROSPECTIVE`, source `JOIN_FORM`, on selected team board |
 | 2026-07-31 | Duplicate merge (#4) | `/leader/duplicates` queue + merge into survivor; `person_merge_history` + `PERSON_MERGED` audit |

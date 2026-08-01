@@ -1,4 +1,5 @@
 import { getSupabaseBrowserClient, isBrowserAuthConfigured } from './supabaseClient'
+import { passwordResetRedirectTo } from './passwordReset'
 
 export async function getAccessToken(): Promise<string | null> {
   const client = getSupabaseBrowserClient()
@@ -23,6 +24,43 @@ export async function signInWithPassword(email: string, password: string) {
     }
   }
   return { ok: true as const, session: data.session }
+}
+
+export async function requestPasswordReset(email: string) {
+  const client = getSupabaseBrowserClient()
+  if (!client) {
+    return {
+      ok: false as const,
+      error: { message: 'Login is not configured on this environment.' },
+    }
+  }
+  const redirectTo = passwordResetRedirectTo(window.location.origin)
+  const { error } = await client.auth.resetPasswordForEmail(email, { redirectTo })
+  if (error) {
+    return {
+      ok: false as const,
+      error: { message: error.message || 'Could not send reset email.' },
+    }
+  }
+  return { ok: true as const }
+}
+
+export async function updatePassword(password: string) {
+  const client = getSupabaseBrowserClient()
+  if (!client) {
+    return {
+      ok: false as const,
+      error: { message: 'Login is not configured on this environment.' },
+    }
+  }
+  const { error } = await client.auth.updateUser({ password })
+  if (error) {
+    return {
+      ok: false as const,
+      error: { message: error.message || 'Could not update password.' },
+    }
+  }
+  return { ok: true as const }
 }
 
 export async function signOut() {
