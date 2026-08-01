@@ -75,7 +75,7 @@
   border: 0;
   background: transparent;
   cursor: pointer;
-  color: var(--color-blue);
+  color: var(--color-clay);
   font-weight: 700;
   min-width: var(--touch);
   min-height: var(--touch);
@@ -115,7 +115,7 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--color-text-muted);
-  background: rgba(79, 126, 168, 0.04);
+  background: var(--color-clay-wash);
 }
 
 .directory-table tr:last-child td {

@@ -8,13 +8,16 @@
   --color-stone: #8a857a;
   --color-tan: #d7c9b1;
   --color-clay: #a85d3b;
+  --color-clay-deep: #8a4a2e;
+  --color-clay-soft: #c47a56;
+  --color-clay-wash: rgba(168, 93, 59, 0.12);
   --color-gold: #a85d3b;
   --color-gold-soft: #c47a56;
   --color-bg: #f5f1e8;
   --color-bg-elevated: #faf7f1;
   --color-surface: #fffcf7;
   --color-border: rgba(138, 133, 122, 0.35);
-  --color-border-strong: rgba(85, 107, 78, 0.35);
+  --color-border-strong: rgba(168, 93, 59, 0.28);
   --color-text: #2f332c;
   --color-text-muted: #8a857a;
   --color-text-inverse: #f5f1e8;
@@ -25,7 +28,7 @@
   --color-success: #556b4e;
   --color-success-soft: #e4ebe1;
   --color-focus: #4f7ea8;
-  --color-accent: #4f7ea8;
+  --color-accent: #a85d3b;
 
   /* Typography */
   --font-display: 'Bebas Neue', Impact, Haettenschweiler, sans-serif;

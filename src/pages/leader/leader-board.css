@@ -71,12 +71,12 @@
 }
 
 .team-board-switcher__link:hover {
-  border-color: var(--color-accent, #4f7ea8);
+  border-color: var(--color-clay);
 }
 
 .team-board-switcher__link--active {
-  border-color: var(--color-accent, #4f7ea8);
-  background: rgba(79, 126, 168, 0.08);
+  border-color: var(--color-clay);
+  background: var(--color-clay-wash);
   font-weight: 600;
 }
 
@@ -144,8 +144,8 @@
 }
 
 .gap-fill-queue__item--active {
-  border-color: var(--color-blue);
-  background: rgba(79, 126, 168, 0.08);
+  border-color: var(--color-clay);
+  background: var(--color-clay-wash);
 }
 
 .leader-attention {
@@ -186,11 +186,11 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--color-text-muted);
-  background: rgba(79, 126, 168, 0.04);
+  background: var(--color-clay-wash);
 }
 
 .leader-gap {
-  color: #a85d3b;
+  color: var(--color-clay);
   font-size: var(--text-small);
   font-weight: 600;
 }

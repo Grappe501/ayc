@@ -4,7 +4,7 @@
   top: 0;
   z-index: 1000;
   padding: var(--space-3) var(--space-4);
-  background: var(--color-blue);
+  background: var(--color-clay);
   color: var(--color-text-inverse);
   font-weight: 700;
   border-radius: var(--radius-md);
@@ -57,7 +57,7 @@
   width: 2.75rem;
   height: 2.75rem;
   border-radius: var(--radius-md);
-  background: linear-gradient(145deg, var(--color-blue) 0%, var(--color-blue-soft) 100%);
+  background: linear-gradient(145deg, var(--color-clay) 0%, var(--color-clay-soft) 100%);
   color: var(--color-text-inverse);
   font-family: var(--font-display);
   font-size: 1.35rem;
@@ -75,7 +75,7 @@
 .brand__org {
   font-size: var(--text-small);
   font-weight: 700;
-  color: var(--color-blue);
+  color: var(--color-clay);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -97,7 +97,7 @@
   border-radius: var(--radius-pill);
   border: 1.5px solid var(--color-border-strong);
   background: var(--color-surface);
-  color: var(--color-blue);
+  color: var(--color-clay);
   font-weight: 700;
   cursor: pointer;
 }
@@ -119,7 +119,7 @@
 }
 
 .primary-nav__link--active {
-  color: var(--color-blue);
+  color: var(--color-clay);
 }
 
 .mobile-nav {
@@ -163,7 +163,7 @@
   background: var(--color-bg);
   border-radius: var(--radius-pill);
   font-weight: 700;
-  color: var(--color-blue);
+  color: var(--color-clay);
   cursor: pointer;
 }
 
@@ -174,13 +174,13 @@
   padding: 0 var(--space-4);
   border-radius: var(--radius-md);
   text-decoration: none;
-  color: var(--color-blue);
+  color: var(--color-clay);
   font-weight: 700;
   font-size: 1.15rem;
 }
 
 .mobile-nav__link--active {
-  background: rgba(79, 126, 168, 0.08);
+  background: var(--color-clay-wash);
 }
 
 .main {
@@ -223,7 +223,7 @@
   align-items: center;
   padding: 0.7rem 1.1rem;
   border-radius: var(--radius-pill);
-  background: var(--color-blue);
+  background: var(--color-clay);
   color: var(--color-text-inverse);
   text-decoration: none;
   font-weight: 700;
@@ -233,7 +233,7 @@
 
 .beta-fab:hover {
   color: var(--color-text-inverse);
-  background: var(--color-blue-deep);
+  background: var(--color-clay-deep);
 }
 
 @media (min-width: 880px) {
