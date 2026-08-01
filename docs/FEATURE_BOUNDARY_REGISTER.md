@@ -11,6 +11,7 @@
 - Per-team attention digests (gaps, joins, preferred, missing leads) on Leader Board  
 - Team Board Mission module (charge, priorities, focus, lead owns, success) on `/leader/teams/:slug`  
 - Team Board Tasks-light (`team_tasks`) create / complete / cancel on category boards  
+- Team Board Resources-light (`team_resources`) links, notes, talking points, checklists  
 - Public Join page (`/join`) → Prospective people (`JOIN_FORM`) on chosen team + feedback notify  
 - Netlify site password + hierarchical board keys (`AYC_MASTER_KEY` + `AYC_KEY_*`)  
 

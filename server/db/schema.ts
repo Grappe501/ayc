@@ -221,6 +221,26 @@ export const teamTasks = pgTable(
   (table) => [index('team_tasks_team_status_idx').on(table.teamId, table.status, table.sortOrder)],
 )
 
+export const teamResources = pgTable(
+  'team_resources',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    teamId: uuid('team_id')
+      .notNull()
+      .references(() => teams.id),
+    title: text('title').notNull(),
+    url: text('url'),
+    notes: text('notes'),
+    kind: text('kind').notNull().default('LINK'),
+    sortOrder: integer('sort_order').notNull().default(0),
+    ...timestamps,
+    archivedAt: timestamp('archived_at', { withTimezone: true }),
+    createdByActor: text('created_by_actor'),
+    updatedByActor: text('updated_by_actor'),
+  },
+  (table) => [index('team_resources_team_idx').on(table.teamId, table.archivedAt, table.sortOrder)],
+)
+
 export const schemaMigrations = pgTable('schema_migrations', {
   id: text('id').primaryKey(),
   appliedAt: timestamp('applied_at', { withTimezone: true }).notNull().defaultNow(),

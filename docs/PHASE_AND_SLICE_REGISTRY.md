@@ -21,9 +21,10 @@
 | AYC-PHASE-2A-HIERARCHY-FOUNDATION | Planned |
 | AYC-PHASE-2B-JOIN-CTA-APPLICATIONS | Planned |
 | AYC-PHASE-2C-NOTIFY-CHANCE | Planned |
-| AYC-PHASE-2D-CATEGORY-BOARD-UPGRADE | In progress — Mission + Tasks shipped |
+| AYC-PHASE-2D-CATEGORY-BOARD-UPGRADE | Complete for Mission + Tasks + Resources (comms/reports later) |
 | AYC-PHASE-2D-MISSION-1.0 | Complete |
 | AYC-PHASE-2D-TASKS-1.0 | Complete |
+| AYC-PHASE-2D-RESOURCES-1.0 | Complete |
 | AYC-PHASE-2E-LOCATION-BOARDS | Planned |
 | AYC-PHASE-2F-SEGMENT-LEAD-BOARDS | Planned |
 | AYC-PHASE-2G-SCOPE-ENGINE | Planned |

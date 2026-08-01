@@ -167,6 +167,54 @@ export function updateTeamTask(body: {
   })
 }
 
+export type TeamResource = {
+  id: string
+  teamId: string
+  teamSlug: string
+  title: string
+  url: string | null
+  notes: string | null
+  kind: string
+  sortOrder: number
+  createdAt: string
+  updatedAt: string
+}
+
+export function fetchTeamResources(teamSlug: string) {
+  return request<{
+    team: { id: string; slug: string; name: string }
+    total: number
+    resources: TeamResource[]
+  }>(`team-resources?team=${encodeURIComponent(teamSlug)}`)
+}
+
+export function createTeamResource(body: {
+  team: string
+  title: string
+  url?: string | null
+  notes?: string | null
+  kind?: string
+}) {
+  return request<{ status: 'created'; resource: TeamResource }>('team-resources', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
+}
+
+export function updateTeamResource(body: {
+  id: string
+  title?: string
+  url?: string | null
+  notes?: string | null
+  kind?: string
+  archive?: boolean
+}) {
+  return request<{ status: 'updated' | 'archived'; resource: TeamResource }>(
+    'team-resources',
+    { method: 'PATCH', body: JSON.stringify(body) },
+  )
+}
+
 export type LeaderRosterRow = {
   id: string
   displayName: string

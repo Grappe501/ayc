@@ -29,6 +29,7 @@ describe('SQL migrations', () => {
     expect(files).toContain('002_join_form_source.sql')
     expect(files).toContain('003_person_merge.sql')
     expect(files).toContain('004_team_tasks.sql')
+    expect(files).toContain('005_team_resources.sql')
   })
 
   it('defines person_merge_history in 003_person_merge', () => {
@@ -41,5 +42,11 @@ describe('SQL migrations', () => {
     const sql = readFileSync(path.join(migrationsDir, '004_team_tasks.sql'), 'utf8')
     expect(sql).toContain('CREATE TABLE IF NOT EXISTS team_tasks')
     expect(sql).toContain('TEAM_TASK_CREATED')
+  })
+
+  it('defines team_resources in 005_team_resources', () => {
+    const sql = readFileSync(path.join(migrationsDir, '005_team_resources.sql'), 'utf8')
+    expect(sql).toContain('CREATE TABLE IF NOT EXISTS team_resources')
+    expect(sql).toContain('TEAM_RESOURCE_CREATED')
   })
 })
