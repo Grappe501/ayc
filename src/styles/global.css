@@ -16,10 +16,10 @@ body {
   line-height: var(--leading-body);
   color: var(--color-text);
   background:
-    radial-gradient(ellipse 72% 48% at 0% -6%, rgba(46, 90, 61, 0.16), transparent 56%),
-    radial-gradient(ellipse 48% 38% at 100% 0%, rgba(106, 90, 205, 0.11), transparent 52%),
-    radial-gradient(ellipse 42% 32% at 88% 100%, rgba(255, 107, 53, 0.09), transparent 55%),
-    linear-gradient(180deg, #ffffff 0%, var(--color-bg) 38%, #ebebeb 100%);
+    radial-gradient(ellipse 70% 45% at 0% -8%, rgba(255, 107, 53, 0.14), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 100% 0%, rgba(106, 90, 205, 0.16), transparent 52%),
+    radial-gradient(ellipse 45% 35% at 80% 100%, rgba(255, 255, 255, 0.06), transparent 55%),
+    linear-gradient(180deg, var(--color-bg-soft) 0%, var(--color-bg) 40%, var(--color-bg-deep) 100%);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -30,8 +30,8 @@ body {
 }
 
 ::selection {
-  background: rgba(46, 90, 61, 0.22);
-  color: var(--color-text);
+  background: rgba(255, 107, 53, 0.35);
+  color: #ffffff;
 }
 
 img {
@@ -46,7 +46,7 @@ a {
 }
 
 a:hover {
-  color: var(--color-tertiary-deep);
+  color: var(--color-tertiary-soft);
 }
 
 h1,
@@ -57,7 +57,7 @@ h4 {
   font-weight: 400;
   letter-spacing: 0.02em;
   line-height: var(--leading-tight);
-  color: var(--color-primary-deep);
+  color: var(--color-text);
   margin: 0 0 var(--space-4);
   text-wrap: balance;
 }
@@ -101,6 +101,71 @@ textarea {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* Light panels: dark ink */
+.card,
+.field,
+.loading-state,
+.error-state,
+.leader-roster-table-wrap,
+.directory-table-wrap,
+.mission-panel,
+.journey-step,
+.momentum-strip__item,
+.coming-list,
+.beta-loop,
+.join-explain,
+.join-form,
+.stat-card,
+.empty-state {
+  color: var(--color-text-on-light);
+}
+
+.card h1,
+.card h2,
+.card h3,
+.card h4,
+.mission-panel h1,
+.mission-panel h2,
+.mission-panel h3,
+.journey-step h1,
+.journey-step h2,
+.journey-step h3,
+.join-explain h1,
+.join-explain h2,
+.join-explain h3,
+.join-form h1,
+.join-form h2,
+.join-form h3 {
+  color: var(--color-primary-deep);
+}
+
+.card a,
+.mission-panel a,
+.join-explain a,
+.join-form a,
+.leader-roster-table-wrap a,
+.directory-table-wrap a {
+  color: var(--color-tertiary-deep);
+}
+
+.card a:hover,
+.mission-panel a:hover,
+.join-explain a:hover,
+.join-form a:hover {
+  color: var(--color-primary-deep);
+}
+
+.card p,
+.mission-panel p,
+.journey-step p,
+.join-explain p,
+.join-explain li,
+.field__hint,
+.stat-card__label,
+.workbench-card__status {
+  color: var(--color-text-muted-on-light);
 }
 
 @keyframes ayc-fade-up {

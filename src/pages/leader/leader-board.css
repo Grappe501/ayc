@@ -62,10 +62,10 @@
   align-items: center;
   gap: 0.4rem;
   padding: 0.45rem 0.75rem;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-on-light);
   border-radius: var(--radius-md);
   background: var(--color-surface);
-  color: var(--color-text);
+  color: var(--color-text-on-light);
   text-decoration: none;
   font-size: var(--text-small);
   box-shadow: var(--shadow-xs);
@@ -138,10 +138,10 @@
   width: 100%;
   text-align: left;
   padding: 0.75rem 0.9rem;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-on-light);
   border-radius: var(--radius-md);
   background: var(--color-surface);
-  color: var(--color-text);
+  color: var(--color-text-on-light);
   cursor: pointer;
   box-shadow: var(--shadow-xs);
   transition:
@@ -151,7 +151,7 @@
 }
 
 .gap-fill-queue__item span {
-  color: var(--color-text-muted);
+  color: var(--color-text-muted-on-light);
   font-size: var(--text-small);
 }
 
@@ -175,9 +175,10 @@
 
 .leader-roster-table-wrap {
   overflow-x: auto;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-on-light);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
+  color: var(--color-text-on-light);
   box-shadow: var(--shadow-sm), var(--shadow-inset);
 }
 
@@ -201,6 +202,10 @@
   text-transform: uppercase;
   color: var(--color-primary-deep);
   background: linear-gradient(180deg, rgba(46, 90, 61, 0.08), rgba(46, 90, 61, 0.14));
+}
+
+.leader-roster-table td {
+  color: var(--color-text-on-light);
 }
 
 .leader-roster-table tbody tr:hover td {

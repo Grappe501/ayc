@@ -1,53 +1,64 @@
 :root {
-  /* Color — AYC brand palette */
-  --color-bg: #f5f5f5;
-  --color-bg-elevated: #ffffff;
-  --color-surface: #ffffff;
+  /* Color — AYC brand palette (green canvas, light surfaces) */
+  --color-bg: #2e5a3d;
+  --color-bg-deep: #234832;
+  --color-bg-soft: #4a7a5c;
+  --color-bg-elevated: #355f44;
+  --color-surface: #f5f5f5;
+  --color-surface-elevated: #ffffff;
   --color-primary: #2e5a3d;
-  --color-primary-deep: #234832;
+  --color-primary-deep: #1c3a28;
   --color-primary-soft: #4a7a5c;
-  --color-primary-wash: rgba(46, 90, 61, 0.14);
+  --color-primary-wash: rgba(46, 90, 61, 0.12);
   --color-secondary: #ff6b35;
   --color-secondary-deep: #e25520;
   --color-secondary-soft: #ff8f66;
-  --color-secondary-wash: rgba(255, 107, 53, 0.12);
-  --color-tertiary: #00a3ff;
-  --color-tertiary-deep: #0082cc;
-  --color-tertiary-soft: #4dbcff;
-  --color-tertiary-wash: rgba(0, 163, 255, 0.12);
-  --color-splash: #6a5acd;
-  --color-splash-deep: #5548a8;
-  --color-splash-soft: #8b7ddd;
-  --color-splash-wash: rgba(106, 90, 205, 0.12);
+  --color-secondary-wash: rgba(255, 107, 53, 0.14);
+  --color-tertiary: #7dd3ff;
+  --color-tertiary-deep: #00a3ff;
+  --color-tertiary-soft: #b3e6ff;
+  --color-tertiary-wash: rgba(0, 163, 255, 0.14);
+  --color-splash: #9b8ce8;
+  --color-splash-deep: #6a5acd;
+  --color-splash-soft: #b8aded;
+  --color-splash-wash: rgba(106, 90, 205, 0.16);
 
   /* Legacy aliases → new roles */
-  --color-gold: var(--color-primary);
-  --color-gold-soft: var(--color-primary-soft);
+  --color-gold: var(--color-surface);
+  --color-gold-soft: #ffffff;
   --color-clay: var(--color-secondary);
   --color-clay-deep: var(--color-secondary-deep);
   --color-clay-soft: var(--color-secondary-soft);
   --color-clay-wash: var(--color-secondary-wash);
-  --color-blue: var(--color-tertiary);
-  --color-blue-deep: var(--color-tertiary-deep);
-  --color-blue-soft: var(--color-tertiary-soft);
+  --color-blue: var(--color-tertiary-deep);
+  --color-blue-deep: #0082cc;
+  --color-blue-soft: var(--color-tertiary);
   --color-green: var(--color-primary);
   --color-green-soft: var(--color-primary-soft);
-  --color-stone: #6b6b6b;
-  --color-tan: #ececec;
-  --color-border: rgba(26, 26, 26, 0.1);
-  --color-border-strong: rgba(46, 90, 61, 0.28);
-  --color-text: #1a1a1a;
-  --color-text-muted: #5c5c5c;
-  --color-text-inverse: #ffffff;
-  --color-surface-tint: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
-  --color-highlight: rgba(255, 255, 255, 0.75);
-  --color-error: #ff6b35;
-  --color-error-soft: rgba(255, 107, 53, 0.12);
-  --color-warning: #ff6b35;
-  --color-warning-soft: rgba(255, 107, 53, 0.12);
-  --color-success: #2e5a3d;
-  --color-success-soft: rgba(46, 90, 61, 0.14);
-  --color-focus: #00a3ff;
+  --color-stone: rgba(245, 245, 245, 0.72);
+  --color-tan: #e8ebe9;
+
+  /* Page (dark green) text */
+  --color-text: #f5f5f5;
+  --color-text-muted: rgba(245, 245, 245, 0.78);
+  --color-text-inverse: #f5f5f5;
+
+  /* Light surface text */
+  --color-text-on-light: #1a1a1a;
+  --color-text-muted-on-light: #4a4a4a;
+
+  --color-border: rgba(245, 245, 245, 0.18);
+  --color-border-strong: rgba(255, 107, 53, 0.45);
+  --color-border-on-light: rgba(26, 26, 26, 0.12);
+  --color-surface-tint: linear-gradient(180deg, #ffffff 0%, #f5f5f5 100%);
+  --color-highlight: rgba(255, 255, 255, 0.2);
+  --color-error: #ff8f66;
+  --color-error-soft: rgba(255, 107, 53, 0.18);
+  --color-warning: #ff8f66;
+  --color-warning-soft: rgba(255, 107, 53, 0.18);
+  --color-success: #8fd4a4;
+  --color-success-soft: rgba(143, 212, 164, 0.16);
+  --color-focus: #7dd3ff;
   --color-accent: #ff6b35;
 
   /* Typography */
@@ -80,24 +91,22 @@
   --radius-xl: 1.75rem;
   --radius-pill: 999px;
 
-  /* Elevation */
-  --shadow-xs: 0 1px 2px rgba(26, 26, 26, 0.04);
+  /* Elevation — tuned for green canvas */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.18);
   --shadow-sm:
-    0 1px 2px rgba(26, 26, 26, 0.04),
-    0 4px 14px rgba(26, 26, 26, 0.06);
+    0 1px 2px rgba(0, 0, 0, 0.16),
+    0 6px 18px rgba(0, 0, 0, 0.18);
   --shadow-md:
-    0 2px 4px rgba(26, 26, 26, 0.04),
-    0 10px 28px rgba(26, 26, 26, 0.09),
-    0 0 0 1px rgba(26, 26, 26, 0.03);
+    0 2px 6px rgba(0, 0, 0, 0.16),
+    0 14px 32px rgba(0, 0, 0, 0.22);
   --shadow-lg:
-    0 4px 8px rgba(26, 26, 26, 0.04),
-    0 20px 48px rgba(26, 26, 26, 0.12),
-    0 0 0 1px rgba(26, 26, 26, 0.04);
+    0 6px 12px rgba(0, 0, 0, 0.18),
+    0 24px 48px rgba(0, 0, 0, 0.28);
   --shadow-lift:
-    0 4px 10px rgba(255, 107, 53, 0.12),
-    0 14px 32px rgba(26, 26, 26, 0.12);
-  --shadow-inset: inset 0 1px 0 var(--color-highlight);
-  --ring-focus: 0 0 0 3px rgba(0, 163, 255, 0.22);
+    0 4px 10px rgba(255, 107, 53, 0.22),
+    0 16px 34px rgba(0, 0, 0, 0.28);
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  --ring-focus: 0 0 0 3px rgba(125, 211, 255, 0.35);
 
   /* Layout */
   --max-width: 80rem;
