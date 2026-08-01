@@ -32,6 +32,10 @@ Desktop.ini
 .cache/
 .tmp/
 *.tsbuildinfo
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
 
 # Personal data / exports / printable keys (never commit)
 /exports/

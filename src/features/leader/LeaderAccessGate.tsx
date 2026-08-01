@@ -65,22 +65,14 @@ export function LeaderAccessGate({ onUnlocked, breakGlass = false }: Props) {
             account whenever possible.
           </p>
         </>
-      ) : (
-        <>
-          <p className="page-header__eyebrow">Leadership Access</p>
-          <h1>Board access code</h1>
-          <p className="page-header__lede">
-            Enter your leadership key. The Lead Organizer master key opens every board.
-          </p>
-        </>
-      )}
+      ) : null}
       <form className="card" onSubmit={onSubmit}>
         {error ? (
           <div className="error-state" role="alert">
             {error}
           </div>
         ) : null}
-        <Field id="leader-code" label="Emergency board key">
+        <Field id="leader-code" label={breakGlass ? 'Emergency board key' : 'Leadership board key'}>
           <Input
             id="leader-code"
             type="password"
@@ -91,7 +83,7 @@ export function LeaderAccessGate({ onUnlocked, breakGlass = false }: Props) {
         </Field>
         <div className="btn-row">
           <Button type="submit" variant="primary" disabled={busy}>
-            {busy ? 'Unlocking…' : 'Unlock with key'}
+            {busy ? 'Unlocking…' : 'Unlock board'}
           </Button>
           {breakGlass ? (
             <Button type="button" variant="secondary" onClick={() => setOpen(false)}>

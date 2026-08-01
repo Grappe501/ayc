@@ -11,6 +11,8 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:smoke": "playwright test e2e/smoke.spec.ts",
     "validate": "npm run typecheck && npm run lint && npm run test && npm run build",
     "db:migrate": "node --experimental-strip-types server/db/migrate.ts",
     "db:seed-teams": "node --experimental-strip-types server/db/seed-teams.ts",
@@ -30,6 +32,7 @@
   "devDependencies": {
     "@eslint/js": "^9.29.0",
     "@netlify/functions": "^3.1.2",
+    "@playwright/test": "^1.54.2",
     "@types/node": "^22.15.32",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",

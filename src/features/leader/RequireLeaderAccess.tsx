@@ -157,28 +157,16 @@ export function RequireLeaderAccess(props: Props) {
     )
   }
 
-  // Not logged in — primary login, break-glass secondary
+  // Not logged in — board key first (bootstrap); account login when invited
   return (
     <div>
       <p className="page-header__eyebrow">Leadership Workbench</p>
-      <h1>Log in to continue</h1>
+      <h1>Unlock the workbench</h1>
       <p className="page-header__lede">
-        Use your AYC account to open the boards you’re granted. Shared keys remain available as
-        emergency break-glass access only.
+        Enter your leadership board key to open boards. Personal login is for people who already
+        claimed an invite — invites are created from a contact after you’re unlocked.
       </p>
-      <div className="btn-row" style={{ marginBottom: '1.5rem' }}>
-        <Button to={`/login?next=${encodeURIComponent(window.location.pathname)}`} variant="primary">
-          Log in
-        </Button>
-        <Button to="/claim" variant="secondary">
-          Claim invite
-        </Button>
-        <Button to="/" variant="secondary">
-          Back to home
-        </Button>
-      </div>
       <LeaderAccessGate
-        breakGlass
         onUnlocked={(next) => {
           setScope(next)
           setUnlocked(true)
@@ -187,6 +175,12 @@ export function RequireLeaderAccess(props: Props) {
           }
         }}
       />
+      <p className="field__hint" style={{ marginTop: '1.25rem' }}>
+        Already claimed an invite?{' '}
+        <Button to={`/login?next=${encodeURIComponent(window.location.pathname)}`} variant="secondary">
+          Log in with account
+        </Button>
+      </p>
     </div>
   )
 }

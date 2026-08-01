@@ -14,13 +14,7 @@
 
 ## Apply migration
 
-Run against production Postgres (local migrate hit `permission denied for schema public` with current `DATABASE_URL`):
-
-```sql
--- contents of server/db/migrations/015_location_scoped_tasks_resources.sql
-```
-
-Or: `npm run db:migrate` with a role that can `ALTER TABLE` in `public`.
+**Applied** on production Supabase (`yprxjkyjbfhinsassdaw`) 2026-08-01 via MCP `apply_migration` (`location_scoped_tasks_resources`). Verified `team_tasks.location_id` and `team_resources.location_id` exist (nullable uuid).
 
 ## Boundaries
 
