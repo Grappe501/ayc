@@ -10,6 +10,7 @@ import { pipelineTagLabel } from '@/features/leader/pipelineLabels'
 import { RequireLeaderAccess } from '@/features/leader/RequireLeaderAccess'
 import { RestoreContactDialog } from '@/features/leader/RestoreContactDialog'
 import { getLeaderScope } from '@/features/leader/leaderSession'
+import { inviteAccount } from '@/features/auth/authApi'
 import {
   fetchContact,
   type ContactDetail,
@@ -34,6 +35,12 @@ function ContactDetailView() {
   const [archiveOpen, setArchiveOpen] = useState(false)
   const [restoreOpen, setRestoreOpen] = useState(false)
   const [banner, setBanner] = useState('')
+  const [inviteBusy, setInviteBusy] = useState(false)
+  const [inviteResult, setInviteResult] = useState<{
+    code: string
+    email: string
+    claimPath: string
+  } | null>(null)
 
   const load = useCallback(async () => {
     if (!personId) return
@@ -114,8 +121,23 @@ function ContactDetailView() {
             <p>{displayName} has been removed from active directory views.</p>
           ) : banner === 'Contact Restored' ? (
             <p>{displayName} has returned to operational views.</p>
-          ) : (
+          ) : banner === 'Login invite created' && inviteResult ? (
+            <div>
+              <p>
+                Share this one-time code with {displayName} ({inviteResult.email}). It will not be
+                shown again.
+              </p>
+              <p>
+                <strong>Code:</strong> <code>{inviteResult.code}</code>
+              </p>
+              <p>
+                <strong>Claim page:</strong> {inviteResult.claimPath}
+              </p>
+            </div>
+          ) : banner === 'Contact Updated' ? (
             <p>{displayName}’s record has been saved.</p>
+          ) : (
+            <p>{banner}</p>
           )}
         </div>
       ) : null}
@@ -135,6 +157,33 @@ function ContactDetailView() {
             <Button to={`/directory/${contact.id}`} variant="secondary">
               View in Directory
             </Button>
+            {!archived && contact.email?.value ? (
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={inviteBusy}
+                onClick={() => {
+                  void (async () => {
+                    setInviteBusy(true)
+                    setInviteResult(null)
+                    const result = await inviteAccount(contact.id)
+                    setInviteBusy(false)
+                    if (!result.ok) {
+                      setBanner(result.error.message)
+                      return
+                    }
+                    setInviteResult({
+                      code: result.data.code,
+                      email: result.data.email,
+                      claimPath: result.data.claimPath,
+                    })
+                    setBanner('Login invite created')
+                  })()
+                }}
+              >
+                {inviteBusy ? 'Inviting…' : 'Invite to login'}
+              </Button>
+            ) : null}
             {!archived ? (
               <Button type="button" variant="secondary" onClick={() => setArchiveOpen(true)}>
                 Archive Contact

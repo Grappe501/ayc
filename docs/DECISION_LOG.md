@@ -36,6 +36,8 @@
 | 2026-07-31 | Calendar recurrence | Master event rule (DAILY/WEEKLY/MONTHLY); expand in query window; exceptions cancel one occurrence; RSVPs stay series-level |
 | 2026-07-31 | Calendar ICS export | Leader-auth `GET /api/leader-calendar-ics` returns RFC 5545 with RRULE/EXDATE; no public feed yet |
 | 2026-08-01 | Public calendar | `/calendar` + `GET /api/public-calendar-events` + `GET /api/public-calendar-ics`; only `PUBLIC`+`SCHEDULED`; leaders toggle visibility (default INTERNAL) |
+| 2026-08-01 | Personal login | Invite/claim-only Supabase Auth (email+password); `user_accounts` linked to `people`; leader keys remain for boards |
+| 2026-08-01 | Directory Profiles | Affiliation header + photo + narrative + public/private notes; owner or leader edits; notes require login |
 | 2026-07-31 | Green canvas theme | Page background `#2E5A3D` with light text; light surfaces keep dark text |
 | 2026-07-31 | Join → Prospective pipeline | `/join` creates people with status `PROSPECTIVE`, source `JOIN_FORM`, on selected team board |
 | 2026-07-31 | Duplicate merge (#4) | `/leader/duplicates` queue + merge into survivor; `person_merge_history` + `PERSON_MERGED` audit |

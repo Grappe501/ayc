@@ -1,4 +1,6 @@
+import { getAccessToken } from '@/features/auth/authSession'
 import { getLeaderWriteSecret } from '@/features/leader/leaderSession'
+import type { ProfileFields } from './profileApi'
 
 export type DirectorySummary = {
   activePeople: number
@@ -56,6 +58,16 @@ export type DirectoryLocation = {
   teamsRepresented: number
 }
 
+export type ProfileNote = {
+  id: string
+  personId: string
+  authorPersonId: string | null
+  authorDisplayName: string
+  body: string
+  visibility: string
+  createdAt: string
+}
+
 export type DirectoryPersonDetail = {
   id: string
   displayName: string
@@ -88,6 +100,16 @@ export type DirectoryPersonDetail = {
     slug: string
     position: string
   }>
+  profile: ProfileFields
+  notes: ProfileNote[]
+  hasAccount: boolean
+  viewer: {
+    isOwner: boolean
+    isLeader: boolean
+    canEditProfile: boolean
+    canLeaveNote: boolean
+    personId: string | null
+  }
 }
 
 type ApiResult<T> = { ok: true; data: T } | { ok: false; error: { message: string }; status: number }
@@ -96,6 +118,8 @@ async function request<T>(path: string): Promise<ApiResult<T>> {
   const headers = new Headers({ Accept: 'application/json' })
   const secret = getLeaderWriteSecret()
   if (secret) headers.set('X-AYC-Leader-Write-Secret', secret)
+  const token = await getAccessToken()
+  if (token) headers.set('Authorization', `Bearer ${token}`)
 
   const response = await fetch(`/api/${path}`, { headers })
   const payload = (await response.json().catch(() => null)) as

@@ -32,18 +32,21 @@
 - Calendar recurrence — daily/weekly/monthly series with occurrence cancel exceptions  
 - Calendar ICS export — leader-authenticated `.ics` download (RRULE + EXDATE)  
 - Public calendar — `/calendar` + unauthenticated ICS of `visibility=PUBLIC` events only  
+- Personal login (invite/claim) — Supabase Auth email+password; `user_accounts` ↔ `people`  
+- Directory Profiles — photo, narrative, public/private notes on `/directory/:personId`  
 
 ## Phase 2 still deferred
 
 Canonical plan: `docs/master-build-plan/10-PHASE-2-MASTER-PLAN.md`
 
-- Per-person unlock / OAuth accounts (identity path after keys)  
+- Replacing shared leader keys with account-based board unlock  
+- Google / social OAuth  
 - Notify Chance email outbox (2C) — skipped for now, add later  
 - Location-level Graphic Design boards (GD stays statewide)
 
 ## Phase 1 forbidden
 
-- Individual accounts / OAuth  
+- Open public signup (accounts remain invite/claim only)  
 - Email / SMS / messaging  
 - Events / training / AI  
 - Imports / exports / voter files  

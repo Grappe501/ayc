@@ -3,6 +3,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { AYC_SITE_NAME } from '@/content/ayc'
 import { BetaFeedbackButton } from '@/components/feedback/BetaFeedbackButton'
 import { focusFirst, trapTabKey } from '@/components/ui/focusTrap'
+import { useAuth } from '@/features/auth/AuthProvider'
 import './AppShell.css'
 
 const NAV = [
@@ -20,6 +21,7 @@ export function AppShell() {
   const menuId = useId()
   const panelRef = useRef<HTMLDivElement>(null)
   const toggleRef = useRef<HTMLButtonElement>(null)
+  const { me, signOut } = useAuth()
 
   useEffect(() => {
     setMenuOpen(false)
@@ -97,6 +99,34 @@ export function AppShell() {
                 {item.label}
               </NavLink>
             ))}
+            {me ? (
+              <>
+                <NavLink
+                  to={`/directory/${me.person.id}`}
+                  className={({ isActive }) =>
+                    isActive ? 'primary-nav__link primary-nav__link--active' : 'primary-nav__link'
+                  }
+                >
+                  My profile
+                </NavLink>
+                <button
+                  type="button"
+                  className="primary-nav__link"
+                  onClick={() => void signOut()}
+                >
+                  Log out
+                </button>
+              </>
+            ) : (
+              <NavLink
+                to="/login"
+                className={({ isActive }) =>
+                  isActive ? 'primary-nav__link primary-nav__link--active' : 'primary-nav__link'
+                }
+              >
+                Log in
+              </NavLink>
+            )}
           </nav>
         </div>
       </header>
@@ -137,6 +167,37 @@ export function AppShell() {
               {item.label}
             </NavLink>
           ))}
+          {me ? (
+            <>
+              <NavLink
+                to={`/directory/${me.person.id}`}
+                className={({ isActive }) =>
+                  isActive ? 'mobile-nav__link mobile-nav__link--active' : 'mobile-nav__link'
+                }
+              >
+                My profile
+              </NavLink>
+              <button
+                type="button"
+                className="mobile-nav__link"
+                onClick={() => {
+                  void signOut()
+                  setMenuOpen(false)
+                }}
+              >
+                Log out
+              </button>
+            </>
+          ) : (
+            <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                isActive ? 'mobile-nav__link mobile-nav__link--active' : 'mobile-nav__link'
+              }
+            >
+              Log in
+            </NavLink>
+          )}
         </div>
       </div>
 

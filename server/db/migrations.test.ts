@@ -37,6 +37,8 @@ describe('SQL migrations', () => {
     expect(files).toContain('010_calendars.sql')
     expect(files).toContain('011_calendar_event_rsvps.sql')
     expect(files).toContain('012_calendar_recurrence.sql')
+    expect(files).toContain('013_user_accounts.sql')
+    expect(files).toContain('014_person_profiles.sql')
   })
 
   it('defines person_merge_history in 003_person_merge', () => {
@@ -117,6 +119,22 @@ describe('SQL migrations', () => {
     expect(sql).toContain('recurrence_frequency')
     expect(sql).toContain('CREATE TABLE IF NOT EXISTS calendar_event_exceptions')
     expect(sql).toContain('CALENDAR_OCCURRENCE_CANCELLED')
+  })
+
+  it('defines user_accounts in 013_user_accounts', () => {
+    const sql = readFileSync(path.join(migrationsDir, '013_user_accounts.sql'), 'utf8')
+    expect(sql).toContain('CREATE TABLE IF NOT EXISTS user_accounts')
+    expect(sql).toContain('CREATE TABLE IF NOT EXISTS account_invites')
+    expect(sql).toContain('ACCOUNT_CLAIMED')
+    expect(sql).toContain('USER_ACCOUNT')
+  })
+
+  it('defines person_profiles in 014_person_profiles', () => {
+    const sql = readFileSync(path.join(migrationsDir, '014_person_profiles.sql'), 'utf8')
+    expect(sql).toContain('CREATE TABLE IF NOT EXISTS person_profiles')
+    expect(sql).toContain('CREATE TABLE IF NOT EXISTS person_profile_notes')
+    expect(sql).toContain('PROFILE_UPDATED')
+    expect(sql).toContain("'PRIVATE'")
   })
 })
 

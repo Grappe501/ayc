@@ -16,6 +16,8 @@ import {
 } from '@/pages/leader/LocationBoardPages'
 import { SegmentBoardPage } from '@/pages/leader/SegmentBoardPage'
 import { GraphicDesignBoardPage, TeamBoardPage } from '@/pages/leader/TeamBoardPage'
+import { ClaimPage } from '@/pages/auth/ClaimPage'
+import { LoginPage } from '@/pages/auth/LoginPage'
 import { PublicCalendarPage } from '@/pages/calendar/PublicCalendarPage'
 import { DirectoryPage } from '@/pages/directory/DirectoryPage'
 import { DirectoryPersonPage } from '@/pages/directory/DirectoryPersonPage'
@@ -53,6 +55,8 @@ export function App() {
         <Route path="/directory/:personId" element={<DirectoryPersonPage />} />
         <Route path="/calendar" element={<PublicCalendarPage />} />
         <Route path="/feedback" element={<FeedbackPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/claim" element={<ClaimPage />} />
         <Route path="/join" element={<JoinPage />} />
         <Route path="/join/thanks" element={<JoinThanksPage />} />
 

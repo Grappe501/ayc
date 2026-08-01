@@ -441,6 +441,76 @@ export const membershipApplications = pgTable(
   ],
 )
 
+export const userAccounts = pgTable(
+  'user_accounts',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    personId: uuid('person_id')
+      .notNull()
+      .unique()
+      .references(() => people.id),
+    authSubject: text('auth_subject').notNull().unique(),
+    email: text('email').notNull(),
+    accountStatus: text('account_status').notNull().default('ACTIVE'),
+    lastLoginAt: timestamp('last_login_at', { withTimezone: true }),
+    ...timestamps,
+    disabledAt: timestamp('disabled_at', { withTimezone: true }),
+  },
+  (table) => [
+    index('user_accounts_email_idx').on(table.email),
+    index('user_accounts_status_idx').on(table.accountStatus),
+  ],
+)
+
+export const accountInvites = pgTable(
+  'account_invites',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    personId: uuid('person_id')
+      .notNull()
+      .references(() => people.id),
+    email: text('email').notNull(),
+    tokenHash: text('token_hash').notNull(),
+    expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+    usedAt: timestamp('used_at', { withTimezone: true }),
+    invitedByActor: text('invited_by_actor'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index('account_invites_person_idx').on(table.personId),
+    index('account_invites_email_idx').on(table.email),
+  ],
+)
+
+export const personProfiles = pgTable('person_profiles', {
+  personId: uuid('person_id')
+    .primaryKey()
+    .references(() => people.id, { onDelete: 'cascade' }),
+  photoPath: text('photo_path'),
+  hometown: text('hometown'),
+  major: text('major'),
+  interests: text('interests'),
+  narrative: text('narrative'),
+  ...timestamps,
+})
+
+export const personProfileNotes = pgTable(
+  'person_profile_notes',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    personId: uuid('person_id')
+      .notNull()
+      .references(() => people.id, { onDelete: 'cascade' }),
+    authorPersonId: uuid('author_person_id').references(() => people.id),
+    authorDisplayName: text('author_display_name').notNull(),
+    body: text('body').notNull(),
+    visibility: text('visibility').notNull().default('PUBLIC'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    archivedAt: timestamp('archived_at', { withTimezone: true }),
+  },
+  (table) => [index('person_profile_notes_person_idx').on(table.personId)],
+)
+
 export const schemaMigrations = pgTable('schema_migrations', {
   id: text('id').primaryKey(),
   appliedAt: timestamp('applied_at', { withTimezone: true }).notNull().defaultNow(),

@@ -23,7 +23,7 @@ function corsHeaders(): Record<string, string> {
     headers['Access-Control-Allow-Origin'] = origin
     headers['Access-Control-Allow-Headers'] =
       'Content-Type, Authorization, X-AYC-Leader-Write-Secret'
-    headers['Access-Control-Allow-Methods'] = 'GET, POST, PATCH, OPTIONS'
+    headers['Access-Control-Allow-Methods'] = 'GET, POST, PATCH, DELETE, OPTIONS'
   }
   return headers
 }

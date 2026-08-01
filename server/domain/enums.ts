@@ -109,6 +109,14 @@ export const AUDIT_EVENT_TYPES = [
   'CALENDAR_RSVP_UPDATED',
   'CALENDAR_RSVP_REMOVED',
   'CALENDAR_OCCURRENCE_CANCELLED',
+  'ACCOUNT_INVITED',
+  'ACCOUNT_CLAIMED',
+  'ACCOUNT_LOGIN',
+  'ACCOUNT_DISABLED',
+  'PROFILE_UPDATED',
+  'PROFILE_PHOTO_UPDATED',
+  'PROFILE_NOTE_CREATED',
+  'PROFILE_NOTE_ARCHIVED',
 ] as const
 
 export const CALENDAR_RECURRENCE_FREQUENCIES = ['DAILY', 'WEEKLY', 'MONTHLY'] as const
@@ -131,8 +139,18 @@ export const AUDIT_ENTITY_TYPES = [
   'CALENDAR',
   'CALENDAR_EVENT',
   'CALENDAR_RSVP',
+  'USER_ACCOUNT',
+  'ACCOUNT_INVITE',
+  'PERSON_PROFILE',
+  'PERSON_PROFILE_NOTE',
 ] as const
 export type AuditEntityType = (typeof AUDIT_ENTITY_TYPES)[number]
+
+export const ACCOUNT_STATUSES = ['ACTIVE', 'DISABLED'] as const
+export type AccountStatus = (typeof ACCOUNT_STATUSES)[number]
+
+export const PROFILE_NOTE_VISIBILITIES = ['PUBLIC', 'PRIVATE'] as const
+export type ProfileNoteVisibility = (typeof PROFILE_NOTE_VISIBILITIES)[number]
 
 export const CALENDAR_EVENT_STATUSES = ['SCHEDULED', 'CANCELLED'] as const
 export type CalendarEventStatus = (typeof CALENDAR_EVENT_STATUSES)[number]

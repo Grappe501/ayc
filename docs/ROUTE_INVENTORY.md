@@ -19,6 +19,8 @@
 | `/directory/:personId` | Complete | Directory person (masked) |
 | `/feedback` | Complete | Beta feedback |
 | `/calendar` | Complete | Public events (`visibility=PUBLIC`) + ICS subscribe |
+| `/login` | Complete | Personal account login (Supabase Auth) |
+| `/claim` | Complete | Claim invite + set password (invite-only) |
 | `/join` | Complete | Public join → creates `PROSPECTIVE` person (`JOIN_FORM`) on chosen team + feedback notify |
 | `/workbench` | Alias → Leader | |
 | `/people` | Alias → Directory | |
@@ -27,6 +29,8 @@
 
 Reserved for later phases (do not ship stubs): `/teams` (public/future RBAC boards), `/admin`, `/events`, `/training`, `/messages`, `/analytics`, `/profile`, `/settings`
 
-Phase 2 live: `/join`, `/join/thanks`, `/calendar`, `/leader/applications`, `/leader/reports`, `/leader/calendar`, `/leader/segments/*`, `/leader/locations/*`, `/leader/teams/social-media/graphic-design`.
+Phase 2 live: `/join`, `/join/thanks`, `/calendar`, `/login`, `/claim`, `/leader/applications`, `/leader/reports`, `/leader/calendar`, `/leader/segments/*`, `/leader/locations/*`, `/leader/teams/social-media/graphic-design`. Directory person pages are full Directory Profiles.
 
 Phase 1 Team Lead Boards live under `/leader/teams/*` (same unlock as Leader Board). Full Phase 2 Team Boards (tasks, resources, communication, reports) remain deferred.
+
+Reserved `/profile` remains unused — personal profile lives at `/directory/:personId` (“My profile” in nav).
