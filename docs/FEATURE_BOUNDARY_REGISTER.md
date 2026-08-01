@@ -5,6 +5,7 @@
 - Vision landing, shell, navigation  
 - Contacts, locations, teams, directory, feedback  
 - Statewide Leader Board + five Team Lead Boards under `/leader/teams/:slug` (roster, gaps, assign)  
+- Leader-gated feedback inbox (`/leader/feedback`) for status/severity/notes triage  
 - Netlify password + leader write secret  
 
 ## Phase 1 deferred (Phase 2 Team Boards)

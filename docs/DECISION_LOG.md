@@ -16,4 +16,5 @@
 | 2026-07-31 | Team Lead Boards under `/leader` | Five boards (Organizer, Voter Registration, Social Media, Events, Outreach); Phase 2 full dashboards still deferred |
 | 2026-07-31 | Gate 6 technical close | Site password on; DB + env live; validate green; product-owner device QA still open |
 | 2026-07-31 | Contact gap-fill sprint | `/leader/gaps` one-at-a-time phone/email queue for Chance |
+| 2026-07-31 | Feedback inbox under `/leader` | Chance triage at `/leader/feedback`; public `/feedback` stays submit-only; no `/admin` |
 | 2026-07-31 | Brand palette refresh | Sage `#556B4E`, blue `#4F7EA8`, stone `#8a857a`, tan `#D7C9B1`, clay `#A85d3B`, cream `#F5F1E8` |

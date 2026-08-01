@@ -5,6 +5,7 @@ import { validateFeedbackSubmit } from '../services/feedbackService.ts'
 describe('buildReferenceCode', () => {
   it('uses AYC-FB-###### format', () => {
     expect(buildReferenceCode(128)).toMatch(/^AYC-FB-\d{6}$/)
+    expect(buildReferenceCode(128)).toBe('AYC-FB-000128')
   })
 })
 

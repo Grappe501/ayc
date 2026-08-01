@@ -150,6 +150,48 @@ export function assignTeam(body: {
   })
 }
 
+export type LeaderFeedbackItem = {
+  id: string
+  referenceCode: string
+  category: string
+  pagePath: string | null
+  workflow: string | null
+  description: string
+  severity: string | null
+  status: string
+  reporterName: string | null
+  reporterContact: string | null
+  browserContext: string | null
+  resolutionSummary: string | null
+  createdAt: string
+  updatedAt: string
+  resolvedAt: string | null
+}
+
+export function fetchLeaderFeedback(params?: { status?: string; q?: string }) {
+  const qs = new URLSearchParams()
+  if (params?.status) qs.set('status', params.status)
+  if (params?.q) qs.set('q', params.q)
+  const suffix = qs.toString() ? `?${qs.toString()}` : ''
+  return request<{
+    total: number
+    openCount: number
+    items: LeaderFeedbackItem[]
+  }>(`leader-feedback${suffix}`)
+}
+
+export function updateLeaderFeedback(body: {
+  id: string
+  status?: string
+  severity?: string | null
+  resolutionSummary?: string | null
+}) {
+  return request<{ item: LeaderFeedbackItem }>('leader-feedback', {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  })
+}
+
 export function fetchTeams() {
   return request<
     Array<{

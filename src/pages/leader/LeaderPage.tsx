@@ -103,6 +103,9 @@ function LeaderBoard() {
             <Button to="/leader/gaps" variant="primary">
               Fill contact gaps
             </Button>
+            <Button to="/leader/feedback" variant="secondary">
+              Feedback inbox
+            </Button>
             <Button to="/leader/contacts/new" variant="secondary">
               Add a Contact
             </Button>
@@ -272,6 +275,9 @@ function LeaderBoard() {
         <div className="btn-row">
           <Button to="/leader/gaps" variant="primary">
             Fill contact gaps
+          </Button>
+          <Button to="/leader/feedback" variant="secondary">
+            Feedback inbox
           </Button>
           <Button to="/leader/contacts/new" variant="secondary">
             Add Contact

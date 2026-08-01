@@ -5,6 +5,7 @@
 | `/` | Phase 1B complete | Vision landing |
 | `/leader` | Complete | Statewide Leader Board + Team Lead Board hub |
 | `/leader/gaps` | Complete | Contact gap-fill sprint (phone/email queue) |
+| `/leader/feedback` | Complete | Leader-gated beta feedback inbox (status, severity, notes) |
 | `/leader/teams/:teamSlug` | Complete | Five Team Lead Boards (`organizer`, `voter-registration`, `social-media`, `events`, `outreach`) |
 | `/leader/contacts/new` | Complete | Contact create |
 | `/leader/contacts/:personId` | Complete | Contact detail / edit / archive |
