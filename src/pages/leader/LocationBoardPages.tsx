@@ -15,6 +15,7 @@ import {
 import { BoardCalendarPanel } from '@/features/calendar/BoardCalendarPanel'
 import { AssignTeamDialog } from '@/features/leader/AssignTeamDialog'
 import { LeaderRosterList } from '@/features/leader/LeaderRosterList'
+import { LocationTeamMissionPanel } from '@/features/leader/LocationTeamMissionPanel'
 import { RequireLeaderAccess } from '@/features/leader/RequireLeaderAccess'
 import { clearLeaderSession } from '@/features/leader/leaderSession'
 import {
@@ -231,6 +232,9 @@ function LocationTeamBoard({ locationId }: { locationId: string }) {
                 Leader Board
               </Button>
             )}
+            <Button to={`#mission`} variant="secondary">
+              Mission
+            </Button>
             <Button
               to={`/leader/calendar?locationId=${location.id}`}
               variant="secondary"
@@ -260,6 +264,17 @@ function LocationTeamBoard({ locationId }: { locationId: string }) {
         <StatCard value={String(stats.missingContact)} label="Contact gaps" />
         <StatCard value={String(stats.prospective)} label="Prospectives" />
       </div>
+
+      <LocationTeamMissionPanel
+        locationType={location.locationType}
+        locationName={location.name}
+        stats={{
+          missingContact: stats.missingContact,
+          prospective: stats.prospective,
+          teamsRepresented: stats.teamsRepresented,
+          total: state.total,
+        }}
+      />
 
       <BoardCalendarPanel
         locationId={location.id}

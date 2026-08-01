@@ -46,7 +46,7 @@ V3 upgrade plan: `docs/plans/AYC_V3_UPGRADE_PLAN.md`
 - Google / social OAuth  
 - Notify Chance email outbox (2C) — skipped for now, add later  
 - Location-level Graphic Design boards (GD stays statewide)  
-- Location board Mission / Tasks / Resources parity (roster + calendar today)
+- Location category Tasks / Resources parity (TEAM Mission shipped 2026-08-01; category boards still roster + calendar)
 
 ## Phase 1 forbidden
 
