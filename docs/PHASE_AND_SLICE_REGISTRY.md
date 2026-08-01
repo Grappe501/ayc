@@ -21,7 +21,7 @@
 | AYC-PHASE-2-MASTER-PLAN-1.0 | Drafted — see `docs/master-build-plan/10-PHASE-2-MASTER-PLAN.md` |
 | AYC-PHASE-2A-HIERARCHY-FOUNDATION | Complete |
 | AYC-PHASE-2B-JOIN-CTA-APPLICATIONS | Complete |
-| AYC-PHASE-2C-NOTIFY-CHANCE | Planned |
+| AYC-PHASE-2C-NOTIFY-CHANCE | Deferred (build later) |
 | AYC-PHASE-2D-CATEGORY-BOARD-UPGRADE | Complete for Mission + Tasks + Resources (comms/reports later) |
 | AYC-PHASE-2D-MISSION-1.0 | Complete |
 | AYC-PHASE-2D-TASKS-1.0 | Complete |
@@ -29,5 +29,5 @@
 | AYC-PHASE-2E-LOCATION-BOARDS | Complete |
 | AYC-PHASE-2F-SEGMENT-LEAD-BOARDS | Complete |
 | AYC-PHASE-2G-SCOPE-ENGINE | Complete |
-| AYC-PHASE-2H-REPORTS-V1 | Planned |
+| AYC-PHASE-2H-REPORTS-V1 | Complete |
 | AYC-PHASE-2-CAL-0…5-NESTED-CALENDARS | Planned (own track) |

@@ -660,3 +660,119 @@ export function updateLeaderApplication(body: {
     body: JSON.stringify(body),
   })
 }
+
+export type LeaderReportsPayload = {
+  generatedAt: string
+  summary: {
+    activePeople: number
+    leads: number
+    volunteers: number
+    locationsRepresented: number
+    locationsWithPeople: number
+    openApplications: number
+    thinLocations: number
+    teamsWithoutLead: number
+    totalOpenTeamItems: number
+  }
+  applicationPipeline: {
+    NEW: number
+    REVIEWING: number
+    ACCEPTED: number
+    DECLINED: number
+    DUPLICATE: number
+    total: number
+    open: number
+  }
+  recentApplications: Array<{
+    id: string
+    referenceCode: string
+    status: string
+    firstName: string
+    lastName: string
+    email: string
+    primaryTeamInterest: string
+    locationInterestType: string
+    wantsToLeadLocal: boolean
+    wantsCategoryLead: boolean
+    createdAt: string
+    assignedToPersonId: string | null
+  }>
+  recentJoinPeople: Array<{
+    id: string
+    firstName: string
+    lastName: string
+    preferredName: string | null
+    displayName: string
+    status: string
+    source: string
+    createdAt: string
+  }>
+  recentAssignments: Array<{
+    id: string
+    personId: string
+    displayName: string
+    position: string
+    teamName: string
+    teamSlug: string
+    createdAt: string
+  }>
+  attention: {
+    missingContact: number
+    prospective: number
+    joinForm: number
+    needsPreferred: number
+    textReady: number
+    readyToLead: number
+    needsMentoring: number
+    futureLeader: number
+    localLeadCandidate: number
+    categoryLeadCandidate: number
+  }
+  teamCoverage: {
+    teamsNeedingAttention: number
+    totalOpenItems: number
+    digests: Array<{
+      slug: string
+      name: string
+      mark: string
+      roster: number
+      leads: number
+      noLead: boolean
+      openItems: number
+      topIssues: string[]
+      prospective: number
+      joinForm: number
+      missingContact: number
+    }>
+    thinCategoryTeams: string[]
+  }
+  locationCoverage: {
+    totalLocations: number
+    thinCount: number
+    thinBySegment: {
+      highSchool: number
+      workingClass: number
+      college: number
+    }
+    thinFormalLeadCount: number
+    thinPipelineCount: number
+    locations: Array<{
+      id: string
+      code: string
+      name: string
+      locationType: string
+      hasLocationLeadRole: boolean
+      rosterCount: number
+      localLeadCandidates: number
+      readyToLead: number
+      categoryLeadsOnRoster: number
+      thinPipeline: boolean
+      thinFormalLead: boolean
+      thin: boolean
+    }>
+  }
+}
+
+export function fetchLeaderReports() {
+  return request<LeaderReportsPayload>('leader-reports')
+}

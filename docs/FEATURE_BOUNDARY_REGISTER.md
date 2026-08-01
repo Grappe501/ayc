@@ -26,14 +26,15 @@
 - HS / WC segment workspaces with develop-local-leads queues + location coverage  
 - Scope engine `canAccessBoard` + person leadership role grants (keys remain for unlock)  
 - Membership applications queue (`membership_applications`) + `/leader/applications` accept/decline  
+- Reports hub (`/leader/reports`) — coverage + pipeline for Chance  
 
 ## Phase 2 still deferred
 
 Canonical plan: `docs/master-build-plan/10-PHASE-2-MASTER-PLAN.md`
 
 - Per-person unlock / OAuth accounts (identity path after keys)  
-- Notify Chance email outbox (2C)  
-- Nested calendars (CAL track), reports hub (2H)  
+- Notify Chance email outbox (2C) — skipped for now, add later  
+- Nested calendars (CAL track)  
 - Location-level Graphic Design boards (GD stays statewide)
 
 ## Phase 1 forbidden

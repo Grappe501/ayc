@@ -29,6 +29,8 @@
 | 2026-07-31 | Board key rotation | All `AYC_MASTER_KEY` / `AYC_KEY_*` rotated in Netlify; printable sheet in local `exports/` only (never git) |
 | 2026-07-31 | Phase 2G scope engine | Shared `canAccessBoard` law; keys map to synthetic roles; master grants/revokes `person_leadership_roles` including LOCATION_LEAD |
 | 2026-07-31 | Phase 2B applications | `/join` writes `membership_applications` only; Accept creates/links Prospective `JOIN_FORM` person; `/join/thanks` + `/leader/applications` |
+| 2026-07-31 | Skip 2C for now | Notify Chance email deferred; proceed to 2H Reports |
+| 2026-07-31 | Phase 2H reports | `/leader/reports` hub: thin location/category coverage + application pipeline + recent signups/assignments |
 | 2026-07-31 | Green canvas theme | Page background `#2E5A3D` with light text; light surfaces keep dark text |
 | 2026-07-31 | Join → Prospective pipeline | `/join` creates people with status `PROSPECTIVE`, source `JOIN_FORM`, on selected team board |
 | 2026-07-31 | Duplicate merge (#4) | `/leader/duplicates` queue + merge into survivor; `person_merge_history` + `PERSON_MERGED` audit |

@@ -4,6 +4,7 @@ import { HomePage } from '@/pages/landing/HomePage'
 import { ContactDetailPage } from '@/pages/leader/ContactDetailPage'
 import { ApplicationsInboxPage } from '@/pages/leader/ApplicationsInboxPage'
 import { FeedbackInboxPage } from '@/pages/leader/FeedbackInboxPage'
+import { ReportsPage } from '@/pages/leader/ReportsPage'
 import { DuplicateMergePage } from '@/pages/leader/DuplicateMergePage'
 import { GapFillPage } from '@/pages/leader/GapFillPage'
 import { LeaderPage } from '@/pages/leader/LeaderPage'
@@ -31,6 +32,7 @@ export function App() {
         <Route path="/leader/duplicates" element={<DuplicateMergePage />} />
         <Route path="/leader/feedback" element={<FeedbackInboxPage />} />
         <Route path="/leader/applications" element={<ApplicationsInboxPage />} />
+        <Route path="/leader/reports" element={<ReportsPage />} />
         <Route
           path="/leader/teams/social-media/graphic-design"
           element={<GraphicDesignBoardPage />}

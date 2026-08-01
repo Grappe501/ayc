@@ -161,15 +161,15 @@ function LeaderBoard() {
             <Button to="/leader/applications" variant="secondary">
               Join applications
             </Button>
-          <Button to="/leader/applications" variant="secondary">
-            Join applications
-          </Button>
-          <Button to="/leader/feedback" variant="secondary">
-            Feedback inbox
-          </Button>
-          <Button to="/leader/contacts/new" variant="secondary">
-            Add a Contact
-          </Button>
+            <Button to="/leader/reports" variant="secondary">
+              Reports
+            </Button>
+            <Button to="/leader/feedback" variant="secondary">
+              Feedback inbox
+            </Button>
+            <Button to="/leader/contacts/new" variant="secondary">
+              Add a Contact
+            </Button>
             <Button to="/directory" variant="secondary">
               View Directory
             </Button>
@@ -628,6 +628,12 @@ function LeaderBoard() {
         <div className="btn-row">
           <Button to="/leader/gaps" variant="primary">
             Fill contact gaps
+          </Button>
+          <Button to="/leader/reports" variant="secondary">
+            Reports
+          </Button>
+          <Button to="/leader/applications" variant="secondary">
+            Join applications
           </Button>
           <Button to="/leader/feedback" variant="secondary">
             Feedback inbox
