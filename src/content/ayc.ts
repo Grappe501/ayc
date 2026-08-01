@@ -16,7 +16,7 @@ export const AYC_SITE_NAME = 'AYC Leadership Workbench'
 export const AYC_PAGE_TITLE = 'Arkansas Youth Coalition | Leadership Workbench'
 
 export const AYC_PAGE_DESCRIPTION =
-  'The Arkansas Youth Coalition Leadership Workbench is a protected space for young Arkansans ages 16–24 building political engagement, statewide relationships, and youth-led action.'
+  'The Arkansas Youth Coalition Leadership Workbench helps young Arkansans ages 16–24 build political engagement, statewide relationships, and youth-led action.'
 
 export const TEAMS = [
   {

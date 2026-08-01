@@ -410,10 +410,10 @@ Do **not** pull these in without a new governing decision:
 
 ## 10. Immediate next build slice (after this plan)
 
-1. Design `person_leadership_roles` → session scope mapping (WS-A spike)  
-2. Ship Notify Chance (WS-C1)  
-3. Location TEAM mission module (WS-D1)  
-4. OG image + PWA manifest (WS-B)  
+1. [x] Design `person_leadership_roles` → session scope mapping (WS-A spike)  
+2. ~~Ship Notify Chance (WS-C1)~~ — skipped for now  
+3. [x] Location TEAM mission module (WS-D1) (+ location category Tasks/Resources)  
+4. [x] OG image + PWA manifest (WS-B) — 2026-08-01  
 5. Playwright smoke for public + master paths (WS-L)
 
 ---

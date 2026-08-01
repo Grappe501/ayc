@@ -27,3 +27,11 @@
 ## Logo
 
 Mark F uses Hunter (torch), Papaya (letters), Berry (diamond). See `docs/design/logo/`.
+
+## Share / PWA
+
+| Asset | Path |
+|-------|------|
+| Open Graph card (1200×630) | `public/og-default.png` |
+| PWA manifest | `public/manifest.webmanifest` |
+| Icons | `public/favicon-192.png`, `public/icon-512.png`, `public/apple-touch-icon.png` |
