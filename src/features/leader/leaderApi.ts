@@ -894,6 +894,7 @@ export function createCalendarEvent(body: {
   allDay?: boolean
   locationText?: string | null
   url?: string | null
+  visibility?: 'INTERNAL' | 'PUBLIC'
   recurrenceFrequency?: string | null
   recurrenceInterval?: number | null
   recurrenceByWeekday?: number[] | null
@@ -915,6 +916,7 @@ export function updateCalendarEvent(body: {
   allDay?: boolean
   locationText?: string | null
   url?: string | null
+  visibility?: 'INTERNAL' | 'PUBLIC'
   status?: 'SCHEDULED' | 'CANCELLED'
   cancelScope?: 'one' | 'series'
   occurrenceStartsAt?: string | null

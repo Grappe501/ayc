@@ -78,6 +78,7 @@ export const handler: Handler = async (event) => {
         allDay?: boolean
         locationText?: string | null
         url?: string | null
+        visibility?: 'INTERNAL' | 'PUBLIC' | null
         recurrenceFrequency?: string | null
         recurrenceInterval?: number | null
         recurrenceByWeekday?: number[] | null
@@ -133,6 +134,7 @@ export const handler: Handler = async (event) => {
         allDay?: boolean
         locationText?: string | null
         url?: string | null
+        visibility?: 'INTERNAL' | 'PUBLIC' | null
         status?: 'SCHEDULED' | 'CANCELLED'
         cancelScope?: 'one' | 'series'
         occurrenceStartsAt?: string | null

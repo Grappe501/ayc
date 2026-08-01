@@ -18,6 +18,7 @@
 | `/directory` | Complete | People / teams / locations views |
 | `/directory/:personId` | Complete | Directory person (masked) |
 | `/feedback` | Complete | Beta feedback |
+| `/calendar` | Complete | Public events (`visibility=PUBLIC`) + ICS subscribe |
 | `/join` | Complete | Public join → creates `PROSPECTIVE` person (`JOIN_FORM`) on chosen team + feedback notify |
 | `/workbench` | Alias → Leader | |
 | `/people` | Alias → Directory | |
@@ -26,6 +27,6 @@
 
 Reserved for later phases (do not ship stubs): `/teams` (public/future RBAC boards), `/admin`, `/events`, `/training`, `/messages`, `/analytics`, `/profile`, `/settings`
 
-Phase 2 live: `/join`, `/join/thanks`, `/leader/applications`, `/leader/reports`, `/leader/calendar`, `/leader/segments/*`, `/leader/locations/*`, `/leader/teams/social-media/graphic-design`.
+Phase 2 live: `/join`, `/join/thanks`, `/calendar`, `/leader/applications`, `/leader/reports`, `/leader/calendar`, `/leader/segments/*`, `/leader/locations/*`, `/leader/teams/social-media/graphic-design`.
 
 Phase 1 Team Lead Boards live under `/leader/teams/*` (same unlock as Leader Board). Full Phase 2 Team Boards (tasks, resources, communication, reports) remain deferred.

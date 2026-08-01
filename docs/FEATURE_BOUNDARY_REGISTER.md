@@ -31,6 +31,7 @@
 - Calendar RSVP / attendance — person-linked YES/NO/MAYBE/INVITED on events  
 - Calendar recurrence — daily/weekly/monthly series with occurrence cancel exceptions  
 - Calendar ICS export — leader-authenticated `.ics` download (RRULE + EXDATE)  
+- Public calendar — `/calendar` + unauthenticated ICS of `visibility=PUBLIC` events only  
 
 ## Phase 2 still deferred
 
@@ -38,7 +39,6 @@ Canonical plan: `docs/master-build-plan/10-PHASE-2-MASTER-PLAN.md`
 
 - Per-person unlock / OAuth accounts (identity path after keys)  
 - Notify Chance email outbox (2C) — skipped for now, add later  
-- Public calendar / unauthenticated ICS feeds  
 - Location-level Graphic Design boards (GD stays statewide)
 
 ## Phase 1 forbidden

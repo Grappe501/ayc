@@ -18,6 +18,7 @@ const PAGE_LABELS: Record<string, string> = {
   '/leader': 'Leader Board',
   '/leader/contacts/new': 'Add Contact',
   '/directory': 'Leadership Directory',
+  '/calendar': 'Public calendar',
   '/feedback': 'Feedback',
   '/workbench': 'Leader Board',
   '/people': 'Leadership Directory',

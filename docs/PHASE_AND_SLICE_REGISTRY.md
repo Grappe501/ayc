@@ -34,3 +34,4 @@
 | AYC-PHASE-2-CAL-RSVP | Complete |
 | AYC-PHASE-2-CAL-RECURRENCE | Complete |
 | AYC-PHASE-2-CAL-ICS | Complete |
+| AYC-PHASE-2-CAL-PUBLIC | Complete |

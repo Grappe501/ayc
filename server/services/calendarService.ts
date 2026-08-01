@@ -496,6 +496,7 @@ export type UpsertCalendarEventInput = {
   allDay?: boolean
   locationText?: string | null
   url?: string | null
+  visibility?: 'INTERNAL' | 'PUBLIC' | null
   recurrenceFrequency?: string | null
   recurrenceInterval?: number | null
   recurrenceByWeekday?: number[] | null
@@ -553,6 +554,11 @@ export async function createCalendarEvent(
     count: input.recurrenceCount,
   })
 
+  const visibility =
+    input.visibility === 'PUBLIC' || input.visibility === 'INTERNAL'
+      ? input.visibility
+      : 'INTERNAL'
+
   const [row] = await db
     .insert(calendarEvents)
     .values({
@@ -564,7 +570,7 @@ export async function createCalendarEvent(
       allDay: Boolean(input.allDay),
       locationText: input.locationText?.trim() || null,
       url: input.url?.trim() || null,
-      visibility: 'INTERNAL',
+      visibility,
       status: 'SCHEDULED',
       recurrenceFrequency: recurrence?.frequency ?? null,
       recurrenceInterval: recurrence?.interval ?? 1,
@@ -721,6 +727,9 @@ export async function updateCalendarEvent(
   }
   if (input.url !== undefined) patch.url = input.url?.trim() || null
   if (input.allDay !== undefined) patch.allDay = Boolean(input.allDay)
+  if (input.visibility === 'PUBLIC' || input.visibility === 'INTERNAL') {
+    patch.visibility = input.visibility
+  }
   if (input.startsAt) {
     const startsAt = new Date(input.startsAt)
     if (Number.isNaN(startsAt.getTime())) {

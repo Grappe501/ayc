@@ -8,6 +8,7 @@ import './AppShell.css'
 const NAV = [
   { to: '/', label: 'Home', end: true },
   { to: '/join', label: 'Join' },
+  { to: '/calendar', label: 'Calendar' },
   { to: '/directory', label: 'Directory' },
   { to: '/leader', label: 'Leaders' },
   { to: '/feedback', label: 'Feedback' },

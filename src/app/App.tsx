@@ -16,6 +16,7 @@ import {
 } from '@/pages/leader/LocationBoardPages'
 import { SegmentBoardPage } from '@/pages/leader/SegmentBoardPage'
 import { GraphicDesignBoardPage, TeamBoardPage } from '@/pages/leader/TeamBoardPage'
+import { PublicCalendarPage } from '@/pages/calendar/PublicCalendarPage'
 import { DirectoryPage } from '@/pages/directory/DirectoryPage'
 import { DirectoryPersonPage } from '@/pages/directory/DirectoryPersonPage'
 import { FeedbackPage } from '@/pages/feedback/FeedbackPage'
@@ -50,9 +51,11 @@ export function App() {
         <Route path="/leader/contacts/:personId" element={<ContactDetailPage />} />
         <Route path="/directory" element={<DirectoryPage />} />
         <Route path="/directory/:personId" element={<DirectoryPersonPage />} />
+        <Route path="/calendar" element={<PublicCalendarPage />} />
         <Route path="/feedback" element={<FeedbackPage />} />
         <Route path="/join" element={<JoinPage />} />
         <Route path="/join/thanks" element={<JoinThanksPage />} />
+
         <Route path="/workbench" element={<LeaderPage />} />
         <Route path="/people" element={<DirectoryPage />} />
         <Route path="/add-contact" element={<NewContactPage />} />

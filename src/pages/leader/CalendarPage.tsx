@@ -98,6 +98,7 @@ function CalendarHub() {
   const [description, setDescription] = useState('')
   const [locationText, setLocationText] = useState('')
   const [url, setUrl] = useState('')
+  const [visibility, setVisibility] = useState<'INTERNAL' | 'PUBLIC'>('INTERNAL')
   const [allDay, setAllDay] = useState(false)
   const [recurrenceFrequency, setRecurrenceFrequency] = useState('NONE')
   const [recurrenceInterval, setRecurrenceInterval] = useState('1')
@@ -242,6 +243,7 @@ function CalendarHub() {
       allDay,
       locationText: locationText.trim() || null,
       url: url.trim() || null,
+      visibility,
       recurrenceFrequency:
         recurrenceFrequency === 'NONE' ? null : recurrenceFrequency,
       recurrenceInterval: Number(recurrenceInterval) || 1,
@@ -257,14 +259,36 @@ function CalendarHub() {
     }
     setTitle('')
     setDescription('')
+    setVisibility('INTERNAL')
     setRecurrenceFrequency('NONE')
     setRecurrenceCount('')
     setRecurrenceUntil('')
     setToast(
       recurrenceFrequency === 'NONE'
-        ? 'Event created on this board calendar.'
-        : 'Recurring event created.',
+        ? visibility === 'PUBLIC'
+          ? 'Public event created.'
+          : 'Event created on this board calendar.'
+        : visibility === 'PUBLIC'
+          ? 'Public recurring event created.'
+          : 'Recurring event created.',
     )
+    setReload((n) => n + 1)
+  }
+
+  async function toggleVisibility(item: CalendarEventItem) {
+    const next = item.visibility === 'PUBLIC' ? 'INTERNAL' : 'PUBLIC'
+    setBusy(true)
+    setError('')
+    const result = await updateCalendarEvent({
+      id: item.id,
+      visibility: next,
+    })
+    setBusy(false)
+    if (!result.ok) {
+      setError(result.error.message)
+      return
+    }
+    setToast(next === 'PUBLIC' ? 'Event is now public.' : 'Event is internal only.')
     setReload((n) => n + 1)
   }
 
@@ -301,6 +325,9 @@ function CalendarHub() {
         lede="Events are written once to a source board. Higher boards roll up descendants by query — nothing is copied."
         actions={
           <>
+            <Button to="/calendar" variant="secondary">
+              Public calendar
+            </Button>
             <Button to="/leader" variant="secondary">
               Leader Board
             </Button>
@@ -462,6 +489,9 @@ function CalendarHub() {
                         ) : null}
                         <div className="btn-row">
                           <Tag>Belongs to {item.sourceBoard.name}</Tag>
+                          <Tag>
+                            {item.visibility === 'PUBLIC' ? 'Public' : 'Internal'}
+                          </Tag>
                           {item.recurrenceLabel ? (
                             <Tag>{item.recurrenceLabel}</Tag>
                           ) : null}
@@ -475,6 +505,14 @@ function CalendarHub() {
                           onClick={() => setSelectedEventId(item.id)}
                         >
                           RSVPs
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          disabled={busy}
+                          onClick={() => void toggleVisibility(item)}
+                        >
+                          {item.visibility === 'PUBLIC' ? 'Make internal' : 'Make public'}
                         </Button>
                         {item.url ? (
                           <a
@@ -747,6 +785,18 @@ function CalendarHub() {
                   />
                   <span>All day</span>
                 </label>
+                <Field id="cal-visibility" label="Visibility">
+                  <Select
+                    id="cal-visibility"
+                    value={visibility}
+                    onChange={(e) =>
+                      setVisibility(e.target.value as 'INTERNAL' | 'PUBLIC')
+                    }
+                  >
+                    <option value="INTERNAL">Internal (leaders only)</option>
+                    <option value="PUBLIC">Public (site + ICS feed)</option>
+                  </Select>
+                </Field>
                 <Field id="cal-repeat" label="Repeat">
                   <Select
                     id="cal-repeat"
