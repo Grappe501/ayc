@@ -511,7 +511,7 @@ function LocationTeamGate() {
   }
 
   return (
-    <RequireLeaderAccess locationType={locationType}>
+    <RequireLeaderAccess locationType={locationType} locationId={locationId}>
       <LocationTeamBoard locationId={locationId} />
     </RequireLeaderAccess>
   )
@@ -558,7 +558,11 @@ function LocationCategoryGate() {
   }
 
   return (
-    <RequireLeaderAccess locationType={locationType} locationCategorySlug={teamSlug}>
+    <RequireLeaderAccess
+      locationType={locationType}
+      locationId={locationId}
+      locationCategorySlug={teamSlug}
+    >
       <LocationCategoryBoard locationId={locationId} teamSlug={teamSlug} />
     </RequireLeaderAccess>
   )

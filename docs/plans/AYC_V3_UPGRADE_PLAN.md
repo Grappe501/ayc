@@ -271,10 +271,12 @@ Do **not** pull these in without a new governing decision:
 
 ### V3.0 — “One door, one mark” (2–4 weeks)
 
-- Finish identity binding design + first vertical slice (master + one category lead on accounts)
-- Brand pack (OG, PWA, asset README) — shell mark already shipping
-- Notify Chance on join
-- Privilege + deep-link hardening (partially shipping now)
+- [x] Finish identity binding — account login + roles open boards; keys = break-glass (2026-08-01)
+- [x] Public site — Netlify visitor password off so landing can be shared
+- ~~Brand pack (OG, PWA)~~ — **skipped for now** (per Steve)
+- **Next:** Location TEAM mission module (V3.1 / former #3)
+- Notify Chance on join — still deferred (skip queue item #2)
+- Privilege + deep-link hardening (partially shipping)
 - Docs sync
 
 ### V3.1 — “Locations that lead” (3–5 weeks)

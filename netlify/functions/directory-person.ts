@@ -7,7 +7,7 @@ import {
   listProfileNotes,
 } from '../../server/services/profileService.ts'
 import { getAccountForPerson } from '../../server/services/accountService.ts'
-import { canRevealContacts, withPublicDb } from './_shared.ts'
+import { canRevealContactsAsync, withPublicDb } from './_shared.ts'
 
 export const handler: Handler = async (event) => {
   if (event.httpMethod !== 'GET') {
@@ -19,9 +19,8 @@ export const handler: Handler = async (event) => {
     return fail('VALIDATION_ERROR', 'Person id is required.')
   }
 
-  const reveal = canRevealContacts(event)
-
   return withPublicDb(async (db) => {
+    const reveal = await canRevealContactsAsync(db, event)
     const person = await getDirectoryPersonDetail(db, id, reveal)
     if (!person) {
       return fail('NOT_FOUND', 'Person not found.', 404)

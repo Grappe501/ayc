@@ -15,8 +15,14 @@ export function LoginPage() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    if (me) navigate(`/directory/${me.person.id}`, { replace: true })
-  }, [me, navigate])
+    if (!me) return
+    const next = params.get('next')
+    if (next) {
+      navigate(next, { replace: true })
+      return
+    }
+    navigate(me.homePath || `/directory/${me.person.id}`, { replace: true })
+  }, [me, navigate, params])
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault()
@@ -30,19 +36,19 @@ export function LoginPage() {
     }
     await refresh()
     setBusy(false)
-    navigate(params.get('next') || '/directory', { replace: true })
+    // Navigation handled by me effect after refresh.
   }
 
   return (
     <div>
       <DocumentMeta
         title="Log in · Arkansas Youth Coalition"
-        description="Log in to your AYC Leadership Workbench account to edit your directory profile."
+        description="Log in to the AYC Leadership Workbench with your invite account."
       />
       <PageHeader
-        eyebrow="Personal account"
+        eyebrow="Single login"
         title="Log in"
-        lede="Invite-only accounts. Use the email and password from your claim invite to edit your directory profile and leave notes."
+        lede="Invite-only accounts. Log in to open your directory profile and any workbench boards you’ve been granted."
         actions={
           <Button to="/claim" variant="secondary">
             Claim invite
@@ -51,15 +57,15 @@ export function LoginPage() {
       />
 
       <p className="field__hint" style={{ marginBottom: '1rem', maxWidth: '36rem' }}>
-        Looking for a team board? Personal login is separate from board unlock. Open{' '}
-        <Link to="/leader">Workbench</Link> and enter your leadership access key.
+        Board access comes from your leadership roles. Shared keys are emergency break-glass only
+        — use them from the Workbench if account login is unavailable.
       </p>
 
       {!configured ? (
         <div className="error-state" role="alert">
           Personal login is not configured on this environment yet. You can still browse the{' '}
-          <Link to="/directory">Directory</Link> and unlock the{' '}
-          <Link to="/leader">Workbench</Link> with a leadership key.
+          <Link to="/directory">Directory</Link> and use an emergency board key on the{' '}
+          <Link to="/leader">Workbench</Link>.
         </div>
       ) : (
         <form onSubmit={onSubmit} className="calendar-create" style={{ maxWidth: '28rem' }}>

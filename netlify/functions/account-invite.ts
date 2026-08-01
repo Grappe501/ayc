@@ -1,5 +1,5 @@
 import type { Handler } from '@netlify/functions'
-import { requireLeaderWriteAccess } from '../../server/http/auth.ts'
+import { requireBoardWriteAccess } from '../../server/http/boardAccess.ts'
 import { fail, methodNotAllowed, ok, parseJsonBody } from '../../server/http/response.ts'
 import { invitePersonAccount } from '../../server/services/accountService.ts'
 import { withPublicDb } from './_shared.ts'
@@ -7,24 +7,27 @@ import { withPublicDb } from './_shared.ts'
 export const handler: Handler = async (event) => {
   if (event.httpMethod !== 'POST') return methodNotAllowed(['POST'])
 
-  const auth = requireLeaderWriteAccess(event)
-  if (!auth.ok) {
-    return auth.reason === 'misconfigured'
-      ? fail('MISCONFIGURED', 'Leader write access is not configured on this environment.', 503)
-      : fail('UNAUTHORIZED', 'That access code was not accepted.', 401)
-  }
-
   const body = parseJsonBody<{ personId?: string; email?: string | null }>(event.body)
   if (!body?.personId?.trim()) {
     return fail('VALIDATION_ERROR', 'Person id is required.', 400, { personId: 'Required' })
   }
 
   return withPublicDb(async (db) => {
+    const auth = await requireBoardWriteAccess(db, event)
+    if (!auth.ok) {
+      return auth.reason === 'misconfigured'
+        ? fail('MISCONFIGURED', 'Leader write access is not configured on this environment.', 503)
+        : fail('UNAUTHORIZED', 'Log in with a leadership account, or use the emergency board key.', 401)
+    }
+
+    const actorLabel =
+      auth.mode === 'key' ? auth.scope.label : `account:${auth.personId}`
+
     try {
       const result = await invitePersonAccount(db, {
         personId: body.personId!.trim(),
         email: body.email,
-        actorLabel: auth.scope.label,
+        actorLabel,
         requestId: event.headers['x-nf-request-id'] ?? null,
       })
       return ok(result, 201)

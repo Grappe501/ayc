@@ -127,15 +127,12 @@ export function secretsMatch(provided: string, expected: string): boolean {
   return timingSafeEqual(a, b)
 }
 
+/**
+ * Break-glass shared key only — never read Bearer (Bearer is Supabase JWT for accounts).
+ */
 export function extractLeaderSecret(event: HandlerEvent): string | undefined {
   const header = event.headers[HEADER] ?? event.headers[HEADER.toUpperCase()]
   if (typeof header === 'string' && header.trim()) return header.trim()
-
-  const auth = event.headers.authorization ?? event.headers.Authorization
-  if (typeof auth === 'string' && auth.toLowerCase().startsWith('bearer ')) {
-    const token = auth.slice(7).trim()
-    return token || undefined
-  }
   return undefined
 }
 

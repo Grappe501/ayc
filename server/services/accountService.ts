@@ -289,6 +289,19 @@ export async function getMePayload(db: AycDatabase, personId: string) {
   const [person] = await db.select().from(people).where(eq(people.id, personId)).limit(1)
   const account = await getAccountForPerson(db, personId)
   if (!person || !account) return null
+
+  const { listLeadershipRolesForPerson } = await import('./leadershipRoleService.ts')
+  const { homePathForRoles } = await import('../../shared/access/homePathForRoles.ts')
+  // Dynamic imports keep this module free of circular init with role services.
+  const roleRows = await listLeadershipRolesForPerson(db, personId)
+  const roles = roleRows.map((row) => ({
+    roleCode: row.roleCode,
+    teamSlug: row.teamSlug ?? null,
+    teamId: row.teamId ?? null,
+    locationId: row.locationId ?? null,
+    segment: row.segment ?? null,
+  }))
+
   return {
     account: {
       id: account.id,
@@ -306,5 +319,18 @@ export async function getMePayload(db: AycDatabase, personId: string) {
       preferredName: person.preferredName,
       status: person.status,
     },
+    roles,
+    homePath: homePathForRoles(roles),
+    canAccessWorkbench: roles.some((role) =>
+      [
+        'LEAD_ORGANIZER',
+        'CATEGORY_LEAD',
+        'GRAPHIC_DESIGN_LEAD',
+        'HS_LEAD_ORGANIZER',
+        'WC_LEAD_ORGANIZER',
+        'LOCATION_LEAD',
+        'LOCATION_TEAM_LEAD',
+      ].includes(role.roleCode),
+    ),
   }
 }

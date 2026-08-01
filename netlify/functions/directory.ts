@@ -13,7 +13,7 @@ import {
   searchDirectoryPeople,
   type DirectorySort,
 } from '../../server/services/directoryService.ts'
-import { canRevealContacts, withPublicDb } from './_shared.ts'
+import { canRevealContactsAsync, withPublicDb } from './_shared.ts'
 
 const SORTS: DirectorySort[] = ['name', 'location', 'team', 'recent']
 
@@ -23,9 +23,9 @@ export const handler: Handler = async (event) => {
   }
 
   const view = (event.queryStringParameters?.view ?? 'people').toLowerCase()
-  const reveal = canRevealContacts(event)
 
   return withPublicDb(async (db) => {
+    const reveal = await canRevealContactsAsync(db, event)
     if (view === 'teams') {
       const teams = await getDirectoryTeams(db)
       return ok({ view: 'teams', teams })

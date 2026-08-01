@@ -33,3 +33,5 @@ export function homePathForScope(scope: UnlockScope): string {
   if (scope.kind === 'segment') return `/leader/segments/${scope.segment}`
   return '/leader'
 }
+
+export { homePathForRoles } from '@shared/access/homePathForRoles'

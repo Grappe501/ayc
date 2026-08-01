@@ -14,7 +14,8 @@
 - Team Board Resources-light (`team_resources`) links, notes, talking points, checklists  
 - Leadership pipeline tags (controlled set) on contacts + Leader Board filter/attention  
 - Public Join page (`/join`) → applications queue (person created on Accept)  
-- Netlify site password + hierarchical board keys (`AYC_MASTER_KEY` + `AYC_KEY_*`)  
+- Hierarchical board keys (`AYC_MASTER_KEY` + `AYC_KEY_*`) as **break-glass**; day-to-day boards via invite login + `person_leadership_roles`  
+- Public site (no Netlify visitor password) — landing/join/directory/calendar shareable  
 
 ## Phase 2 opened
 

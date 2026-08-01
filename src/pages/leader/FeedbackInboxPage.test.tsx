@@ -10,6 +10,17 @@ vi.mock('@/features/leader/leaderSession', () => ({
   setLeaderSession: () => undefined,
 }))
 
+vi.mock('@/features/auth/AuthProvider', () => ({
+  useAuth: () => ({
+    ready: true,
+    configured: true,
+    session: null,
+    me: null,
+    refresh: async () => undefined,
+    signOut: async () => undefined,
+  }),
+}))
+
 vi.mock('@/features/leader/leaderApi', () => ({
   fetchLeaderFeedback: vi.fn(async () => ({
     ok: true as const,

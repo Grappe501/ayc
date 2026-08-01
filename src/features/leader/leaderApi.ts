@@ -1,3 +1,4 @@
+import { getAccessToken } from '@/features/auth/authSession'
 import { getLeaderWriteSecret } from '@/features/leader/leaderSession'
 
 export type ApiError = {
@@ -32,17 +33,19 @@ async function request<T>(
 
   if (opts.auth !== false) {
     const secret = getLeaderWriteSecret()
-    if (!secret) {
+    const token = await getAccessToken()
+    if (secret) headers.set('X-AYC-Leader-Write-Secret', secret)
+    if (token) headers.set('Authorization', `Bearer ${token}`)
+    if (!secret && !token) {
       return {
         ok: false,
         status: 401,
         error: {
           code: 'UNAUTHORIZED',
-          message: 'Leader write access is required.',
+          message: 'Log in with a leadership account, or use the emergency board key.',
         },
       }
     }
-    headers.set('X-AYC-Leader-Write-Secret', secret)
   }
 
   const response = await fetch(`/api/${path}`, { ...init, headers })
@@ -984,8 +987,12 @@ export async function downloadCalendarIcs(params: {
   to?: string
 }): Promise<{ ok: true } | { ok: false; error: { message: string } }> {
   const secret = getLeaderWriteSecret()
-  if (!secret) {
-    return { ok: false, error: { message: 'Leader write access is required.' } }
+  const token = await getAccessToken()
+  if (!secret && !token) {
+    return {
+      ok: false,
+      error: { message: 'Log in with a leadership account, or use the emergency board key.' },
+    }
   }
 
   const search = new URLSearchParams()
@@ -996,11 +1003,12 @@ export async function downloadCalendarIcs(params: {
   if (params.from) search.set('from', params.from)
   if (params.to) search.set('to', params.to)
 
+  const headers: Record<string, string> = { Accept: 'text/calendar' }
+  if (secret) headers['X-AYC-Leader-Write-Secret'] = secret
+  if (token) headers.Authorization = `Bearer ${token}`
+
   const response = await fetch(`/api/leader-calendar-ics?${search.toString()}`, {
-    headers: {
-      Accept: 'text/calendar',
-      'X-AYC-Leader-Write-Secret': secret,
-    },
+    headers,
   })
 
   if (!response.ok) {

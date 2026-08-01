@@ -1,6 +1,14 @@
 import { getLeaderWriteSecret } from '@/features/leader/leaderSession'
 import { getAccessToken } from './authSession'
 
+export type AuthRoleGrant = {
+  roleCode: string
+  teamSlug?: string | null
+  teamId?: string | null
+  locationId?: string | null
+  segment?: string | null
+}
+
 export type AuthMe = {
   account: {
     id: string
@@ -16,6 +24,9 @@ export type AuthMe = {
     preferredName: string | null
     status: string
   }
+  roles: AuthRoleGrant[]
+  homePath: string
+  canAccessWorkbench: boolean
 }
 
 type ApiResult<T> = { ok: true; data: T } | { ok: false; error: { message: string; fields?: Record<string, string> } }
@@ -62,14 +73,10 @@ export function fetchMe() {
   return authRequest<AuthMe>('account-me')
 }
 
-export function inviteAccount(personId: string, email?: string | null) {
+export async function inviteAccount(personId: string, email?: string | null) {
   const secret = getLeaderWriteSecret()
-  if (!secret) {
-    return Promise.resolve({
-      ok: false as const,
-      error: { message: 'Leader write access is required.' },
-    })
-  }
+  const headers: Record<string, string> = {}
+  if (secret) headers['X-AYC-Leader-Write-Secret'] = secret
   return authRequest<{
     inviteId: string
     personId: string
@@ -77,15 +84,9 @@ export function inviteAccount(personId: string, email?: string | null) {
     code: string
     expiresAt: string
     claimPath: string
-  }>(
-    'account-invite',
-    {
-      method: 'POST',
-      body: JSON.stringify({ personId, email }),
-      headers: {
-        'X-AYC-Leader-Write-Secret': secret,
-      },
-    },
-    { bearer: false },
-  )
+  }>('account-invite', {
+    method: 'POST',
+    body: JSON.stringify({ personId, email }),
+    headers,
+  })
 }

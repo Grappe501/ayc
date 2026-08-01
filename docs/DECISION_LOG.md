@@ -42,6 +42,8 @@
 | 2026-08-01 | Palette v2 | Onyx all-star base (Hunter, Berry, Papaya, Onyx) + Blue Cotton instead of Dusk Blue; Midnight/Cream/Berry-deep mixed from 4-color chart; logo recolored to match |
 | 2026-08-01 | Applications / Reports access | Master (Lead Organizer) key required — not any category key |
 | 2026-08-01 | V3 upgrade plan | `docs/plans/AYC_V3_UPGRADE_PLAN.md` is planning authority for next major cycle |
+| 2026-08-01 | Public site | Netlify visitor password removed — share landing freely |
+| 2026-08-01 | Single login + break-glass | Boards open via account + leadership roles; shared keys remain emergency-only |
 | 2026-08-01 | Calendar grid views | Shared month/week/day CalendarBoard with prev/next; event click → detail routes; embedded on Main + board pages |
 | 2026-07-31 | Green canvas theme | Page background `#2E5A3D` with light text; light surfaces keep dark text |
 | 2026-07-31 | Join → Prospective pipeline | `/join` creates people with status `PROSPECTIVE`, source `JOIN_FORM`, on selected team board |

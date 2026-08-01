@@ -19,13 +19,14 @@ Repo: https://github.com/Grappe501/ayc (`main`)
 - [ ] Optional segment keys: `AYC_KEY_HIGH_SCHOOL`, `AYC_KEY_WORKING_CLASS` (land on segment shells)
 - [x] `AYC_ENVIRONMENT=production` (recommended)
 - [x] Optional `AYC_ALLOWED_ORIGIN=https://arkansasyouth.netlify.app` for explicit CORS
-- [x] Site password / visitor access control active for beta
+- [x] Site password **disabled** (2026-08-01) — public landing/join/directory/calendar are shareable
+- [x] Workbench access: account login + leadership roles; shared keys = break-glass only
 
-Credentials are **not** stored in git. Share site visitor password + Leader Board unlock out-of-band (Steve / `.env` / Netlify env). Confirmed set 2026-07-31.
+Credentials are **not** stored in git. Share emergency board keys out-of-band (Steve / `.env` / Netlify env). Invite accounts for day-to-day board access.
 
 ## Post-deploy checks (Vol VII §28)
 
-- [x] Home `/` loads (HTTP 200) behind site password
+- [x] Home `/` loads (HTTP 200) publicly (no visitor password)
 - [x] SPA deep link `/directory` loads (not 404 from host)
 - [x] `/api/health` returns `{ ok: true }` and `database.ok: true`
 - [x] Health response does **not** expose raw DB errors in production
