@@ -33,7 +33,11 @@ function LeaderBoard() {
   })
   const [people, setPeople] = useState<LeaderRosterRow[]>([])
   const [total, setTotal] = useState(0)
-  const [attention, setAttention] = useState({ missingContact: 0, prospective: 0 })
+  const [attention, setAttention] = useState({
+    missingContact: 0,
+    prospective: 0,
+    joinForm: 0,
+  })
   const [teams, setTeams] = useState<Array<{ id: string; name: string; slug: string }>>([])
   const [q, setQ] = useState('')
   const [searchDraft, setSearchDraft] = useState('')
@@ -165,10 +169,32 @@ function LeaderBoard() {
       </Section>
 
       <Section id="attention" title="Needs attention">
-        {attention.missingContact === 0 && attention.prospective === 0 ? (
+        {attention.missingContact === 0 &&
+        attention.prospective === 0 &&
+        attention.joinForm === 0 ? (
           <p className="field__hint">Nothing needs attention right now.</p>
         ) : (
           <div className="leader-attention">
+            {attention.joinForm > 0 ? (
+              <Card>
+                <Tag>Join form</Tag>
+                <h3>{attention.joinForm} new join applications</h3>
+                <p>
+                  Public `/join` signups land here as <strong>Prospective</strong> on their chosen
+                  team board. Open the record, confirm details, then activate.
+                </p>
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={() => {
+                    setStatusFilter('PROSPECTIVE')
+                    setGapsOnly(false)
+                  }}
+                >
+                  Show join prospectives
+                </Button>
+              </Card>
+            ) : null}
             <Card>
               <Tag>Contact gaps</Tag>
               <h3>{attention.missingContact} missing phone & email</h3>
@@ -192,7 +218,7 @@ function LeaderBoard() {
             <Card>
               <Tag>Prospective</Tag>
               <h3>{attention.prospective} prospective records</h3>
-              <p>Confirm team placement and activate when ready.</p>
+              <p>Confirm team placement and activate when ready — includes Join form signups.</p>
               <Button
                 type="button"
                 variant="secondary"

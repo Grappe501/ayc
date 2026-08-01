@@ -12,7 +12,7 @@
 | `/directory` | Complete | People / teams / locations views |
 | `/directory/:personId` | Complete | Directory person (masked) |
 | `/feedback` | Complete | Beta feedback |
-| `/join` | Complete | Public join application (educates + captures interest) |
+| `/join` | Complete | Public join → creates `PROSPECTIVE` person (`JOIN_FORM`) on chosen team + feedback notify |
 | `/workbench` | Alias → Leader | |
 | `/people` | Alias → Directory | |
 | `/add-contact` | Alias → New contact | |

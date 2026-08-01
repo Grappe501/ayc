@@ -107,7 +107,12 @@ export function LeaderRosterList({
                       </>
                     )}
                   </td>
-                  <td>{labelStatus(person.status)}</td>
+                  <td>
+                    {labelStatus(person.status)}
+                    {person.source === 'JOIN_FORM' ? (
+                      <div className="field__hint">Joined via form</div>
+                    ) : null}
+                  </td>
                   <td>
                     <div className="btn-row">
                       <Button to={`/leader/contacts/${person.id}`} variant="secondary">
@@ -137,6 +142,7 @@ export function LeaderRosterList({
           return (
             <Card key={person.id}>
               <Tag>{labelStatus(person.status)}</Tag>
+              {person.source === 'JOIN_FORM' ? <Tag>Joined via form</Tag> : null}
               <h3>{person.displayName}</h3>
               <p>
                 {person.location

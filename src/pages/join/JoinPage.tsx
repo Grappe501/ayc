@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { DocumentMeta } from '@/components/seo/DocumentMeta'
 import { Button, Field, Input, Select, Textarea } from '@/components/ui'
 import { TEAMS } from '@/content/ayc'
-import { submitBetaFeedback } from '@/features/feedback/feedbackApi'
+import { submitJoinApplication } from '@/features/join/joinApi'
 import '../landing/landing.css'
 import './join.css'
 
@@ -26,7 +26,11 @@ export function JoinPage() {
   const [ageOk, setAgeOk] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
-  const [referenceCode, setReferenceCode] = useState('')
+  const [resultInfo, setResultInfo] = useState<{
+    referenceHint: string
+    teamName: string
+    alreadyOnFile?: boolean
+  } | null>(null)
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault()
@@ -42,34 +46,29 @@ export function JoinPage() {
 
     setBusy(true)
     try {
-      const description = [
-        'JOIN APPLICATION',
-        `Name: ${firstName.trim()} ${lastName.trim()}`,
-        `Email: ${email.trim()}`,
-        `Phone: ${phone.trim() || 'not provided'}`,
-        `City/area: ${city.trim() || 'not provided'}`,
-        `Path: ${locationType}`,
-        `School/campus/county: ${locationName.trim() || 'not provided'}`,
-        `Team interest: ${teamInterest}`,
-        `Leadership interest: ${leadInterest}`,
-        `Notes: ${notes.trim() || 'none'}`,
-      ].join('\n')
-
-      const result = await submitBetaFeedback({
-        category: 'IDEA',
-        description,
-        pagePath: '/join',
-        workflow: 'JOIN_APPLICATION',
-        reporterName: `${firstName.trim()} ${lastName.trim()}`,
-        reporterContact: [email.trim(), phone.trim()].filter(Boolean).join(' · '),
-        browserContext: typeof navigator !== 'undefined' ? navigator.userAgent.slice(0, 240) : null,
+      const result = await submitJoinApplication({
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        email: email.trim(),
+        phone: phone.trim() || undefined,
+        city: city.trim() || undefined,
+        locationType,
+        locationName: locationName.trim() || undefined,
+        teamInterest,
+        leadInterest,
+        notes: notes.trim() || undefined,
+        ageConfirmed: ageOk,
       })
 
       if (!result.ok) {
         setError(result.error.message)
         return
       }
-      setReferenceCode(result.data.referenceCode)
+      setResultInfo({
+        referenceHint: result.data.referenceHint,
+        teamName: result.data.teamName,
+        alreadyOnFile: result.data.alreadyOnFile,
+      })
     } catch {
       setError('Something went wrong. Please try again.')
     } finally {
@@ -77,7 +76,7 @@ export function JoinPage() {
     }
   }
 
-  if (referenceCode) {
+  if (resultInfo) {
     return (
       <div className="join-page">
         <DocumentMeta
@@ -85,10 +84,24 @@ export function JoinPage() {
           description="Thanks for joining AYC."
         />
         <p className="landing__eyebrow">You are in the queue</p>
-        <h1>Thank you for joining AYC.</h1>
+        <h1>
+          {resultInfo.alreadyOnFile
+            ? 'You are already on the AYC roster.'
+            : 'Thank you for joining AYC.'}
+        </h1>
         <p className="page-header__lede">
-          Your application reference is <strong>{referenceCode}</strong>. Chance and the leadership
-          team will follow up. Keep building where you are — we will meet you there.
+          {resultInfo.alreadyOnFile ? (
+            <>
+              We matched your contact to an existing record. Leadership has been notified (
+              <strong>{resultInfo.referenceHint}</strong>).
+            </>
+          ) : (
+            <>
+              You are on the Leader Board as a <strong>Prospective</strong> for{' '}
+              <strong>{resultInfo.teamName}</strong>. Reference{' '}
+              <strong>{resultInfo.referenceHint}</strong>. Chance and team leads will follow up.
+            </>
+          )}
         </p>
         <div className="btn-row">
           <Button to="/" variant="primary">

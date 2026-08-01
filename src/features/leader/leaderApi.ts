@@ -94,6 +94,7 @@ export type LeaderRosterRow = {
   lastName: string
   preferredName: string | null
   status: string
+  source: string
   createdAt: string
   updatedAt: string
   hasEmail: boolean
@@ -137,7 +138,7 @@ export function fetchLeaderRoster(params?: {
   if (params?.gapsOnly) qs.set('gaps', '1')
   return request<{
     total: number
-    attention: { missingContact: number; prospective: number }
+    attention: { missingContact: number; prospective: number; joinForm: number }
     people: LeaderRosterRow[]
   }>(`contacts?${qs.toString()}`)
 }

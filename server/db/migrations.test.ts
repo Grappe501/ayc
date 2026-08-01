@@ -26,5 +26,6 @@ describe('SQL migrations', () => {
     const files = readdirSync(migrationsDir).filter((f) => f.endsWith('.sql')).sort()
     expect(files[0]).toBe('000_placeholder.sql')
     expect(files).toContain('001_init.sql')
+    expect(files).toContain('002_join_form_source.sql')
   })
 })

@@ -28,6 +28,7 @@ export type LeaderRosterRow = {
   lastName: string
   preferredName: string | null
   status: string
+  source: string
   createdAt: Date
   updatedAt: Date
   hasEmail: boolean
@@ -46,7 +47,11 @@ export type LeaderRosterRow = {
 export async function listLeaderRoster(
   db: AycDatabase,
   filters: LeaderRosterFilters = {},
-): Promise<{ total: number; attention: { missingContact: number; prospective: number }; people: LeaderRosterRow[] }> {
+): Promise<{
+  total: number
+  attention: { missingContact: number; prospective: number; joinForm: number }
+  people: LeaderRosterRow[]
+}> {
   const rows = await db
     .select({
       id: people.id,
@@ -55,6 +60,7 @@ export async function listLeaderRoster(
       preferredName: people.preferredName,
       displayName: people.displayName,
       status: people.status,
+      source: people.source,
       createdAt: people.createdAt,
       updatedAt: people.updatedAt,
       locationId: locations.id,
@@ -141,6 +147,7 @@ export async function listLeaderRoster(
       lastName: row.lastName,
       preferredName: row.preferredName,
       status: row.status,
+      source: row.source,
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
       hasEmail: contact.email,
@@ -194,6 +201,9 @@ export async function listLeaderRoster(
   const attention = {
     missingContact: peopleRows.filter((p) => p.missingContact).length,
     prospective: peopleRows.filter((p) => p.status === 'PROSPECTIVE').length,
+    joinForm: peopleRows.filter(
+      (p) => p.status === 'PROSPECTIVE' && p.source === 'JOIN_FORM',
+    ).length,
   }
 
   const limit = filters.limit ?? 500

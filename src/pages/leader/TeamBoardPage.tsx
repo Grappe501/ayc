@@ -214,7 +214,10 @@ function TeamBoard({ teamSlug }: { teamSlug: TeamBoardSlug }) {
             <Card>
               <Tag>Prospective</Tag>
               <h3>{summary.prospective} prospective records</h3>
-              <p>Confirm placement and activate when ready.</p>
+              <p>
+                Includes Join form signups for this team. Confirm placement, then activate when
+                ready.
+              </p>
               <Button
                 type="button"
                 variant="secondary"

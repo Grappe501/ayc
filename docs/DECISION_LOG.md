@@ -25,3 +25,4 @@
 | 2026-07-31 | Landing → newcomer first | Public home educates what/why/how; Join CTA primary; Leader Workbench at bottom |
 | 2026-07-31 | Hierarchical board keys | `AYC_MASTER_KEY` opens all boards; `AYC_KEY_*` category/segment keys open hierarchy; write APIs accept any registered key |
 | 2026-07-31 | Green canvas theme | Page background `#2E5A3D` with light text; light surfaces keep dark text |
+| 2026-07-31 | Join → Prospective pipeline | `/join` creates people with status `PROSPECTIVE`, source `JOIN_FORM`, on selected team board |

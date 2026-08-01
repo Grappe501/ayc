@@ -16,6 +16,7 @@ function row(
     lastName: 'B',
     preferredName: null,
     status: 'ACTIVE',
+    source: 'LEADER_ENTRY',
     createdAt: '',
     updatedAt: '',
     hasEmail: true,

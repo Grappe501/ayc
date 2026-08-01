@@ -3,7 +3,12 @@
 export const PERSON_STATUSES = ['ACTIVE', 'PROSPECTIVE', 'INACTIVE', 'ARCHIVED'] as const
 export type PersonStatus = (typeof PERSON_STATUSES)[number]
 
-export const PERSON_SOURCES = ['LEADER_ENTRY', 'BETA_IMPORT', 'MANUAL_ADMIN'] as const
+export const PERSON_SOURCES = [
+  'LEADER_ENTRY',
+  'BETA_IMPORT',
+  'MANUAL_ADMIN',
+  'JOIN_FORM',
+] as const
 export type PersonSource = (typeof PERSON_SOURCES)[number]
 
 export const PREFERRED_CONTACT_METHODS = ['TEXT', 'EMAIL', 'EITHER', 'UNKNOWN'] as const
