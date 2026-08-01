@@ -16,21 +16,25 @@ Required before leadership-team testing (Volume VII Gate 6).
 
 ## Operator confirmation (Steve / deploy owner)
 
-- [ ] Production Netlify password active
-- [ ] Production database confirmed + migrations/seed applied
-- [ ] Env vars set (`DATABASE_URL`, `AYC_LEADER_WRITE_SECRET`)
-- [ ] Backup retention confirmed / restore drill noted
-- [ ] `npm run validate` green on release commit
-- [ ] Post-deploy checks in `DEPLOYMENT_VALIDATION.md` completed
-- [ ] Test data labeled or removed from production
-- [ ] Responsive QA recorded (phone + iPad) via beta script
-- [ ] Keyboard / dialog focus smoke test recorded
+- [x] Production Netlify password active
+- [x] Production database confirmed + migrations/seed applied
+- [x] Env vars set (`DATABASE_URL`, `AYC_LEADER_WRITE_SECRET`)
+- [x] Backup retention confirmed / restore drill noted (pooler + health path; full PITR deferred)
+- [x] `npm run validate` green on release commit
+- [x] Post-deploy checks in `DEPLOYMENT_VALIDATION.md` completed (API/desktop path)
+- [x] Test data labeled or removed from production (Gate 6 feedback marked TEST; roster is real intake)
+- [ ] Responsive QA recorded (phone + iPad) via beta script — **Steve**
+- [ ] Keyboard / dialog focus smoke test recorded — **Steve** (desktop keyboard path exercised in 1H; confirm on device)
 
 ## Gate 6 decision
 
 | Role | Approve | Date |
 |------|---------|------|
-| Product owner | ☐ | |
-| Technical lead | ☐ | |
+| Product owner | ☐ | _pending device QA_ |
+| Technical lead | ☑ | 2026-07-31 |
 
 **Notes:**
+
+- Technical Gate 6 is ready for leadership beta pending Steve’s phone/iPad pass on `docs/beta/PHASE_1_BETA_TEST_SCRIPT.md`.
+- Site visitor password and Leader Board unlock shared out-of-band (not in git).
+- Live: https://arkansasyouth.netlify.app

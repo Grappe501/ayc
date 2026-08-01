@@ -12,11 +12,12 @@ PostgreSQL holds AYC Phase 1 operational data: people, contact methods, location
 
 | Item | Value / status |
 |------|----------------|
-| Provider | _fill in_ |
-| Project / cluster | _fill in_ |
-| Daily backups enabled | ☐ |
-| Retention | _fill in_ |
-| Last restore drill date | _fill in_ |
+| Provider | Supabase (Postgres 17) |
+| Project / cluster | `ayc-leadership-workbench` (`yprxjkyjbfhinsassdaw`) · region `us-east-1` |
+| Daily backups enabled | ☑ (Supabase managed plan backups) |
+| Retention | Per Supabase project plan (confirm in Dashboard → Database → Backups) |
+| Last restore drill date | 2026-07-31 — connectivity + health restore path verified via pooler URL; full PITR restore deferred to next maintenance window |
+| Console | https://supabase.com/dashboard/project/yprxjkyjbfhinsassdaw |
 
 ## What to back up before risky changes
 
@@ -30,9 +31,10 @@ PostgreSQL holds AYC Phase 1 operational data: people, contact methods, location
 2. Restore database from provider backup to a point in time or snapshot.
 3. Confirm `npm run db:migrate` is not required (restored DB already includes schema) **or** re-apply only missing migrations carefully.
 4. Re-seed teams only if team rows are missing: `npm run db:seed-teams`.
-5. Verify `/api/health` reports `database.ok: true` (no error detail in production).
-6. Spot-check Leader Board unlock, directory, and one contact record.
-7. Resume traffic.
+5. Re-seed roster only if leadership intake list is missing: `npm run db:seed-roster`.
+6. Verify `/api/health` reports `database.ok: true` (no error detail in production).
+7. Spot-check Leader Board unlock, directory, and one contact record.
+8. Resume traffic.
 
 ## Rollback of application code
 
@@ -42,5 +44,5 @@ PostgreSQL holds AYC Phase 1 operational data: people, contact methods, location
 
 ## Restore tested?
 
-☐ Restore drill completed on a non-production or disposable branch/database  
-☐ Notes attached to this file or Decision Log
+☑ Pooler connectivity + `/api/health` database.ok confirmed after production wiring (2026-07-31)  
+☐ Full PITR restore drill on a disposable branch/database (schedule before major schema change)
