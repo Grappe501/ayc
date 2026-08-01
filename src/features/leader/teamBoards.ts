@@ -36,13 +36,26 @@ export function summarizeTeamRoster(people: LeaderRosterRow[], teamSlug: string)
   const locations = new Set(
     people.map((person) => person.location?.id).filter(Boolean),
   )
+  const missingContact = people.filter((person) => person.missingContact).length
+  const prospective = people.filter((person) => person.status === 'PROSPECTIVE').length
+  const joinForm = people.filter(
+    (person) => person.status === 'PROSPECTIVE' && person.source === 'JOIN_FORM',
+  ).length
+  const needsPreferred = people.filter((person) => person.needsPreferred).length
+  const textReady = people.filter((person) => person.textReady).length
+  const noLead = leads.length === 0
+
   return {
     roster: people.length,
     leads: leads.length,
     volunteers: volunteers.length,
     locationsRepresented: locations.size,
-    missingContact: people.filter((person) => person.missingContact).length,
-    prospective: people.filter((person) => person.status === 'PROSPECTIVE').length,
+    missingContact,
+    prospective,
+    joinForm,
+    needsPreferred,
+    textReady,
+    noLead,
     leadPeople: leads,
   }
 }

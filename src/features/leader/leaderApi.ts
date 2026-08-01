@@ -87,6 +87,34 @@ export function fetchLeaderSummary() {
   }>('leader-summary')
 }
 
+export type TeamAttentionDigest = {
+  slug: string
+  name: string
+  mark: string
+  shortLabel: string
+  roster: number
+  leads: number
+  volunteers: number
+  locationsRepresented: number
+  missingContact: number
+  prospective: number
+  joinForm: number
+  needsPreferred: number
+  textReady: number
+  noLead: boolean
+  openItems: number
+  topIssues: string[]
+}
+
+export function fetchTeamDigests() {
+  return request<{
+    generatedAt: string
+    totalOpenItems: number
+    teamsNeedingAttention: number
+    digests: TeamAttentionDigest[]
+  }>('team-digests')
+}
+
 export type LeaderRosterRow = {
   id: string
   displayName: string

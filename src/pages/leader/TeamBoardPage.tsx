@@ -18,8 +18,10 @@ import { RequireLeaderAccess } from '@/features/leader/RequireLeaderAccess'
 import { clearLeaderSession } from '@/features/leader/leaderSession'
 import {
   fetchLeaderRoster,
+  fetchTeamDigests,
   fetchTeams,
   type LeaderRosterRow,
+  type TeamAttentionDigest,
 } from '@/features/leader/leaderApi'
 import {
   getTeamBoardMeta,
@@ -43,6 +45,7 @@ function TeamBoard({ teamSlug }: { teamSlug: TeamBoardSlug }) {
   const [error, setError] = useState('')
   const [assignPerson, setAssignPerson] = useState<LeaderRosterRow | null>(null)
   const [teamId, setTeamId] = useState('')
+  const [digest, setDigest] = useState<TeamAttentionDigest | null>(null)
 
   useEffect(() => {
     const handle = window.setTimeout(() => setQ(searchDraft.trim()), 300)
@@ -54,7 +57,7 @@ function TeamBoard({ teamSlug }: { teamSlug: TeamBoardSlug }) {
     ;(async () => {
       setLoading(true)
       setError('')
-      const [roster, teamResult] = await Promise.all([
+      const [roster, teamResult, digestResult] = await Promise.all([
         fetchLeaderRoster({
           q: q || undefined,
           team: teamSlug,
@@ -62,11 +65,17 @@ function TeamBoard({ teamSlug }: { teamSlug: TeamBoardSlug }) {
           gapsOnly,
         }),
         fetchTeams(),
+        fetchTeamDigests(),
       ])
       if (cancelled) return
       if (teamResult.ok) {
         const match = teamResult.data.find((team) => team.slug === teamSlug)
         setTeamId(match?.id ?? '')
+      }
+      if (digestResult.ok) {
+        setDigest(
+          digestResult.data.digests.find((entry) => entry.slug === teamSlug) ?? null,
+        )
       }
       if (!roster.ok) {
         setError(roster.error.message)
@@ -86,6 +95,17 @@ function TeamBoard({ teamSlug }: { teamSlug: TeamBoardSlug }) {
     () => summarizeTeamRoster(people, teamSlug),
     [people, teamSlug],
   )
+
+  const attention = digest ?? {
+    missingContact: summary.missingContact,
+    prospective: summary.prospective,
+    joinForm: summary.joinForm,
+    needsPreferred: summary.needsPreferred,
+    textReady: summary.textReady,
+    noLead: summary.noLead,
+    openItems: 0,
+    topIssues: [] as string[],
+  }
 
   return (
     <div className={`team-board team-board--${teamSlug}`}>
@@ -184,51 +204,105 @@ function TeamBoard({ teamSlug }: { teamSlug: TeamBoardSlug }) {
         ) : null}
       </Section>
 
-      <Section id="attention" title="Needs attention">
-        {summary.missingContact === 0 && summary.prospective === 0 ? (
+      <Section id="attention" title="Team digest">
+        {digest ? (
+          <p className="field__hint" style={{ marginBottom: '1rem' }}>
+            {digest.openItems > 0
+              ? `${digest.openItems} open item${digest.openItems === 1 ? '' : 's'} on ${meta.name}.`
+              : `${meta.name} looks caught up.`}{' '}
+            <Link to="/leader#team-digests">All team digests</Link>
+          </p>
+        ) : null}
+        {attention.missingContact === 0 &&
+        attention.prospective === 0 &&
+        attention.needsPreferred === 0 &&
+        !attention.noLead ? (
           <p className="field__hint">Nothing needs attention on this team right now.</p>
         ) : (
           <div className="leader-attention">
-            <Card>
-              <Tag>Contact gaps</Tag>
-              <h3>
-                {summary.missingContact} missing phone & email
-              </h3>
-              <p>Fill text/phone so this team can reach its people.</p>
-              <div className="btn-row">
-                <Button to={`/leader/gaps`} variant="primary">
-                  Start gap fill
+            {attention.noLead ? (
+              <Card>
+                <Tag>Lead seat</Tag>
+                <h3>No {meta.name} lead assigned</h3>
+                <p>Name a lead so this board has an owner.</p>
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={() => {
+                    setGapsOnly(false)
+                    setStatusFilter('ALL')
+                  }}
+                >
+                  Review roster to assign
                 </Button>
+              </Card>
+            ) : null}
+            {attention.missingContact > 0 ? (
+              <Card>
+                <Tag>Contact gaps</Tag>
+                <h3>{attention.missingContact} missing phone & email</h3>
+                <p>Fill text/phone so this team can reach its people.</p>
+                <div className="btn-row">
+                  <Button to={`/leader/gaps`} variant="primary">
+                    Start gap fill
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => {
+                      setGapsOnly(true)
+                      setStatusFilter('ALL')
+                    }}
+                  >
+                    Show gaps
+                  </Button>
+                </div>
+              </Card>
+            ) : null}
+            {attention.joinForm > 0 ? (
+              <Card>
+                <Tag>Join form</Tag>
+                <h3>{attention.joinForm} new join applications</h3>
+                <p>Public join signups for this team — confirm and activate.</p>
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={() => {
+                    setStatusFilter('PROSPECTIVE')
+                    setGapsOnly(false)
+                  }}
+                >
+                  Show join prospectives
+                </Button>
+              </Card>
+            ) : null}
+            {attention.prospective > 0 ? (
+              <Card>
+                <Tag>Prospective</Tag>
+                <h3>{attention.prospective} prospective records</h3>
+                <p>Confirm placement, then activate when ready.</p>
                 <Button
                   type="button"
                   variant="secondary"
                   onClick={() => {
-                    setGapsOnly(true)
-                    setStatusFilter('ALL')
+                    setStatusFilter('PROSPECTIVE')
+                    setGapsOnly(false)
                   }}
                 >
-                  Show gaps
+                  Show prospective
                 </Button>
-              </div>
-            </Card>
-            <Card>
-              <Tag>Prospective</Tag>
-              <h3>{summary.prospective} prospective records</h3>
-              <p>
-                Includes Join form signups for this team. Confirm placement, then activate when
-                ready.
-              </p>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => {
-                  setStatusFilter('PROSPECTIVE')
-                  setGapsOnly(false)
-                }}
-              >
-                Show prospective
-              </Button>
-            </Card>
+              </Card>
+            ) : null}
+            {attention.needsPreferred > 0 ? (
+              <Card>
+                <Tag>Preferred contact</Tag>
+                <h3>{attention.needsPreferred} need preferred method</h3>
+                <p>Set Text / Email / Either so outreach is clear.</p>
+                <Button to="/leader" variant="secondary">
+                  Leader Board filters
+                </Button>
+              </Card>
+            ) : null}
           </div>
         )}
       </Section>

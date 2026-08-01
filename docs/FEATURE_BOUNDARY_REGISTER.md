@@ -8,6 +8,7 @@
 - Leader-gated feedback inbox (`/leader/feedback`) for status/severity/notes triage  
 - Duplicate review + merge (`/leader/duplicates`) into survivor; archive loser with merge history  
 - Preferred contact method + text-ready flags on Leader Board / gap fill / contact form  
+- Per-team attention digests (gaps, joins, preferred, missing leads) on Leader Board  
 - Public Join page (`/join`) → Prospective people (`JOIN_FORM`) on chosen team + feedback notify  
 - Netlify site password + hierarchical board keys (`AYC_MASTER_KEY` + `AYC_KEY_*`)  
 

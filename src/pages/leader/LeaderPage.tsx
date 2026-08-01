@@ -19,8 +19,10 @@ import { clearLeaderSession } from '@/features/leader/leaderSession'
 import {
   fetchLeaderRoster,
   fetchLeaderSummary,
+  fetchTeamDigests,
   fetchTeams,
   type LeaderRosterRow,
+  type TeamAttentionDigest,
 } from '@/features/leader/leaderApi'
 import './leader-board.css'
 
@@ -41,6 +43,11 @@ function LeaderBoard() {
     textReady: 0,
   })
   const [teams, setTeams] = useState<Array<{ id: string; name: string; slug: string }>>([])
+  const [digests, setDigests] = useState<TeamAttentionDigest[]>([])
+  const [digestStats, setDigestStats] = useState({
+    totalOpenItems: 0,
+    teamsNeedingAttention: 0,
+  })
   const [q, setQ] = useState('')
   const [searchDraft, setSearchDraft] = useState('')
   const [teamFilter, setTeamFilter] = useState('')
@@ -63,7 +70,7 @@ function LeaderBoard() {
     ;(async () => {
       setLoading(true)
       setError('')
-      const [summary, roster, teamResult] = await Promise.all([
+      const [summary, roster, teamResult, digestResult] = await Promise.all([
         fetchLeaderSummary(),
         fetchLeaderRoster({
           q: q || undefined,
@@ -75,6 +82,7 @@ function LeaderBoard() {
           needsPreferredOnly,
         }),
         fetchTeams(),
+        fetchTeamDigests(),
       ])
       if (cancelled) return
       if (!summary.ok) {
@@ -84,6 +92,13 @@ function LeaderBoard() {
       }
       setStats(summary.data)
       if (teamResult.ok) setTeams(teamResult.data)
+      if (digestResult.ok) {
+        setDigests(digestResult.data.digests)
+        setDigestStats({
+          totalOpenItems: digestResult.data.totalOpenItems,
+          teamsNeedingAttention: digestResult.data.teamsNeedingAttention,
+        })
+      }
       if (!roster.ok) {
         setError(roster.error.message)
         setLoading(false)
@@ -161,19 +176,72 @@ function LeaderBoard() {
         <StatCard value={String(stats.locationsRepresented)} label="Locations Represented" />
       </div>
 
-      <Section id="team-boards" title="Team Lead Boards">
+      <Section id="team-digests" title="Team attention digests">
         <p className="field__hint" style={{ marginBottom: '1rem' }}>
-          Open a team board to manage that team’s leads, volunteers, and contact gaps.
+          Per-team snapshot for Chance and category leads — gaps, joins, preferred contact, and
+          missing leads. Sorted by who needs work first.
+          {digestStats.teamsNeedingAttention > 0
+            ? ` ${digestStats.teamsNeedingAttention} team${digestStats.teamsNeedingAttention === 1 ? '' : 's'} need attention (${digestStats.totalOpenItems} open items).`
+            : ' All teams look caught up.'}
         </p>
-        <div className="team-board-hub">
-          {TEAMS.map((team) => (
-            <Card key={team.id}>
-              <span className="team-board-hub__mark">{team.mark}</span>
-              <h3>{team.name} Lead</h3>
-              <p>{team.shortLabel}</p>
-              <Button to={`/leader/teams/${team.id}`} variant="primary">
-                Open {team.name} board
-              </Button>
+        <div className="team-digest-grid">
+          {(digests.length > 0
+            ? digests
+            : TEAMS.map((team) => ({
+                slug: team.id,
+                name: team.name,
+                mark: team.mark,
+                shortLabel: team.shortLabel,
+                roster: 0,
+                leads: 0,
+                volunteers: 0,
+                locationsRepresented: 0,
+                missingContact: 0,
+                prospective: 0,
+                joinForm: 0,
+                needsPreferred: 0,
+                textReady: 0,
+                noLead: true,
+                openItems: 0,
+                topIssues: ['Loading…'],
+              }))
+          ).map((digest) => (
+            <Card
+              key={digest.slug}
+              className={
+                digest.openItems > 0
+                  ? 'team-digest-card team-digest-card--needs-work'
+                  : 'team-digest-card'
+              }
+            >
+              <div className="team-digest-card__top">
+                <span className="team-board-hub__mark">{digest.mark}</span>
+                {digest.openItems > 0 ? (
+                  <Tag>{digest.openItems} open</Tag>
+                ) : (
+                  <Tag>Caught up</Tag>
+                )}
+              </div>
+              <h3>{digest.name}</h3>
+              <p className="field__hint">
+                {digest.roster} on roster · {digest.leads} lead
+                {digest.leads === 1 ? '' : 's'} · {digest.textReady} text-ready
+              </p>
+              <ul className="team-digest-issues">
+                {digest.topIssues.map((issue) => (
+                  <li key={issue}>{issue}</li>
+                ))}
+              </ul>
+              <div className="btn-row">
+                <Button to={`/leader/teams/${digest.slug}`} variant="primary">
+                  Open board
+                </Button>
+                {digest.missingContact > 0 ? (
+                  <Button to="/leader/gaps" variant="secondary">
+                    Gap fill
+                  </Button>
+                ) : null}
+              </div>
             </Card>
           ))}
         </div>

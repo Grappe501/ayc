@@ -91,6 +91,8 @@ describe('teamBoards', () => {
     expect(summary.leads).toBe(2)
     expect(summary.volunteers).toBe(1)
     expect(summary.missingContact).toBe(1)
+    expect(summary.noLead).toBe(false)
+    expect(summary.joinForm).toBe(0)
     expect(summary.leadPeople.map((p) => p.displayName)).toEqual([
       'Lead One',
       'Extra Lead',

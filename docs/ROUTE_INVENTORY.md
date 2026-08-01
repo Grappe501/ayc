@@ -3,7 +3,7 @@
 | Route | Status | Notes |
 |-------|--------|-------|
 | `/` | Phase 1B complete | Vision landing |
-| `/leader` | Complete | Statewide Leader Board + Team Lead Board hub |
+| `/leader` | Complete | Statewide Leader Board + per-team attention digests + Team Lead Board hub |
 | `/leader/gaps` | Complete | Contact gap-fill sprint (phone/email queue) |
 | `/leader/duplicates` | Complete | Duplicate pair queue + merge into survivor (archives loser) |
 | `/leader/feedback` | Complete | Leader-gated beta feedback inbox (status, severity, notes) |
