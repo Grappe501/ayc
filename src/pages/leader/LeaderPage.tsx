@@ -100,7 +100,10 @@ function LeaderBoard() {
         lede="Chance Bradford’s workspace to build the AYC contact list, fill missing phone and email, and assign people to teams."
         actions={
           <>
-            <Button to="/leader/contacts/new" variant="primary">
+            <Button to="/leader/gaps" variant="primary">
+              Fill contact gaps
+            </Button>
+            <Button to="/leader/contacts/new" variant="secondary">
               Add a Contact
             </Button>
             <Button to="/directory" variant="secondary">
@@ -166,17 +169,22 @@ function LeaderBoard() {
             <Card>
               <Tag>Contact gaps</Tag>
               <h3>{attention.missingContact} missing phone & email</h3>
-              <p>Open a contact to fill text/phone when you have it.</p>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => {
-                  setGapsOnly(true)
-                  setStatusFilter('ALL')
-                }}
-              >
-                Show gaps
-              </Button>
+              <p>Run the gap-fill sprint: one person at a time, save phone and/or email, next.</p>
+              <div className="btn-row">
+                <Button to="/leader/gaps" variant="primary">
+                  Start gap fill
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => {
+                    setGapsOnly(true)
+                    setStatusFilter('ALL')
+                  }}
+                >
+                  Show in list
+                </Button>
+              </div>
             </Card>
             <Card>
               <Tag>Prospective</Tag>
@@ -262,7 +270,10 @@ function LeaderBoard() {
 
       <Section id="quick" title="Quick actions">
         <div className="btn-row">
-          <Button to="/leader/contacts/new" variant="primary">
+          <Button to="/leader/gaps" variant="primary">
+            Fill contact gaps
+          </Button>
+          <Button to="/leader/contacts/new" variant="secondary">
             Add Contact
           </Button>
           <Button to="/directory" variant="secondary">

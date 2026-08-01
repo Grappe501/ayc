@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import { AppShell } from '@/components/layout/AppShell'
 import { HomePage } from '@/pages/landing/HomePage'
 import { ContactDetailPage } from '@/pages/leader/ContactDetailPage'
+import { GapFillPage } from '@/pages/leader/GapFillPage'
 import { LeaderPage } from '@/pages/leader/LeaderPage'
 import { NewContactPage } from '@/pages/leader/NewContactPage'
 import { TeamBoardPage } from '@/pages/leader/TeamBoardPage'
@@ -16,6 +17,7 @@ export function App() {
       <Route element={<AppShell />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/leader" element={<LeaderPage />} />
+        <Route path="/leader/gaps" element={<GapFillPage />} />
         <Route path="/leader/teams/:teamSlug" element={<TeamBoardPage />} />
         <Route path="/leader/contacts/new" element={<NewContactPage />} />
         <Route path="/leader/contacts/:personId" element={<ContactDetailPage />} />

@@ -195,16 +195,21 @@ function TeamBoard({ teamSlug }: { teamSlug: TeamBoardSlug }) {
                 {summary.missingContact} missing phone & email
               </h3>
               <p>Fill text/phone so this team can reach its people.</p>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => {
-                  setGapsOnly(true)
-                  setStatusFilter('ALL')
-                }}
-              >
-                Show gaps
-              </Button>
+              <div className="btn-row">
+                <Button to={`/leader/gaps`} variant="primary">
+                  Start gap fill
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => {
+                    setGapsOnly(true)
+                    setStatusFilter('ALL')
+                  }}
+                >
+                  Show gaps
+                </Button>
+              </div>
             </Card>
             <Card>
               <Tag>Prospective</Tag>
