@@ -33,3 +33,4 @@
 | AYC-PHASE-2-CAL-0…5-NESTED-CALENDARS | Complete (schema, CRUD, rollup, Main + board UI) |
 | AYC-PHASE-2-CAL-RSVP | Complete |
 | AYC-PHASE-2-CAL-RECURRENCE | Complete |
+| AYC-PHASE-2-CAL-ICS | Complete |

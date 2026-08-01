@@ -221,7 +221,7 @@ export function scopeCanAccessResolvedBoard(
   return false
 }
 
-async function listRollupCalendarIds(
+export async function listRollupCalendarIds(
   db: AycDatabase,
   focus: ResolvedBoard,
 ): Promise<string[]> {

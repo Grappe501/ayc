@@ -972,3 +972,58 @@ export function removeEventRsvp(eventId: string, personId: string) {
     rsvps: CalendarRsvpItem[]
   }>(`leader-calendar-rsvps?${qs.toString()}`, { method: 'DELETE' })
 }
+
+export async function downloadCalendarIcs(params: {
+  boardSlug?: string
+  locationId?: string
+  teamSlug?: string
+  mode?: 'rollup' | 'own'
+  from?: string
+  to?: string
+}): Promise<{ ok: true } | { ok: false; error: { message: string } }> {
+  const secret = getLeaderWriteSecret()
+  if (!secret) {
+    return { ok: false, error: { message: 'Leader write access is required.' } }
+  }
+
+  const search = new URLSearchParams()
+  if (params.boardSlug) search.set('board', params.boardSlug)
+  if (params.locationId) search.set('locationId', params.locationId)
+  if (params.teamSlug) search.set('teamSlug', params.teamSlug)
+  if (params.mode) search.set('mode', params.mode)
+  if (params.from) search.set('from', params.from)
+  if (params.to) search.set('to', params.to)
+
+  const response = await fetch(`/api/leader-calendar-ics?${search.toString()}`, {
+    headers: {
+      Accept: 'text/calendar',
+      'X-AYC-Leader-Write-Secret': secret,
+    },
+  })
+
+  if (!response.ok) {
+    const payload = (await response.json().catch(() => null)) as {
+      error?: { message?: string }
+    } | null
+    return {
+      ok: false,
+      error: {
+        message: payload?.error?.message ?? 'Could not download calendar.',
+      },
+    }
+  }
+
+  const blob = await response.blob()
+  const disposition = response.headers.get('Content-Disposition') ?? ''
+  const match = /filename="([^"]+)"/.exec(disposition)
+  const filename = match?.[1] ?? 'ayc-calendar.ics'
+  const url = URL.createObjectURL(blob)
+  const anchor = document.createElement('a')
+  anchor.href = url
+  anchor.download = filename
+  document.body.appendChild(anchor)
+  anchor.click()
+  anchor.remove()
+  URL.revokeObjectURL(url)
+  return { ok: true }
+}

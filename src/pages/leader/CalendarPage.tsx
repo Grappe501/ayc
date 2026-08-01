@@ -17,6 +17,7 @@ import { RequireLeaderAccess } from '@/features/leader/RequireLeaderAccess'
 import { clearLeaderSession } from '@/features/leader/leaderSession'
 import {
   createCalendarEvent,
+  downloadCalendarIcs,
   fetchCalendarEvents,
   fetchEventRsvps,
   fetchLeaderRoster,
@@ -392,6 +393,35 @@ function CalendarHub() {
         </Button>
         <Button type="button" variant="secondary" onClick={() => setCursor(startOfMonth(new Date()))}>
           Today
+        </Button>
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={busy || loading}
+          onClick={() => {
+            void (async () => {
+              setBusy(true)
+              setError('')
+              const result = await downloadCalendarIcs({
+                boardSlug,
+                locationId,
+                teamSlug,
+                mode,
+                from: startOfMonth(cursor).toISOString(),
+                to: endOfMonth(
+                  new Date(cursor.getFullYear(), cursor.getMonth() + 5, 1),
+                ).toISOString(),
+              })
+              setBusy(false)
+              if (!result.ok) {
+                setError(result.error.message)
+                return
+              }
+              setToast('ICS calendar downloaded.')
+            })()
+          }}
+        >
+          Download ICS
         </Button>
       </div>
 
