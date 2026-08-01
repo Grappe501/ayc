@@ -71,12 +71,12 @@
 }
 
 .team-board-switcher__link:hover {
-  border-color: var(--color-accent, #0f2f57);
+  border-color: var(--color-accent, #4f7ea8);
 }
 
 .team-board-switcher__link--active {
-  border-color: var(--color-accent, #0f2f57);
-  background: rgba(15, 47, 87, 0.06);
+  border-color: var(--color-accent, #4f7ea8);
+  background: rgba(79, 126, 168, 0.08);
   font-weight: 600;
 }
 
@@ -135,11 +135,11 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--color-text-muted);
-  background: rgba(15, 47, 87, 0.03);
+  background: rgba(79, 126, 168, 0.04);
 }
 
 .leader-gap {
-  color: #8a6a10;
+  color: #a85d3b;
   font-size: var(--text-small);
   font-weight: 600;
 }

@@ -115,7 +115,7 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--color-text-muted);
-  background: rgba(15, 47, 87, 0.03);
+  background: rgba(79, 126, 168, 0.04);
 }
 
 .directory-table tr:last-child td {
