@@ -25,9 +25,6 @@ export function LandingHero() {
           <Button to="/join" variant="primary">
             Join AYC
           </Button>
-          <Button to="#why" variant="secondary">
-            Why this matters
-          </Button>
         </div>
       </div>
     </section>
