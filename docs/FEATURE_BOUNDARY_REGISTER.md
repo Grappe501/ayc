@@ -8,10 +8,17 @@
 - Leader-gated feedback inbox (`/leader/feedback`) for status/severity/notes triage  
 - Netlify password + leader write secret  
 
-## Phase 1 deferred (Phase 2 Team Boards)
+## Phase 1 deferred (see Phase 2 master plan)
 
-- Full team dashboards: tasks, resources, communication, reports, history  
-- Public `/teams/:slug` routes and per-lead RBAC accounts  
+Canonical plan: `docs/master-build-plan/10-PHASE-2-MASTER-PLAN.md`
+
+- Full board network: statewide category, location TEAM, location category, Graphic Design under Social Media  
+- Lead Organizer admin + Category / HS / Working Class Lead Organizer roles  
+- Public Join CTA + membership applications  
+- Transactional email notify to Chance on adds/signups  
+- Nested calendars (own CAL track)  
+- Reports hub  
+- Per-lead RBAC (scope engine; auth hardens over slices)
 
 ## Phase 1 forbidden
 
