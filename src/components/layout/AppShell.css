@@ -118,26 +118,8 @@
   font-size: var(--text-small);
 }
 
-.primary-nav__link::after {
-  content: '';
-  position: absolute;
-  left: var(--space-3);
-  right: var(--space-3);
-  bottom: 0.55rem;
-  height: 2px;
-  border-radius: var(--radius-pill);
-  background: var(--color-gold);
-  transform: scaleX(0);
-  transform-origin: center;
-  transition: transform var(--duration) var(--ease);
-}
-
 .primary-nav__link--active {
   color: var(--color-blue);
-}
-
-.primary-nav__link--active::after {
-  transform: scaleX(1);
 }
 
 .mobile-nav {

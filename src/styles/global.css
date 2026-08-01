@@ -34,8 +34,7 @@ img {
 
 a {
   color: var(--color-blue-soft);
-  text-decoration-thickness: 0.08em;
-  text-underline-offset: 0.18em;
+  text-decoration: none;
 }
 
 a:hover {

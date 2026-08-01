@@ -29,18 +29,6 @@ export function LandingHero() {
           </a>
         </p>
       </div>
-
-      <div className="landing-hero__visual" aria-hidden="true">
-        <div className="landing-hero__map" />
-        <div className="landing-hero__lines" />
-        <div className="landing-hero__nodes">
-          <span className="landing-hero__node" />
-          <span className="landing-hero__node landing-hero__node--gold" />
-          <span className="landing-hero__node landing-hero__node--blue" />
-          <span className="landing-hero__node" />
-          <span className="landing-hero__node landing-hero__node--gold" />
-        </div>
-      </div>
     </section>
   )
 }
