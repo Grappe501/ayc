@@ -59,21 +59,6 @@
   margin-bottom: var(--space-5);
 }
 
-.mission-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--touch);
-  font-weight: 700;
-  color: var(--color-blue);
-  text-decoration: none;
-  border-bottom: none;
-}
-
-.mission-link:hover {
-  color: var(--color-blue-deep);
-  text-decoration: none;
-}
-
 /* Mission panel */
 .mission-panel {
   padding: clamp(1.5rem, 4vw, 2.5rem);
