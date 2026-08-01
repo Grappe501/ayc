@@ -43,8 +43,10 @@ export function LeaderAccessGate({ onUnlocked }: Props) {
       <p className="page-header__eyebrow">Leadership Access</p>
       <h1>Board access code</h1>
       <p className="page-header__lede">
-        Enter your leadership key. The Lead Organizer master key opens every board. Campaign Lead
-        and segment keys open the boards in your hierarchy.
+        Enter your leadership key. The Lead Organizer master key opens every board. Category keys
+        open their statewide board (Social Media also opens Graphic Design). An optional Graphic
+        Design key lands on the GD board. High School and Working Class keys open their segment
+        shells.
       </p>
       <form className="card" onSubmit={onSubmit}>
         {error ? (

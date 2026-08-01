@@ -24,6 +24,7 @@
 | 2026-07-31 | Phase 2 master plan drafted | Hierarchy (Chance admin, category/HS/WC leads, Graphic Design under Social Media), Join CTA, notify email, nested calendars as CAL track — `10-PHASE-2-MASTER-PLAN.md` |
 | 2026-07-31 | Landing → newcomer first | Public home educates what/why/how; Join CTA primary; Leader Workbench at bottom |
 | 2026-07-31 | Hierarchical board keys | `AYC_MASTER_KEY` opens all boards; `AYC_KEY_*` category/segment keys open hierarchy; write APIs accept any registered key |
+| 2026-07-31 | Optional GD + segment home paths | `AYC_KEY_GRAPHIC_DESIGN` optional; unlock sends category/segment keys to home boards; Social Media still opens GD |
 | 2026-07-31 | Green canvas theme | Page background `#2E5A3D` with light text; light surfaces keep dark text |
 | 2026-07-31 | Join → Prospective pipeline | `/join` creates people with status `PROSPECTIVE`, source `JOIN_FORM`, on selected team board |
 | 2026-07-31 | Duplicate merge (#4) | `/leader/duplicates` queue + merge into survivor; `person_merge_history` + `PERSON_MERGED` audit |

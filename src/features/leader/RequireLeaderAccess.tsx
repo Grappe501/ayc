@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { LeaderAccessGate } from '@/features/leader/LeaderAccessGate'
 import {
   getLeaderScope,
@@ -40,6 +40,7 @@ export function RequireLeaderAccess({
   requireStatewide,
   requireMaster,
 }: Props) {
+  const navigate = useNavigate()
   const [unlocked, setUnlocked] = useState(() => hasLeaderSession())
   const [scope, setScope] = useState<UnlockScope | null>(() => getLeaderScope())
 
@@ -49,6 +50,10 @@ export function RequireLeaderAccess({
         onUnlocked={(next) => {
           setScope(next)
           setUnlocked(true)
+          // Category / GD / segment keys land on their home board; master stays on the requested page.
+          if (next.kind !== 'master') {
+            navigate(homePathForScope(next), { replace: true })
+          }
         }}
       />
     )

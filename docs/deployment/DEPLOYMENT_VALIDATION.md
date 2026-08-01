@@ -13,7 +13,10 @@ Repo: https://github.com/Grappe501/ayc (`main`)
 ## Netlify environment
 
 - [x] `DATABASE_URL` set (server-only)
-- [x] `AYC_LEADER_WRITE_SECRET` set (server-only)
+- [x] `AYC_LEADER_WRITE_SECRET` / `AYC_MASTER_KEY` set (server-only)
+- [ ] Optional category keys: `AYC_KEY_ORGANIZER`, `AYC_KEY_VOTER_REGISTRATION`, `AYC_KEY_SOCIAL_MEDIA`, `AYC_KEY_EVENTS`, `AYC_KEY_OUTREACH`
+- [ ] Optional `AYC_KEY_GRAPHIC_DESIGN` (lands on GD board; Social Media key still opens GD without it)
+- [ ] Optional segment keys: `AYC_KEY_HIGH_SCHOOL`, `AYC_KEY_WORKING_CLASS` (land on segment shells)
 - [x] `AYC_ENVIRONMENT=production` (recommended)
 - [x] Optional `AYC_ALLOWED_ORIGIN=https://arkansasyouth.netlify.app` for explicit CORS
 - [x] Site password / visitor access control active for beta
