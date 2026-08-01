@@ -13,7 +13,7 @@
 - Team Board Tasks-light (`team_tasks`) create / complete / cancel on category boards  
 - Team Board Resources-light (`team_resources`) links, notes, talking points, checklists  
 - Leadership pipeline tags (controlled set) on contacts + Leader Board filter/attention  
-- Public Join page (`/join`) → Prospective people (`JOIN_FORM`) on chosen team + feedback notify  
+- Public Join page (`/join`) → applications queue (person created on Accept)  
 - Netlify site password + hierarchical board keys (`AYC_MASTER_KEY` + `AYC_KEY_*`)  
 
 ## Phase 2 opened
@@ -25,13 +25,14 @@
 - Location TEAM + five location category boards per location (`/leader/locations/*`)  
 - HS / WC segment workspaces with develop-local-leads queues + location coverage  
 - Scope engine `canAccessBoard` + person leadership role grants (keys remain for unlock)  
+- Membership applications queue (`membership_applications`) + `/leader/applications` accept/decline  
 
 ## Phase 2 still deferred
 
 Canonical plan: `docs/master-build-plan/10-PHASE-2-MASTER-PLAN.md`
 
 - Per-person unlock / OAuth accounts (identity path after keys)  
-- Membership applications inbox (2B), notify email (2C)  
+- Notify Chance email outbox (2C)  
 - Nested calendars (CAL track), reports hub (2H)  
 - Location-level Graphic Design boards (GD stays statewide)
 

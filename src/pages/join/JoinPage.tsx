@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { DocumentMeta } from '@/components/seo/DocumentMeta'
 import { Button, Field, Input, Select, Textarea } from '@/components/ui'
 import { TEAMS } from '@/content/ayc'
@@ -13,6 +14,7 @@ const TEAM_OPTIONS = [
 ]
 
 export function JoinPage() {
+  const navigate = useNavigate()
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
@@ -26,11 +28,6 @@ export function JoinPage() {
   const [ageOk, setAgeOk] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
-  const [resultInfo, setResultInfo] = useState<{
-    referenceHint: string
-    teamName: string
-    alreadyOnFile?: boolean
-  } | null>(null)
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault()
@@ -64,55 +61,18 @@ export function JoinPage() {
         setError(result.error.message)
         return
       }
-      setResultInfo({
-        referenceHint: result.data.referenceHint,
-        teamName: result.data.teamName,
-        alreadyOnFile: result.data.alreadyOnFile,
+
+      const params = new URLSearchParams({
+        ref: result.data.referenceCode,
+        team: result.data.teamName,
       })
+      if (result.data.alreadyOnFile) params.set('dup', '1')
+      navigate(`/join/thanks?${params.toString()}`)
     } catch {
       setError('Something went wrong. Please try again.')
     } finally {
       setBusy(false)
     }
-  }
-
-  if (resultInfo) {
-    return (
-      <div className="join-page">
-        <DocumentMeta
-          title="Application received | Arkansas Youth Coalition"
-          description="Thanks for joining AYC."
-        />
-        <p className="landing__eyebrow">You are in the queue</p>
-        <h1>
-          {resultInfo.alreadyOnFile
-            ? 'You are already on the AYC roster.'
-            : 'Thank you for joining AYC.'}
-        </h1>
-        <p className="page-header__lede">
-          {resultInfo.alreadyOnFile ? (
-            <>
-              We matched your contact to an existing record. Leadership has been notified (
-              <strong>{resultInfo.referenceHint}</strong>).
-            </>
-          ) : (
-            <>
-              You are on the Leader Board as a <strong>Prospective</strong> for{' '}
-              <strong>{resultInfo.teamName}</strong>. Reference{' '}
-              <strong>{resultInfo.referenceHint}</strong>. Chance and team leads will follow up.
-            </>
-          )}
-        </p>
-        <div className="btn-row">
-          <Button to="/" variant="primary">
-            Back to home
-          </Button>
-          <Button to="/directory" variant="secondary">
-            Explore the directory
-          </Button>
-        </div>
-      </div>
-    )
   }
 
   return (
@@ -124,8 +84,8 @@ export function JoinPage() {
       <p className="landing__eyebrow">Join AYC</p>
       <h1>Join the Arkansas Youth Coalition</h1>
       <p className="page-header__lede">
-        Tell us about yourself, pick a team, and say whether you want to volunteer or lead. This is
-        how we grow the network across colleges, high schools, and working-class communities.
+        Tell us about yourself, pick a team, and say whether you want to volunteer or lead. Chance
+        reviews each application before anyone is added to the leadership roster.
       </p>
 
       <div className="join-layout">
@@ -142,6 +102,11 @@ export function JoinPage() {
               one Graphic Design lead.
             </li>
           </ul>
+          <h3>Paths</h3>
+          <p>
+            College campuses, high schools, and working-class / county communities each have a place
+            in AYC. Pick the path that fits you; location leads grow from people who show up locally.
+          </p>
           <h3>Leadership interest</h3>
           <p>
             You can volunteer on a team, offer to lead a team in your area, or express interest in a
@@ -257,6 +222,11 @@ export function JoinPage() {
             />
             <span>I am ages 16–24 (or I am seeking an approved leadership path with AYC).</span>
           </label>
+
+          <p className="field__hint">
+            By submitting, you agree AYC leadership may contact you about this application. You will
+            not appear in the public directory until accepted.
+          </p>
 
           <div className="btn-row">
             <Button type="submit" variant="primary" disabled={busy}>

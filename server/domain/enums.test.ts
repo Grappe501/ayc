@@ -26,5 +26,7 @@ describe('canonical teams and audit types', () => {
     expect(AUDIT_EVENT_TYPES).toContain('PERSON_CREATED')
     expect(AUDIT_EVENT_TYPES).toContain('BETA_FEEDBACK_SUBMITTED')
     expect(AUDIT_EVENT_TYPES).toContain('LOCATION_CODE_CHANGED')
+    expect(AUDIT_EVENT_TYPES).toContain('APPLICATION_SUBMITTED')
+    expect(AUDIT_EVENT_TYPES).toContain('APPLICATION_ACCEPTED')
   })
 })

@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import { AppShell } from '@/components/layout/AppShell'
 import { HomePage } from '@/pages/landing/HomePage'
 import { ContactDetailPage } from '@/pages/leader/ContactDetailPage'
+import { ApplicationsInboxPage } from '@/pages/leader/ApplicationsInboxPage'
 import { FeedbackInboxPage } from '@/pages/leader/FeedbackInboxPage'
 import { DuplicateMergePage } from '@/pages/leader/DuplicateMergePage'
 import { GapFillPage } from '@/pages/leader/GapFillPage'
@@ -17,6 +18,7 @@ import { DirectoryPage } from '@/pages/directory/DirectoryPage'
 import { DirectoryPersonPage } from '@/pages/directory/DirectoryPersonPage'
 import { FeedbackPage } from '@/pages/feedback/FeedbackPage'
 import { JoinPage } from '@/pages/join/JoinPage'
+import { JoinThanksPage } from '@/pages/join/JoinThanksPage'
 import { NotFoundPage } from '@/pages/not-found/NotFoundPage'
 
 export function App() {
@@ -28,6 +30,7 @@ export function App() {
         <Route path="/leader/gaps" element={<GapFillPage />} />
         <Route path="/leader/duplicates" element={<DuplicateMergePage />} />
         <Route path="/leader/feedback" element={<FeedbackInboxPage />} />
+        <Route path="/leader/applications" element={<ApplicationsInboxPage />} />
         <Route
           path="/leader/teams/social-media/graphic-design"
           element={<GraphicDesignBoardPage />}
@@ -45,6 +48,7 @@ export function App() {
         <Route path="/directory/:personId" element={<DirectoryPersonPage />} />
         <Route path="/feedback" element={<FeedbackPage />} />
         <Route path="/join" element={<JoinPage />} />
+        <Route path="/join/thanks" element={<JoinThanksPage />} />
         <Route path="/workbench" element={<LeaderPage />} />
         <Route path="/people" element={<DirectoryPage />} />
         <Route path="/add-contact" element={<NewContactPage />} />

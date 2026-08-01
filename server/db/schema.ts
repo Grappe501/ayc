@@ -316,6 +316,44 @@ export const boards = pgTable(
   ],
 )
 
+export const membershipApplications = pgTable(
+  'membership_applications',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    referenceCode: text('reference_code').notNull().unique(),
+    status: text('status').notNull().default('NEW'),
+    firstName: text('first_name').notNull(),
+    lastName: text('last_name').notNull(),
+    preferredName: text('preferred_name'),
+    email: text('email').notNull(),
+    emailNormalized: text('email_normalized').notNull(),
+    phone: text('phone'),
+    phoneNormalized: text('phone_normalized'),
+    city: text('city'),
+    county: text('county'),
+    ageConfirmed: boolean('age_confirmed').notNull().default(false),
+    locationInterestType: text('location_interest_type').notNull().default('UNSURE'),
+    locationNameFreeform: text('location_name_freeform'),
+    locationId: uuid('location_id').references(() => locations.id),
+    primaryTeamInterest: text('primary_team_interest').notNull(),
+    secondaryInterests: jsonb('secondary_interests').$type<string[]>().notNull(),
+    wantsToLeadLocal: boolean('wants_to_lead_local').notNull().default(false),
+    wantsCategoryLead: boolean('wants_category_lead').notNull().default(false),
+    experienceNotes: text('experience_notes'),
+    availabilityNotes: text('availability_notes'),
+    howHeard: text('how_heard'),
+    reviewNotes: text('review_notes'),
+    matchedPersonId: uuid('matched_person_id').references(() => people.id),
+    assignedToPersonId: uuid('assigned_to_person_id').references(() => people.id),
+    reviewedAt: timestamp('reviewed_at', { withTimezone: true }),
+    ...timestamps,
+  },
+  (table) => [
+    index('membership_applications_status_idx').on(table.status),
+    index('membership_applications_email_idx').on(table.emailNormalized),
+  ],
+)
+
 export const schemaMigrations = pgTable('schema_migrations', {
   id: text('id').primaryKey(),
   appliedAt: timestamp('applied_at', { withTimezone: true }).notNull().defaultNow(),

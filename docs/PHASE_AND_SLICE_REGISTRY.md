@@ -20,7 +20,7 @@
 | AYC-PHASE-1O-PIPELINE-TAGS-1.0 | Complete |
 | AYC-PHASE-2-MASTER-PLAN-1.0 | Drafted — see `docs/master-build-plan/10-PHASE-2-MASTER-PLAN.md` |
 | AYC-PHASE-2A-HIERARCHY-FOUNDATION | Complete |
-| AYC-PHASE-2B-JOIN-CTA-APPLICATIONS | Planned |
+| AYC-PHASE-2B-JOIN-CTA-APPLICATIONS | Complete |
 | AYC-PHASE-2C-NOTIFY-CHANCE | Planned |
 | AYC-PHASE-2D-CATEGORY-BOARD-UPGRADE | Complete for Mission + Tasks + Resources (comms/reports later) |
 | AYC-PHASE-2D-MISSION-1.0 | Complete |

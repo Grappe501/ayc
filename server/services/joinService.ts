@@ -1,53 +1,68 @@
+import { and, eq, isNull } from 'drizzle-orm'
 import type { AycDatabase } from '../db/client.ts'
-import type { AffiliationType, LocationType } from '../domain/enums.ts'
+import { membershipApplications, personContactMethods } from '../db/schema.ts'
+import type { ApplicationLocationInterest, AffiliationType, LocationType } from '../domain/enums.ts'
+import { normalizeEmail, normalizePhone } from '../domain/normalize.ts'
 import { suggestLocationCode } from '../domain/locationCodes.ts'
-import { createContact } from './contactService.ts'
-import { addPipelineTags } from './pipelineTagService.ts'
-import { createBetaFeedback } from '../repos/feedback.ts'
+import { insertAuditEvent } from '../repos/audit.ts'
 import { findLocationByTypeAndCode } from '../repos/locations.ts'
 import { getTeamBySlug, listActiveTeams } from '../repos/teams.ts'
 
 export type JoinApplicationRequest = {
   firstName?: string
   lastName?: string
+  preferredName?: string | null
   email?: string
   phone?: string | null
   city?: string | null
+  county?: string | null
   locationType?: string
   locationName?: string | null
   teamInterest?: string
+  secondaryInterests?: string[] | null
   leadInterest?: string
   notes?: string | null
+  availabilityNotes?: string | null
+  howHeard?: string | null
   ageConfirmed?: boolean
 }
 
 export type JoinApplicationResult = {
-  personId: string
-  displayName: string
-  status: 'PROSPECTIVE'
+  applicationId: string
+  referenceCode: string
+  status: 'NEW' | 'DUPLICATE'
   teamSlug: string
   teamName: string
-  referenceHint: string
   alreadyOnFile?: boolean
 }
 
-function mapLocationType(raw: string | undefined): LocationType {
+export function mapLocationInterest(raw: string | undefined): ApplicationLocationInterest {
   const value = (raw ?? 'UNSURE').toUpperCase()
   if (value === 'HIGH_SCHOOL') return 'HIGH_SCHOOL'
-  if (value === 'WORKING_CLASS' || value === 'COUNTY') return 'COUNTY'
+  if (value === 'WORKING_CLASS' || value === 'COUNTY') return 'WORKING_CLASS'
   if (value === 'COLLEGE') return 'COLLEGE'
+  return 'UNSURE'
+}
+
+export function mapLocationTypeFromInterest(
+  interest: ApplicationLocationInterest,
+): LocationType {
+  if (interest === 'HIGH_SCHOOL') return 'HIGH_SCHOOL'
+  if (interest === 'COLLEGE') return 'COLLEGE'
   return 'COUNTY'
 }
 
-function mapAffiliation(locationType: LocationType, rawPath: string | undefined): AffiliationType {
-  const value = (rawPath ?? '').toUpperCase()
+export function mapAffiliation(
+  locationType: LocationType,
+  interest: ApplicationLocationInterest,
+): AffiliationType {
   if (locationType === 'HIGH_SCHOOL') return 'CURRENT_SCHOOL'
   if (locationType === 'COLLEGE') return 'CURRENT_COLLEGE'
-  if (value === 'WORKING_CLASS') return 'NON_STUDENT_COUNTY'
+  if (interest === 'WORKING_CLASS') return 'NON_STUDENT_COUNTY'
   return 'ORGANIZING_LOCATION'
 }
 
-function mapTeamSlug(interest: string | undefined): string {
+export function mapTeamSlug(interest: string | undefined): string {
   const value = (interest ?? 'unsure').toLowerCase()
   if (
     value === 'organizer' ||
@@ -62,7 +77,25 @@ function mapTeamSlug(interest: string | undefined): string {
   return 'organizer'
 }
 
-async function resolveUniqueCode(
+export function mapLeadFlags(leadInterest: string | undefined): {
+  wantsToLeadLocal: boolean
+  wantsCategoryLead: boolean
+} {
+  const value = (leadInterest?.trim() || 'volunteer').toLowerCase()
+  return {
+    wantsToLeadLocal: value === 'local-lead' || value === 'local_lead',
+    wantsCategoryLead: value === 'category-lead' || value === 'category_lead',
+  }
+}
+
+export function buildApplicationReferenceCode(
+  seed = Math.floor(Math.random() * 1_000_000),
+): string {
+  const n = Math.abs(seed) % 1_000_000
+  return `AYC-JA-${n.toString().padStart(6, '0')}`
+}
+
+export async function resolveUniqueLocationCode(
   db: AycDatabase,
   locationType: LocationType,
   name: string,
@@ -81,6 +114,24 @@ async function resolveUniqueCode(
     if (!hit) return candidate
   }
   return `${base.slice(0, 2)}${Date.now().toString(36).slice(-2)}`.toUpperCase().slice(0, 4)
+}
+
+async function findPersonIdByEmail(
+  db: AycDatabase,
+  emailNormalized: string,
+): Promise<string | null> {
+  const [row] = await db
+    .select({ personId: personContactMethods.personId })
+    .from(personContactMethods)
+    .where(
+      and(
+        eq(personContactMethods.contactType, 'EMAIL'),
+        eq(personContactMethods.normalizedValue, emailNormalized),
+        isNull(personContactMethods.archivedAt),
+      ),
+    )
+    .limit(1)
+  return row?.personId ?? null
 }
 
 export async function submitJoinApplication(
@@ -104,201 +155,96 @@ export async function submitJoinApplication(
     })
   }
 
-  const pathRaw = input.locationType ?? 'UNSURE'
-  const locationType = mapLocationType(pathRaw)
-  const locationName =
-    input.locationName?.trim() ||
-    input.city?.trim() ||
-    (locationType === 'COUNTY' ? 'Working Class / County Prospect' : 'Arkansas Prospect Queue')
-
+  const locationInterest = mapLocationInterest(input.locationType)
   const teamSlug = mapTeamSlug(input.teamInterest)
   const team = await getTeamBySlug(db, teamSlug)
-  if (!team) {
-    const teams = await listActiveTeams(db)
-    if (!teams[0]) {
-      throw Object.assign(new Error('MISCONFIGURED'), {
-        code: 'MISCONFIGURED' as const,
-        message: 'Teams are not configured.',
-      })
-    }
-  }
-  const primaryTeam = team ?? (await listActiveTeams(db))[0]!
-
-  const code = await resolveUniqueCode(db, locationType, locationName)
-  const leadInterest = (input.leadInterest?.trim() || 'volunteer').toLowerCase()
-  const notes = input.notes?.trim() || ''
-
-  const actor = {
-    actorType: 'SYSTEM' as const,
-    actorLabel: 'JOIN_FORM',
+  const teams = team ? null : await listActiveTeams(db)
+  const primaryTeam = team ?? teams?.[0]
+  if (!primaryTeam) {
+    throw Object.assign(new Error('MISCONFIGURED'), {
+      code: 'MISCONFIGURED' as const,
+      message: 'Teams are not configured.',
+    })
   }
 
-  async function tagLeadInterest(personId: string) {
-    if (!personId) return
-    const tags: string[] = []
-    if (leadInterest === 'local-lead' || leadInterest === 'local_lead') {
-      tags.push('LOCAL_LEAD_CANDIDATE')
-    }
-    if (leadInterest === 'category-lead' || leadInterest === 'category_lead') {
-      tags.push('CATEGORY_LEAD_CANDIDATE')
-    }
-    if (tags.length === 0) return
+  const emailNormalized = normalizeEmail(email)
+  const phone = input.phone?.trim() || null
+  const phoneNormalized = phone ? normalizePhone(phone) : null
+  const leadFlags = mapLeadFlags(input.leadInterest)
+  const matchedPersonId = await findPersonIdByEmail(db, emailNormalized)
+  const status = matchedPersonId ? ('DUPLICATE' as const) : ('NEW' as const)
+
+  const secondary = (input.secondaryInterests ?? [])
+    .map((value) => mapTeamSlug(value))
+    .filter((value) => value !== primaryTeam.slug)
+
+  let referenceCode = buildApplicationReferenceCode()
+  for (let attempt = 0; attempt < 5; attempt += 1) {
     try {
-      await addPipelineTags(db, personId, tags, actor)
-    } catch (error) {
-      console.error('join lead-interest pipeline tag failed', error)
-    }
-  }
-
-  const result = await createContact(
-    db,
-    {
-      firstName,
-      lastName,
-      email,
-      phone: input.phone?.trim() || null,
-      status: 'PROSPECTIVE',
-      source: 'JOIN_FORM',
-      preferredContactMethod: input.phone?.trim() ? 'EITHER' : 'EMAIL',
-      location: {
-        locationType,
-        name: locationName,
-        code,
-        city: input.city?.trim() || null,
-        countyName: locationType === 'COUNTY' ? locationName : null,
-      },
-      affiliationType: mapAffiliation(locationType, pathRaw),
-      primaryTeamId: primaryTeam.id,
-      position: leadInterest === 'volunteer' ? 'VOLUNTEER' : 'VOLUNTEER',
-      confirmDuplicate: true,
-    },
-    actor,
-  )
-
-  if (result.status === 'duplicate_review' && result.result === 'EXACT_MATCH') {
-    const match = result.candidates[0]
-    await createBetaFeedback(db, {
-      category: 'IDEA',
-      description: [
-        'JOIN APPLICATION (already on file)',
-        `Name: ${firstName} ${lastName}`,
-        `Email: ${email}`,
-        `Matched person: ${match?.id ?? 'unknown'}`,
-        `Team interest: ${teamSlug}`,
-        `Leadership interest: ${leadInterest}`,
-        `Notes: ${notes || 'none'}`,
-      ].join('\n'),
-      pagePath: '/join',
-      workflow: 'JOIN_APPLICATION',
-      reporterName: `${firstName} ${lastName}`,
-      reporterContact: [email, input.phone?.trim()].filter(Boolean).join(' · '),
-    })
-    return {
-      personId: match?.id ?? '',
-      displayName: match ? `${match.firstName} ${match.lastName}` : `${firstName} ${lastName}`,
-      status: 'PROSPECTIVE',
-      teamSlug: primaryTeam.slug,
-      teamName: primaryTeam.name,
-      referenceHint: 'ALREADY_ON_FILE',
-      alreadyOnFile: true,
-    }
-  }
-
-  if (result.status === 'duplicate_review') {
-    // Retries with force for likely/possible after confirm path failed unexpectedly.
-    const forced = await createContact(
-      db,
-      {
-        firstName,
-        lastName,
-        email,
-        phone: input.phone?.trim() || null,
-        status: 'PROSPECTIVE',
-        source: 'JOIN_FORM',
-        preferredContactMethod: input.phone?.trim() ? 'EITHER' : 'EMAIL',
-        location: {
-          locationType,
-          name: locationName,
-          code: await resolveUniqueCode(db, locationType, `${locationName} JOIN`),
+      const [row] = await db
+        .insert(membershipApplications)
+        .values({
+          referenceCode,
+          status,
+          firstName,
+          lastName,
+          preferredName: input.preferredName?.trim() || null,
+          email,
+          emailNormalized,
+          phone,
+          phoneNormalized,
           city: input.city?.trim() || null,
-        },
-        affiliationType: mapAffiliation(locationType, pathRaw),
-        primaryTeamId: primaryTeam.id,
-        position: 'VOLUNTEER',
-        forceCreateDespiteExact: true,
-        confirmDuplicate: true,
-      },
-      actor,
-    )
-    if (forced.status === 'duplicate_review') {
-      throw Object.assign(new Error('VALIDATION_ERROR'), {
-        code: 'VALIDATION_ERROR' as const,
-        fields: {
-          email: 'We could not create your record. Please contact AYC leadership.',
+          county: input.county?.trim() || null,
+          ageConfirmed: true,
+          locationInterestType: locationInterest,
+          locationNameFreeform: input.locationName?.trim() || null,
+          primaryTeamInterest: primaryTeam.slug,
+          secondaryInterests: secondary,
+          wantsToLeadLocal: leadFlags.wantsToLeadLocal,
+          wantsCategoryLead: leadFlags.wantsCategoryLead,
+          experienceNotes: input.notes?.trim() || null,
+          availabilityNotes: input.availabilityNotes?.trim() || null,
+          howHeard: input.howHeard?.trim() || null,
+          matchedPersonId,
+        })
+        .returning()
+
+      if (!row) throw new Error('Failed to create application')
+
+      await insertAuditEvent(db, {
+        eventType: 'APPLICATION_SUBMITTED',
+        entityType: 'MEMBERSHIP_APPLICATION',
+        entityId: row.id,
+        actorType: 'SYSTEM',
+        actorLabel: 'JOIN_FORM',
+        changeSummary: `Join application ${row.referenceCode} submitted (${status}).`,
+        metadata: {
+          teamSlug: primaryTeam.slug,
+          matchedPersonId,
         },
       })
-    }
-    await tagLeadInterest(forced.personId)
-    await createBetaFeedback(db, {
-      category: 'IDEA',
-      description: [
-        'JOIN APPLICATION',
-        `Person id: ${forced.personId}`,
-        `Name: ${forced.displayName}`,
-        `Email: ${email}`,
-        `Phone: ${input.phone?.trim() || 'not provided'}`,
-        `Path: ${pathRaw}`,
-        `Location: ${locationName}`,
-        `Team: ${primaryTeam.name}`,
-        `Leadership interest: ${leadInterest}`,
-        `Notes: ${notes || 'none'}`,
-      ].join('\n'),
-      pagePath: '/join',
-      workflow: 'JOIN_APPLICATION',
-      reporterName: `${firstName} ${lastName}`,
-      reporterContact: [email, input.phone?.trim()].filter(Boolean).join(' · '),
-      severity: 'MEDIUM',
-    })
-    return {
-      personId: forced.personId,
-      displayName: forced.displayName,
-      status: 'PROSPECTIVE',
-      teamSlug: primaryTeam.slug,
-      teamName: primaryTeam.name,
-      referenceHint: forced.personId.slice(0, 8).toUpperCase(),
+
+      return {
+        applicationId: row.id,
+        referenceCode: row.referenceCode,
+        status,
+        teamSlug: primaryTeam.slug,
+        teamName: primaryTeam.name,
+        alreadyOnFile: Boolean(matchedPersonId),
+      }
+    } catch (error) {
+      const err = error as { code?: string; constraint_name?: string; message?: string }
+      const uniqueHit =
+        err.code === '23505' ||
+        String(err.message ?? '').includes('reference_code') ||
+        String(err.constraint_name ?? '').includes('reference')
+      if (uniqueHit && attempt < 4) {
+        referenceCode = buildApplicationReferenceCode()
+        continue
+      }
+      throw error
     }
   }
 
-  await tagLeadInterest(result.personId)
-  await createBetaFeedback(db, {
-    category: 'IDEA',
-    description: [
-      'JOIN APPLICATION',
-      `Person id: ${result.personId}`,
-      `Name: ${result.displayName}`,
-      `Email: ${email}`,
-      `Phone: ${input.phone?.trim() || 'not provided'}`,
-      `Path: ${pathRaw}`,
-      `Location: ${locationName}`,
-      `Team: ${primaryTeam.name} (${primaryTeam.slug})`,
-      `Leadership interest: ${leadInterest}`,
-      `Notes: ${notes || 'none'}`,
-      '',
-      'Appears on Leader Board / team board as PROSPECTIVE (source JOIN_FORM).',
-    ].join('\n'),
-    pagePath: '/join',
-    workflow: 'JOIN_APPLICATION',
-    reporterName: `${firstName} ${lastName}`,
-    reporterContact: [email, input.phone?.trim()].filter(Boolean).join(' · '),
-    severity: 'MEDIUM',
-  })
-
-  return {
-    personId: result.personId,
-    displayName: result.displayName,
-    status: 'PROSPECTIVE',
-    teamSlug: primaryTeam.slug,
-    teamName: primaryTeam.name,
-    referenceHint: result.personId.slice(0, 8).toUpperCase(),
-  }
+  throw new Error('Could not allocate application reference code')
 }

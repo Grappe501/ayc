@@ -1,24 +1,28 @@
 export type JoinApplicationBody = {
   firstName: string
   lastName: string
+  preferredName?: string
   email: string
   phone?: string
   city?: string
+  county?: string
   locationType: string
   locationName?: string
   teamInterest: string
+  secondaryInterests?: string[]
   leadInterest: string
   notes?: string
+  availabilityNotes?: string
+  howHeard?: string
   ageConfirmed: boolean
 }
 
 export type JoinApplicationResult = {
-  personId: string
-  displayName: string
-  status: 'PROSPECTIVE'
+  applicationId: string
+  referenceCode: string
+  status: 'NEW' | 'DUPLICATE'
   teamSlug: string
   teamName: string
-  referenceHint: string
   alreadyOnFile?: boolean
 }
 

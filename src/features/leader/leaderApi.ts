@@ -604,3 +604,59 @@ export function revokeLeadershipRole(roleId: string) {
     body: JSON.stringify({ id: roleId }),
   })
 }
+
+export type MembershipApplicationItem = {
+  id: string
+  referenceCode: string
+  status: string
+  firstName: string
+  lastName: string
+  preferredName: string | null
+  email: string
+  phone: string | null
+  city: string | null
+  county: string | null
+  ageConfirmed: boolean
+  locationInterestType: string
+  locationNameFreeform: string | null
+  primaryTeamInterest: string
+  secondaryInterests: string[]
+  wantsToLeadLocal: boolean
+  wantsCategoryLead: boolean
+  experienceNotes: string | null
+  availabilityNotes: string | null
+  howHeard: string | null
+  reviewNotes: string | null
+  matchedPersonId: string | null
+  assignedToPersonId: string | null
+  reviewedAt: string | null
+  createdAt: string
+  updatedAt: string
+}
+
+export function fetchLeaderApplications(params: { status?: string; q?: string } = {}) {
+  const search = new URLSearchParams()
+  if (params.status) search.set('status', params.status)
+  if (params.q) search.set('q', params.q)
+  const qs = search.toString()
+  return request<{
+    total: number
+    openCount: number
+    items: MembershipApplicationItem[]
+  }>(`leader-applications${qs ? `?${qs}` : ''}`)
+}
+
+export function updateLeaderApplication(body: {
+  id: string
+  action: 'review' | 'accept' | 'decline'
+  reviewNotes?: string | null
+}) {
+  return request<{
+    application: MembershipApplicationItem
+    personId?: string
+    created?: boolean
+  }>('leader-applications', {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  })
+}

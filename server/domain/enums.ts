@@ -98,6 +98,10 @@ export const AUDIT_EVENT_TYPES = [
   'ROLE_GRANTED',
   'ROLE_REVOKED',
   'BETA_FEEDBACK_SUBMITTED',
+  'APPLICATION_SUBMITTED',
+  'APPLICATION_UPDATED',
+  'APPLICATION_ACCEPTED',
+  'APPLICATION_DECLINED',
 ] as const
 export type AuditEventType = (typeof AUDIT_EVENT_TYPES)[number]
 
@@ -113,8 +117,27 @@ export const AUDIT_ENTITY_TYPES = [
   'BOARD',
   'BETA_FEEDBACK',
   'TEAM',
+  'MEMBERSHIP_APPLICATION',
 ] as const
 export type AuditEntityType = (typeof AUDIT_ENTITY_TYPES)[number]
+
+/** Phase 2B membership applications queue. */
+export const APPLICATION_STATUSES = [
+  'NEW',
+  'REVIEWING',
+  'ACCEPTED',
+  'DECLINED',
+  'DUPLICATE',
+] as const
+export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number]
+
+export const APPLICATION_LOCATION_INTERESTS = [
+  'COLLEGE',
+  'HIGH_SCHOOL',
+  'WORKING_CLASS',
+  'UNSURE',
+] as const
+export type ApplicationLocationInterest = (typeof APPLICATION_LOCATION_INTERESTS)[number]
 
 /** Volume V leadership pipeline — controlled tags only. */
 export const PIPELINE_TAGS = [

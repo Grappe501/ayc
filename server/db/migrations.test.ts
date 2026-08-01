@@ -33,6 +33,7 @@ describe('SQL migrations', () => {
     expect(files).toContain('006_pipeline_tags.sql')
     expect(files).toContain('007_hierarchy_foundation.sql')
     expect(files).toContain('008_location_boards.sql')
+    expect(files).toContain('009_membership_applications.sql')
   })
 
   it('defines person_merge_history in 003_person_merge', () => {
@@ -75,4 +76,15 @@ describe('SQL migrations', () => {
     expect(sql).toContain('boards_location_team_uidx')
     expect(sql).toContain('boards_location_category_uidx')
   })
+
+  it('defines membership_applications in 009_membership_applications', () => {
+    const sql = readFileSync(
+      path.join(migrationsDir, '009_membership_applications.sql'),
+      'utf8',
+    )
+    expect(sql).toContain('CREATE TABLE IF NOT EXISTS membership_applications')
+    expect(sql).toContain('APPLICATION_SUBMITTED')
+    expect(sql).toContain('MEMBERSHIP_APPLICATION')
+  })
 })
+

@@ -158,12 +158,18 @@ function LeaderBoard() {
             <Button to="/leader/duplicates" variant="secondary">
               Review duplicates
             </Button>
-            <Button to="/leader/feedback" variant="secondary">
-              Feedback inbox
+            <Button to="/leader/applications" variant="secondary">
+              Join applications
             </Button>
-            <Button to="/leader/contacts/new" variant="secondary">
-              Add a Contact
-            </Button>
+          <Button to="/leader/applications" variant="secondary">
+            Join applications
+          </Button>
+          <Button to="/leader/feedback" variant="secondary">
+            Feedback inbox
+          </Button>
+          <Button to="/leader/contacts/new" variant="secondary">
+            Add a Contact
+          </Button>
             <Button to="/directory" variant="secondary">
               View Directory
             </Button>
