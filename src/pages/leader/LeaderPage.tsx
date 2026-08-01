@@ -236,6 +236,9 @@ function LeaderBoard() {
                 <Button to={`/leader/teams/${digest.slug}`} variant="primary">
                   Open board
                 </Button>
+                <Button to={`/leader/teams/${digest.slug}#mission`} variant="secondary">
+                  Mission
+                </Button>
                 {digest.missingContact > 0 ? (
                   <Button to="/leader/gaps" variant="secondary">
                     Gap fill

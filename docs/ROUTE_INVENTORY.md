@@ -7,7 +7,7 @@
 | `/leader/gaps` | Complete | Contact gap-fill sprint (phone/email queue) |
 | `/leader/duplicates` | Complete | Duplicate pair queue + merge into survivor (archives loser) |
 | `/leader/feedback` | Complete | Leader-gated beta feedback inbox (status, severity, notes) |
-| `/leader/teams/:teamSlug` | Complete | Five Team Lead Boards (`organizer`, `voter-registration`, `social-media`, `events`, `outreach`) |
+| `/leader/teams/:teamSlug` | Complete | Five Team Lead Boards + Mission module (`#mission`) |
 | `/leader/contacts/new` | Complete | Contact create |
 | `/leader/contacts/:personId` | Complete | Contact detail / edit / archive |
 | `/directory` | Complete | People / teams / locations views |

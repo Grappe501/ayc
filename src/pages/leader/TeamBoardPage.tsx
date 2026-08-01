@@ -15,6 +15,7 @@ import {
 import { AssignTeamDialog } from '@/features/leader/AssignTeamDialog'
 import { LeaderRosterList } from '@/features/leader/LeaderRosterList'
 import { RequireLeaderAccess } from '@/features/leader/RequireLeaderAccess'
+import { TeamMissionPanel } from '@/features/leader/TeamMissionPanel'
 import { clearLeaderSession } from '@/features/leader/leaderSession'
 import {
   fetchLeaderRoster,
@@ -112,11 +113,14 @@ function TeamBoard({ teamSlug }: { teamSlug: TeamBoardSlug }) {
       <PageHeader
         eyebrow="Team Lead Board"
         title={`${meta.name} Lead Board`}
-        lede={`${meta.shortLabel}. ${meta.description} Fill contact gaps and assign people to this team.`}
+        lede={`${meta.shortLabel}. Mission, priorities, roster, and attention for this statewide category.`}
         actions={
           <>
             <Button to="/leader" variant="secondary">
               All teams
+            </Button>
+            <Button to={`/leader/teams/${teamSlug}#mission`} variant="secondary">
+              Mission
             </Button>
             <Button to="/leader/contacts/new" variant="primary">
               Add a Contact
@@ -159,11 +163,16 @@ function TeamBoard({ teamSlug }: { teamSlug: TeamBoardSlug }) {
       ) : null}
 
       <div className="card-grid card-grid--3 section">
-        <StatCard value={String(summary.roster)} label="On this team" />
-        <StatCard value={String(summary.leads)} label="Leads" />
-        <StatCard value={String(summary.volunteers)} label="Volunteers" />
-        <StatCard value={String(summary.locationsRepresented)} label="Locations" />
+        <StatCard value={String(digest?.roster ?? summary.roster)} label="On this team" />
+        <StatCard value={String(digest?.leads ?? summary.leads)} label="Leads" />
+        <StatCard value={String(digest?.volunteers ?? summary.volunteers)} label="Volunteers" />
+        <StatCard
+          value={String(digest?.locationsRepresented ?? summary.locationsRepresented)}
+          label="Locations"
+        />
       </div>
+
+      <TeamMissionPanel teamSlug={teamSlug} digest={digest} />
 
       <Section id="leads" title={`${meta.name} leads`}>
         {loading ? <LoadingState label="Loading leads…" /> : null}

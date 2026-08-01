@@ -326,3 +326,81 @@
 .team-digest-issues li + li {
   margin-top: 0.2rem;
 }
+
+.team-mission {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.team-mission__hero {
+  padding: var(--space-5);
+  border-radius: var(--radius-md);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(245, 245, 245, 0.88)),
+    linear-gradient(120deg, rgba(255, 107, 53, 0.08), rgba(0, 163, 255, 0.06));
+  border: 1px solid rgba(46, 90, 61, 0.14);
+  color: var(--color-text-on-light);
+}
+
+.team-mission__charge {
+  margin: 0.5rem 0 0.75rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3vw, 2.4rem);
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  color: var(--color-primary-deep);
+}
+
+.team-mission__purpose,
+.team-mission__serves {
+  margin: 0;
+  max-width: 52rem;
+}
+
+.team-mission__purpose {
+  font-size: var(--text-body-lg, 1.05rem);
+  margin-bottom: 0.75rem;
+}
+
+.team-mission__serves {
+  color: var(--color-text-muted-on-light, #4a554c);
+}
+
+.team-mission__priorities {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid rgba(46, 90, 61, 0.14);
+  color: var(--color-text-on-light);
+}
+
+.team-mission__priorities h4,
+.team-mission__columns h4 {
+  margin: 0.4rem 0 0.75rem;
+  color: var(--color-text-on-light);
+}
+
+.team-mission__columns {
+  display: grid;
+  gap: var(--space-4);
+  color: var(--color-text-on-light);
+}
+
+@media (min-width: 800px) {
+  .team-mission__columns {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.team-mission__list {
+  margin: 0;
+  padding-left: 1.15rem;
+}
+
+.team-mission__list li + li {
+  margin-top: 0.35rem;
+}
+
+.team-mission__list--numbered {
+  padding-left: 1.25rem;
+}
