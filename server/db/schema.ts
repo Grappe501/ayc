@@ -1,5 +1,6 @@
 import {
   boolean,
+  date,
   index,
   integer,
   jsonb,
@@ -196,6 +197,28 @@ export const personMergeHistory = pgTable(
     uniqueIndex('person_merge_history_merged_uidx').on(table.mergedPersonId),
     index('person_merge_history_surviving_idx').on(table.survivingPersonId, table.mergedAt),
   ],
+)
+
+export const teamTasks = pgTable(
+  'team_tasks',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    teamId: uuid('team_id')
+      .notNull()
+      .references(() => teams.id),
+    title: text('title').notNull(),
+    notes: text('notes'),
+    status: text('status').notNull().default('OPEN'),
+    priority: text('priority').notNull().default('NORMAL'),
+    dueOn: date('due_on'),
+    sortOrder: integer('sort_order').notNull().default(0),
+    ...timestamps,
+    completedAt: timestamp('completed_at', { withTimezone: true }),
+    archivedAt: timestamp('archived_at', { withTimezone: true }),
+    createdByActor: text('created_by_actor'),
+    updatedByActor: text('updated_by_actor'),
+  },
+  (table) => [index('team_tasks_team_status_idx').on(table.teamId, table.status, table.sortOrder)],
 )
 
 export const schemaMigrations = pgTable('schema_migrations', {

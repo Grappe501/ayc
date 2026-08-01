@@ -87,6 +87,9 @@ export const AUDIT_EVENT_TYPES = [
   'TEAM_ASSIGNMENT_CREATED',
   'TEAM_ASSIGNMENT_UPDATED',
   'TEAM_ASSIGNMENT_ENDED',
+  'TEAM_TASK_CREATED',
+  'TEAM_TASK_UPDATED',
+  'TEAM_TASK_COMPLETED',
   'BETA_FEEDBACK_SUBMITTED',
 ] as const
 export type AuditEventType = (typeof AUDIT_EVENT_TYPES)[number]
@@ -96,10 +99,17 @@ export const AUDIT_ENTITY_TYPES = [
   'CONTACT_METHOD',
   'LOCATION',
   'TEAM_ASSIGNMENT',
+  'TEAM_TASK',
   'BETA_FEEDBACK',
   'TEAM',
 ] as const
 export type AuditEntityType = (typeof AUDIT_ENTITY_TYPES)[number]
+
+export const TEAM_TASK_STATUSES = ['OPEN', 'DONE', 'CANCELLED'] as const
+export type TeamTaskStatus = (typeof TEAM_TASK_STATUSES)[number]
+
+export const TEAM_TASK_PRIORITIES = ['NORMAL', 'HIGH'] as const
+export type TeamTaskPriority = (typeof TEAM_TASK_PRIORITIES)[number]
 
 export const ACTOR_TYPES = ['SYSTEM', 'SHARED_LEADER_SESSION', 'USER', 'ADMIN', 'IMPORT'] as const
 export type ActorType = (typeof ACTOR_TYPES)[number]

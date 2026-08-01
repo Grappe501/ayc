@@ -28,11 +28,18 @@ describe('SQL migrations', () => {
     expect(files).toContain('001_init.sql')
     expect(files).toContain('002_join_form_source.sql')
     expect(files).toContain('003_person_merge.sql')
+    expect(files).toContain('004_team_tasks.sql')
   })
 
   it('defines person_merge_history in 003_person_merge', () => {
     const sql = readFileSync(path.join(migrationsDir, '003_person_merge.sql'), 'utf8')
     expect(sql).toContain('CREATE TABLE IF NOT EXISTS person_merge_history')
     expect(sql).toContain('PERSON_MERGED')
+  })
+
+  it('defines team_tasks in 004_team_tasks', () => {
+    const sql = readFileSync(path.join(migrationsDir, '004_team_tasks.sql'), 'utf8')
+    expect(sql).toContain('CREATE TABLE IF NOT EXISTS team_tasks')
+    expect(sql).toContain('TEAM_TASK_CREATED')
   })
 })

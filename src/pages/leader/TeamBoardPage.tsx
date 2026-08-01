@@ -16,6 +16,7 @@ import { AssignTeamDialog } from '@/features/leader/AssignTeamDialog'
 import { LeaderRosterList } from '@/features/leader/LeaderRosterList'
 import { RequireLeaderAccess } from '@/features/leader/RequireLeaderAccess'
 import { TeamMissionPanel } from '@/features/leader/TeamMissionPanel'
+import { TeamTasksPanel } from '@/features/leader/TeamTasksPanel'
 import { clearLeaderSession } from '@/features/leader/leaderSession'
 import {
   fetchLeaderRoster,
@@ -122,6 +123,9 @@ function TeamBoard({ teamSlug }: { teamSlug: TeamBoardSlug }) {
             <Button to={`/leader/teams/${teamSlug}#mission`} variant="secondary">
               Mission
             </Button>
+            <Button to={`/leader/teams/${teamSlug}#tasks`} variant="secondary">
+              Tasks
+            </Button>
             <Button to="/leader/contacts/new" variant="primary">
               Add a Contact
             </Button>
@@ -173,6 +177,8 @@ function TeamBoard({ teamSlug }: { teamSlug: TeamBoardSlug }) {
       </div>
 
       <TeamMissionPanel teamSlug={teamSlug} digest={digest} />
+
+      <TeamTasksPanel teamSlug={teamSlug} />
 
       <Section id="leads" title={`${meta.name} leads`}>
         {loading ? <LoadingState label="Loading leads…" /> : null}
