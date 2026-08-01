@@ -23,11 +23,6 @@ export function LandingHero() {
             View the Leadership Directory
           </Button>
         </div>
-        <p>
-          <a className="mission-link" href="#mission">
-            Read Our Mission
-          </a>
-        </p>
       </div>
     </section>
   )
