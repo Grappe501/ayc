@@ -197,9 +197,8 @@
   height: auto;
   object-fit: contain;
   user-select: none;
-  /* Green mark on green field — quiet, not a sticker */
-  opacity: 0.88;
-  filter: saturate(0.95);
+  /* Green mark + white letters + orange diamond on green field */
+  opacity: 0.95;
 }
 
 @media (max-width: 719px) {
