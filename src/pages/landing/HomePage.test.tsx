@@ -38,6 +38,12 @@ describe('HomePage landing', () => {
     expect(html).toContain('Why step into leadership.')
   })
 
+  it('places the AYC logo mark beside the hero headline', () => {
+    const html = renderHome()
+    expect(html).toContain('landing-hero__mark')
+    expect(html).toContain('alt="Arkansas Youth Coalition"')
+  })
+
   it('keeps leadership tools at the bottom', () => {
     const html = renderHome()
     expect(html).toContain('Leadership Workbench')

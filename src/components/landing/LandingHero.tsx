@@ -1,13 +1,21 @@
 import { Button } from '@/components/ui'
+import logoMark from '@/assets/brand/ayc-logo-mark-a.png'
 
 export function LandingHero() {
   return (
     <section className="landing-hero ayc-reveal" aria-labelledby="hero-heading">
       <div className="landing-hero__copy">
         <p className="landing__eyebrow landing-hero__eyebrow">Arkansas Youth Coalition</p>
-        <h1 id="hero-heading">
-          A home for young Arkansans ready to lead.
-        </h1>
+        <div className="landing-hero__headline">
+          <h1 id="hero-heading">A home for young Arkansans ready to lead.</h1>
+          <img
+            className="landing-hero__mark"
+            src={logoMark}
+            alt="Arkansas Youth Coalition"
+            width={220}
+            height={220}
+          />
+        </div>
         <p className="landing-hero__support">
           AYC is a statewide civic leadership network for ages 16–24 — college students, high school
           students, and working-class young people building political power together. This is the
