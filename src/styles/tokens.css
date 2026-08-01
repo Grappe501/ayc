@@ -63,6 +63,13 @@
   --color-text-on-light: var(--ayc-onyx);
   --color-text-muted-on-light: #3a403c;
 
+  /*
+   * Contextual ink — defaults to page (light-on-green).
+   * Light surfaces reassign these so children stay readable without hardcoding.
+   */
+  --ink: var(--color-text);
+  --ink-muted: var(--color-text-muted);
+
   --color-border: rgba(254, 235, 209, 0.18);
   --color-border-strong: rgba(143, 30, 24, 0.45);
   --color-border-on-light: rgba(7, 12, 15, 0.12);

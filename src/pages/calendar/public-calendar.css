@@ -39,7 +39,7 @@
 
 .public-calendar__dow {
   font-size: var(--text-small);
-  color: var(--color-text-muted-on-light);
+  color: var(--ink-muted);
   padding: 0.25rem;
 }
 

@@ -103,9 +103,11 @@ textarea {
   border: 0;
 }
 
-/* Light panels: dark ink */
+/*
+ * Light panels: dark ink context.
+ * Do NOT put bare .field / .field__hint here — they also render on the green canvas.
+ */
 .card,
-.field,
 .loading-state,
 .error-state,
 .leader-roster-table-wrap,
@@ -118,8 +120,23 @@ textarea {
 .join-explain,
 .join-form,
 .stat-card,
-.empty-state {
-  color: var(--color-text-on-light);
+.empty-state,
+.team-mission__hero,
+.team-mission__priorities,
+.team-mission__column,
+.team-tasks__compose,
+.team-tasks__empty,
+.team-tasks__item,
+.team-resources__item,
+.team-resources__starters li,
+.cal-board__month-cell,
+.cal-board__week-cell,
+.cal-board__day,
+.feedback-inbox__item,
+.glass {
+  --ink: var(--color-text-on-light);
+  --ink-muted: var(--color-text-muted-on-light);
+  color: var(--ink);
 }
 
 .card h1,
@@ -137,7 +154,10 @@ textarea {
 .join-explain h3,
 .join-form h1,
 .join-form h2,
-.join-form h3 {
+.join-form h3,
+.team-mission__hero h3,
+.team-mission__priorities h4,
+.team-mission__column h4 {
   color: var(--color-primary-deep);
 }
 
@@ -162,10 +182,9 @@ textarea {
 .journey-step p,
 .join-explain p,
 .join-explain li,
-.field__hint,
 .stat-card__label,
 .workbench-card__status {
-  color: var(--color-text-muted-on-light);
+  color: var(--ink-muted);
 }
 
 @keyframes ayc-fade-up {

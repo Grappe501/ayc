@@ -375,14 +375,21 @@
 }
 
 .team-mission__priorities h4,
-.team-mission__columns h4 {
+.team-mission__column h4 {
   margin: 0.4rem 0 0.75rem;
-  color: var(--color-text-on-light);
+  color: var(--color-primary-deep);
 }
 
 .team-mission__columns {
   display: grid;
   gap: var(--space-4);
+}
+
+.team-mission__column {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid rgba(53, 85, 50, 0.14);
   color: var(--color-text-on-light);
 }
 
@@ -534,6 +541,6 @@
 }
 
 .team-resources__starters li {
-  background: transparent;
+  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
   border-style: dashed;
 }

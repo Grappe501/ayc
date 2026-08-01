@@ -96,7 +96,11 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--color-splash-deep);
+  color: var(--ink-muted);
+}
+
+.card .card__eyebrow {
+  color: var(--color-secondary);
 }
 
 .card h3 {
@@ -245,19 +249,22 @@
   font-size: var(--text-micro);
   font-weight: 700;
   letter-spacing: 0.04em;
-  background: var(--color-splash-wash);
-  color: var(--color-splash-deep);
+  background: var(--color-surface);
+  color: var(--color-text-on-light);
+  border: 1px solid var(--color-border-on-light);
   box-shadow: var(--shadow-xs);
 }
 
 .badge--gold {
-  background: var(--color-primary-wash);
+  background: color-mix(in srgb, var(--color-primary) 14%, var(--color-surface));
   color: var(--color-primary-deep);
+  border-color: color-mix(in srgb, var(--color-primary) 28%, transparent);
 }
 
 .badge--blue {
-  background: var(--color-tertiary-wash);
-  color: #0077bb;
+  background: color-mix(in srgb, var(--color-tertiary) 35%, var(--color-surface));
+  color: #1f4f7a;
+  border-color: color-mix(in srgb, var(--color-tertiary-deep) 35%, transparent);
 }
 
 .tag {
@@ -265,9 +272,10 @@
   align-items: center;
   padding: 0.35rem 0.75rem;
   border-radius: var(--radius-md);
-  background: rgba(53, 85, 50, 0.08);
+  /* Always a cream chip so tags stay readable on the hunter canvas */
+  background: var(--color-surface);
   border: 1px solid var(--color-border-on-light);
-  color: var(--color-text-muted-on-light);
+  color: var(--color-text-on-light);
   font-size: var(--text-small);
   box-shadow: var(--shadow-xs);
 }
@@ -281,6 +289,10 @@
 .empty-state {
   text-align: center;
   padding: var(--space-7) var(--space-5);
+  background: var(--color-surface-tint);
+  border: 1px solid var(--color-border-on-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 .empty-state__icon {
@@ -312,7 +324,7 @@
 }
 
 .empty-state p {
-  color: var(--color-text-muted);
+  color: var(--ink-muted);
   max-width: 32rem;
   margin-left: auto;
   margin-right: auto;
@@ -407,7 +419,7 @@
 .field label {
   font-weight: 700;
   font-size: var(--text-small);
-  color: var(--color-text-on-light);
+  color: var(--ink);
 }
 
 .field input,
@@ -459,7 +471,7 @@
 }
 
 .field__hint {
-  color: var(--color-text-muted-on-light);
+  color: var(--ink-muted);
   font-size: var(--text-small);
   margin: 0;
 }

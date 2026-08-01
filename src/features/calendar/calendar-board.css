@@ -35,7 +35,7 @@
 
 .cal-board__dow {
   font-size: var(--text-small);
-  color: var(--color-text-muted-on-light);
+  color: var(--ink-muted);
   padding: 0.25rem;
   font-weight: 600;
 }
@@ -121,7 +121,7 @@
 
 .cal-board__gutter {
   font-size: 0.7rem;
-  color: var(--color-text-muted-on-light);
+  color: var(--ink-muted);
   padding: 0.35rem;
   border-right: 1px solid var(--color-border-on-light);
 }
@@ -169,7 +169,7 @@
 
 .cal-board__hour {
   font-size: 0.65rem;
-  color: var(--color-text-muted-on-light);
+  color: var(--ink-muted);
   padding: 0.15rem 0.25rem;
   border-top: 1px solid color-mix(in srgb, var(--color-border-on-light) 70%, transparent);
 }

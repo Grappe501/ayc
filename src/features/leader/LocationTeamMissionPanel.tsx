@@ -71,7 +71,7 @@ export function LocationTeamMissionPanel({ locationType, locationName, stats }: 
         </div>
 
         <div className="team-mission__columns">
-          <div>
+          <div className="team-mission__column">
             <h4>Focus areas</h4>
             <ul className="team-mission__list">
               {mission.focusAreas.map((item) => (
@@ -79,7 +79,7 @@ export function LocationTeamMissionPanel({ locationType, locationName, stats }: 
               ))}
             </ul>
           </div>
-          <div>
+          <div className="team-mission__column">
             <h4>Lead owns</h4>
             <ul className="team-mission__list">
               {mission.leadOwns.map((item) => (
@@ -87,7 +87,7 @@ export function LocationTeamMissionPanel({ locationType, locationName, stats }: 
               ))}
             </ul>
           </div>
-          <div>
+          <div className="team-mission__column">
             <h4>Success looks like</h4>
             <ul className="team-mission__list">
               {mission.successLooksLike.map((item) => (
