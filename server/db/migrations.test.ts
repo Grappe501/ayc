@@ -35,6 +35,7 @@ describe('SQL migrations', () => {
     expect(files).toContain('008_location_boards.sql')
     expect(files).toContain('009_membership_applications.sql')
     expect(files).toContain('010_calendars.sql')
+    expect(files).toContain('011_calendar_event_rsvps.sql')
   })
 
   it('defines person_merge_history in 003_person_merge', () => {
@@ -95,6 +96,18 @@ describe('SQL migrations', () => {
     expect(sql).toContain('CALENDAR_EVENT_CREATED')
     expect(sql).toContain('source_calendar_id')
   })
+
+  it('defines calendar_event_rsvps in 011_calendar_event_rsvps', () => {
+    const sql = readFileSync(
+      path.join(migrationsDir, '011_calendar_event_rsvps.sql'),
+      'utf8',
+    )
+    expect(sql).toContain('CREATE TABLE IF NOT EXISTS calendar_event_rsvps')
+    expect(sql).toContain('CALENDAR_RSVP_INVITED')
+    expect(sql).toContain("'YES'")
+    expect(sql).toContain('CALENDAR_RSVP')
+  })
 })
+
 
 

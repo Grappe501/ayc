@@ -18,12 +18,25 @@ import { clearLeaderSession } from '@/features/leader/leaderSession'
 import {
   createCalendarEvent,
   fetchCalendarEvents,
+  fetchEventRsvps,
+  fetchLeaderRoster,
+  inviteEventRsvps,
+  removeEventRsvp,
+  setEventRsvp,
   updateCalendarEvent,
   type CalendarBoardRef,
   type CalendarEventItem,
+  type CalendarRsvpCounts,
+  type CalendarRsvpItem,
+  type LeaderRosterRow,
 } from '@/features/leader/leaderApi'
 import './leader-board.css'
 import './calendar.css'
+
+function formatRsvpCounts(counts: CalendarRsvpCounts) {
+  if (counts.total === 0) return 'No RSVPs'
+  return `${counts.yes} yes · ${counts.maybe} maybe · ${counts.no} no · ${counts.invited} invited`
+}
 
 function startOfMonth(date: Date) {
   return new Date(date.getFullYear(), date.getMonth(), 1)
@@ -73,6 +86,12 @@ function CalendarHub() {
   const [busy, setBusy] = useState(false)
   const [toast, setToast] = useState('')
   const [reload, setReload] = useState(0)
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(null)
+  const [rsvps, setRsvps] = useState<CalendarRsvpItem[]>([])
+  const [rsvpCounts, setRsvpCounts] = useState<CalendarRsvpCounts | null>(null)
+  const [rsvpLoading, setRsvpLoading] = useState(false)
+  const [inviteQ, setInviteQ] = useState('')
+  const [inviteResults, setInviteResults] = useState<LeaderRosterRow[]>([])
 
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -123,6 +142,52 @@ function CalendarHub() {
       cancelled = true
     }
   }, [boardSlug, locationId, teamSlug, mode, cursor, reload])
+
+  const selectedEvent = events.find((item) => item.id === selectedEventId) ?? null
+
+  useEffect(() => {
+    if (!selectedEventId) {
+      setRsvps([])
+      setRsvpCounts(null)
+      return
+    }
+    let cancelled = false
+    ;(async () => {
+      setRsvpLoading(true)
+      const result = await fetchEventRsvps(selectedEventId)
+      if (cancelled) return
+      if (!result.ok) {
+        setError(result.error.message)
+        setRsvpLoading(false)
+        return
+      }
+      setRsvps(result.data.rsvps)
+      setRsvpCounts(result.data.counts)
+      setRsvpLoading(false)
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [selectedEventId, reload])
+
+  useEffect(() => {
+    const q = inviteQ.trim()
+    if (!q || q.length < 2) {
+      setInviteResults([])
+      return
+    }
+    const handle = window.setTimeout(() => {
+      void (async () => {
+        const result = await fetchLeaderRoster({ q })
+        if (!result.ok) return
+        const already = new Set(rsvps.map((row) => row.personId))
+        setInviteResults(
+          result.data.people.filter((person) => !already.has(person.id)).slice(0, 8),
+        )
+      })()
+    }, 300)
+    return () => window.clearTimeout(handle)
+  }, [inviteQ, rsvps])
 
   const days = useMemo(() => {
     const first = startOfMonth(cursor)
@@ -321,16 +386,33 @@ function CalendarHub() {
               ) : (
                 <ul className="calendar-event-list">
                   {events.map((item) => (
-                    <li key={item.id}>
+                    <li
+                      key={item.id}
+                      className={
+                        item.id === selectedEventId
+                          ? 'calendar-event-list__item calendar-event-list__item--active'
+                          : 'calendar-event-list__item'
+                      }
+                    >
                       <div>
                         <strong>{item.title}</strong>
                         <p className="field__hint">{formatWhen(item)}</p>
                         {item.locationText ? (
                           <p className="field__hint">{item.locationText}</p>
                         ) : null}
-                        <Tag>Belongs to {item.sourceBoard.name}</Tag>
+                        <div className="btn-row">
+                          <Tag>Belongs to {item.sourceBoard.name}</Tag>
+                          <Tag>{formatRsvpCounts(item.rsvpCounts)}</Tag>
+                        </div>
                       </div>
                       <div className="btn-row">
+                        <Button
+                          type="button"
+                          variant={item.id === selectedEventId ? 'primary' : 'secondary'}
+                          onClick={() => setSelectedEventId(item.id)}
+                        >
+                          RSVPs
+                        </Button>
                         {item.url ? (
                           <a
                             className="btn btn--secondary"
@@ -374,9 +456,15 @@ function CalendarHub() {
                       <>
                         <div className="calendar-month__day">{cell.date.getDate()}</div>
                         {cell.events.slice(0, 3).map((item) => (
-                          <div key={item.id} className="calendar-month__event" title={item.sourceBoard.name}>
+                          <button
+                            key={item.id}
+                            type="button"
+                            className="calendar-month__event"
+                            title={`${item.sourceBoard.name} · ${formatRsvpCounts(item.rsvpCounts)}`}
+                            onClick={() => setSelectedEventId(item.id)}
+                          >
                             {item.title}
-                          </div>
+                          </button>
                         ))}
                         {cell.events.length > 3 ? (
                           <div className="field__hint">+{cell.events.length - 3} more</div>
@@ -387,6 +475,152 @@ function CalendarHub() {
                 ))}
               </div>
             )}
+          </Section>
+
+          <Section title={selectedEvent ? `RSVPs · ${selectedEvent.title}` : 'RSVPs'}>
+            <Card>
+              {!selectedEvent ? (
+                <p className="field__hint">
+                  Select an event (RSVPs button or month cell) to invite people and mark responses.
+                </p>
+              ) : (
+                <>
+                  <p className="field__hint">{formatWhen(selectedEvent)}</p>
+                  {rsvpCounts ? (
+                    <p className="field__hint">{formatRsvpCounts(rsvpCounts)}</p>
+                  ) : null}
+                  {rsvpLoading ? <LoadingState label="Loading RSVPs…" /> : null}
+                  {!rsvpLoading ? (
+                    <ul className="calendar-rsvp-list">
+                      {rsvps.length === 0 ? (
+                        <li className="field__hint">No one invited yet.</li>
+                      ) : (
+                        rsvps.map((row) => (
+                          <li key={row.id}>
+                            <div>
+                              <Button
+                                to={`/leader/contacts/${row.personId}`}
+                                variant="secondary"
+                              >
+                                {row.person.displayName}
+                              </Button>
+                            </div>
+                            <div className="btn-row">
+                              <Select
+                                aria-label={`RSVP for ${row.person.displayName}`}
+                                value={row.status}
+                                disabled={busy}
+                                onChange={(e) => {
+                                  void (async () => {
+                                    setBusy(true)
+                                    setError('')
+                                    const result = await setEventRsvp({
+                                      eventId: selectedEvent.id,
+                                      personId: row.personId,
+                                      status: e.target.value as
+                                        | 'INVITED'
+                                        | 'YES'
+                                        | 'NO'
+                                        | 'MAYBE',
+                                    })
+                                    setBusy(false)
+                                    if (!result.ok) {
+                                      setError(result.error.message)
+                                      return
+                                    }
+                                    setRsvps(result.data.rsvps)
+                                    setRsvpCounts(result.data.counts)
+                                    setReload((n) => n + 1)
+                                  })()
+                                }}
+                              >
+                                <option value="INVITED">Invited</option>
+                                <option value="YES">Yes</option>
+                                <option value="MAYBE">Maybe</option>
+                                <option value="NO">No</option>
+                              </Select>
+                              <Button
+                                type="button"
+                                variant="secondary"
+                                disabled={busy}
+                                onClick={() => {
+                                  void (async () => {
+                                    setBusy(true)
+                                    const result = await removeEventRsvp(
+                                      selectedEvent.id,
+                                      row.personId,
+                                    )
+                                    setBusy(false)
+                                    if (!result.ok) {
+                                      setError(result.error.message)
+                                      return
+                                    }
+                                    setRsvps(result.data.rsvps)
+                                    setRsvpCounts(result.data.counts)
+                                    setReload((n) => n + 1)
+                                  })()
+                                }}
+                              >
+                                Remove
+                              </Button>
+                            </div>
+                          </li>
+                        ))
+                      )}
+                    </ul>
+                  ) : null}
+
+                  <Field id="rsvp-invite" label="Invite from roster">
+                    <Input
+                      id="rsvp-invite"
+                      value={inviteQ}
+                      onChange={(e) => setInviteQ(e.target.value)}
+                      placeholder="Search name…"
+                    />
+                  </Field>
+                  {inviteResults.length > 0 ? (
+                    <ul className="calendar-invite-list">
+                      {inviteResults.map((person) => (
+                        <li key={person.id}>
+                          <span>{person.displayName}</span>
+                          <Button
+                            type="button"
+                            variant="primary"
+                            disabled={busy}
+                            onClick={() => {
+                              void (async () => {
+                                setBusy(true)
+                                setError('')
+                                const result = await inviteEventRsvps(selectedEvent.id, [
+                                  person.id,
+                                ])
+                                setBusy(false)
+                                if (!result.ok) {
+                                  setError(result.error.message)
+                                  return
+                                }
+                                setRsvps(result.data.rsvps)
+                                setRsvpCounts(result.data.counts)
+                                setInviteQ('')
+                                setInviteResults([])
+                                setToast(
+                                  result.data.invited
+                                    ? 'Invited.'
+                                    : 'Already on the RSVP list.',
+                                )
+                                setReload((n) => n + 1)
+                              })()
+                            }}
+                          >
+                            Invite
+                          </Button>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </>
+              )}
+            </Card>
           </Section>
 
           <Section title="Create event on this board">

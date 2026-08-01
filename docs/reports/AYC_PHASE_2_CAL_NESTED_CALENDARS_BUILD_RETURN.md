@@ -12,5 +12,6 @@
 
 ## Boundaries
 
-- No RSVP, recurrence, ICS, or public calendars
+- RSVP shipped in follow-on (`011_calendar_event_rsvps`)
+- No recurrence, ICS, or public calendars
 - Reports density hooks deferred

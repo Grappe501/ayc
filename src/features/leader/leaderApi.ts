@@ -793,6 +793,14 @@ export type CalendarBoardRef = {
   path: string
 }
 
+export type CalendarRsvpCounts = {
+  invited: number
+  yes: number
+  no: number
+  maybe: number
+  total: number
+}
+
 export type CalendarEventItem = {
   id: string
   title: string
@@ -814,9 +822,29 @@ export type CalendarEventItem = {
     teamSlug: string | null
   }
   calendarName: string
+  rsvpCounts: CalendarRsvpCounts
   createdAt: string
   updatedAt: string
   cancelledAt: string | null
+}
+
+export type CalendarRsvpItem = {
+  id: string
+  eventId: string
+  personId: string
+  status: string
+  notes: string | null
+  respondedAt: string | null
+  createdAt: string
+  updatedAt: string
+  person: {
+    id: string
+    firstName: string
+    lastName: string
+    preferredName: string | null
+    displayName: string
+    status: string
+  }
 }
 
 export function fetchCalendarEvents(params: {
@@ -877,4 +905,47 @@ export function updateCalendarEvent(body: {
     method: 'PATCH',
     body: JSON.stringify(body),
   })
+}
+
+export function fetchEventRsvps(eventId: string) {
+  return request<{
+    event: { id: string; title: string; status: string }
+    counts: CalendarRsvpCounts
+    rsvps: CalendarRsvpItem[]
+  }>(`leader-calendar-rsvps?eventId=${encodeURIComponent(eventId)}`)
+}
+
+export function inviteEventRsvps(eventId: string, personIds: string[]) {
+  return request<{
+    invited: number
+    already: number
+    counts: CalendarRsvpCounts
+    rsvps: CalendarRsvpItem[]
+  }>('leader-calendar-rsvps', {
+    method: 'POST',
+    body: JSON.stringify({ eventId, personIds }),
+  })
+}
+
+export function setEventRsvp(body: {
+  eventId: string
+  personId: string
+  status: 'INVITED' | 'YES' | 'NO' | 'MAYBE'
+  notes?: string | null
+}) {
+  return request<{
+    counts: CalendarRsvpCounts
+    rsvps: CalendarRsvpItem[]
+  }>('leader-calendar-rsvps', {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  })
+}
+
+export function removeEventRsvp(eventId: string, personId: string) {
+  const qs = new URLSearchParams({ eventId, personId })
+  return request<{
+    counts: CalendarRsvpCounts
+    rsvps: CalendarRsvpItem[]
+  }>(`leader-calendar-rsvps?${qs.toString()}`, { method: 'DELETE' })
 }

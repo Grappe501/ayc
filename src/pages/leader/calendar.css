@@ -80,13 +80,44 @@
 }
 
 .calendar-month__event {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  cursor: pointer;
   font-size: 0.7rem;
   line-height: 1.2;
   padding: 0.15rem 0.25rem;
   margin-bottom: 0.15rem;
   border-radius: 0.25rem;
   background: var(--color-secondary-wash);
+  color: inherit;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.calendar-event-list__item--active {
+  background: var(--color-secondary-wash);
+  border-radius: var(--radius-md);
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.calendar-rsvp-list,
+.calendar-invite-list {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.calendar-rsvp-list li,
+.calendar-invite-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
 }

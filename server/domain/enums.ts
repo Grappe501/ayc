@@ -105,6 +105,9 @@ export const AUDIT_EVENT_TYPES = [
   'CALENDAR_EVENT_CREATED',
   'CALENDAR_EVENT_UPDATED',
   'CALENDAR_EVENT_CANCELLED',
+  'CALENDAR_RSVP_INVITED',
+  'CALENDAR_RSVP_UPDATED',
+  'CALENDAR_RSVP_REMOVED',
 ] as const
 export type AuditEventType = (typeof AUDIT_EVENT_TYPES)[number]
 
@@ -123,6 +126,7 @@ export const AUDIT_ENTITY_TYPES = [
   'MEMBERSHIP_APPLICATION',
   'CALENDAR',
   'CALENDAR_EVENT',
+  'CALENDAR_RSVP',
 ] as const
 export type AuditEntityType = (typeof AUDIT_ENTITY_TYPES)[number]
 
@@ -131,6 +135,9 @@ export type CalendarEventStatus = (typeof CALENDAR_EVENT_STATUSES)[number]
 
 export const CALENDAR_VISIBILITIES = ['INTERNAL', 'PUBLIC'] as const
 export type CalendarVisibility = (typeof CALENDAR_VISIBILITIES)[number]
+
+export const CALENDAR_RSVP_STATUSES = ['INVITED', 'YES', 'NO', 'MAYBE'] as const
+export type CalendarRsvpStatus = (typeof CALENDAR_RSVP_STATUSES)[number]
 
 /** Phase 2B membership applications queue. */
 export const APPLICATION_STATUSES = [

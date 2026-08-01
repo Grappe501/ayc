@@ -356,6 +356,28 @@ export const calendarEvents = pgTable(
   ],
 )
 
+export const calendarEventRsvps = pgTable(
+  'calendar_event_rsvps',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    eventId: uuid('event_id')
+      .notNull()
+      .references(() => calendarEvents.id, { onDelete: 'cascade' }),
+    personId: uuid('person_id')
+      .notNull()
+      .references(() => people.id),
+    status: text('status').notNull().default('INVITED'),
+    notes: text('notes'),
+    respondedAt: timestamp('responded_at', { withTimezone: true }),
+    ...timestamps,
+  },
+  (table) => [
+    uniqueIndex('calendar_event_rsvps_event_person_uidx').on(table.eventId, table.personId),
+    index('calendar_event_rsvps_event_idx').on(table.eventId),
+    index('calendar_event_rsvps_person_idx').on(table.personId),
+  ],
+)
+
 export const membershipApplications = pgTable(
   'membership_applications',
   {

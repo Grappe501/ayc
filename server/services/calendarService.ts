@@ -2,12 +2,14 @@ import { and, asc, eq, gte, inArray, isNull, lte, ne } from 'drizzle-orm'
 import type { AycDatabase } from '../db/client.ts'
 import {
   boards,
+  calendarEventRsvps,
   calendarEvents,
   calendars,
   locations,
   teams,
 } from '../db/schema.ts'
 import { boardIdsForRollup } from '../domain/calendarRollup.ts'
+import { emptyRsvpCounts, tallyRsvpStatuses } from '../domain/calendarRsvp.ts'
 import {
   isLocationCategorySlug,
   locationCategoryBoardSlug,
@@ -346,6 +348,27 @@ export async function listCalendarEvents(
     for (const team of teamRows) teamSlugById.set(team.id, team.slug)
   }
 
+  const eventIds = rows.map((row) => row.id)
+  const countsByEvent = new Map<string, ReturnType<typeof emptyRsvpCounts>>()
+  if (eventIds.length > 0) {
+    const rsvpRows = await db
+      .select({
+        eventId: calendarEventRsvps.eventId,
+        status: calendarEventRsvps.status,
+      })
+      .from(calendarEventRsvps)
+      .where(inArray(calendarEventRsvps.eventId, eventIds))
+    const statusesByEvent = new Map<string, string[]>()
+    for (const row of rsvpRows) {
+      const list = statusesByEvent.get(row.eventId) ?? []
+      list.push(row.status)
+      statusesByEvent.set(row.eventId, list)
+    }
+    for (const [eventId, statuses] of statusesByEvent) {
+      countsByEvent.set(eventId, tallyRsvpStatuses(statuses))
+    }
+  }
+
   return {
     board,
     mode,
@@ -370,6 +393,7 @@ export async function listCalendarEvents(
         teamSlug: row.boardTeamId ? (teamSlugById.get(row.boardTeamId) ?? null) : null,
       },
       calendarName: row.calendarName,
+      rsvpCounts: countsByEvent.get(row.id) ?? emptyRsvpCounts(),
       createdAt: row.createdAt.toISOString(),
       updatedAt: row.updatedAt.toISOString(),
       cancelledAt: row.cancelledAt?.toISOString() ?? null,
@@ -461,18 +485,18 @@ export async function createCalendarEvent(
   return { board, eventId: row!.id }
 }
 
-export async function updateCalendarEvent(
+export async function getEventWithBoardAccess(
   db: AycDatabase,
   eventId: string,
-  input: UpsertCalendarEventInput & { status?: 'SCHEDULED' | 'CANCELLED' },
   scope: UnlockScope,
-  actor: ActorContext,
+  action: 'view' | 'edit' = 'view',
 ) {
   const [existing] = await db
     .select({
       id: calendarEvents.id,
       sourceCalendarId: calendarEvents.sourceCalendarId,
       title: calendarEvents.title,
+      status: calendarEvents.status,
       boardId: boards.id,
       boardSlug: boards.slug,
       boardName: boards.name,
@@ -540,9 +564,37 @@ export async function updateCalendarEvent(
   if (!scopeCanAccessResolvedBoard(scope, board)) {
     throw Object.assign(new Error('FORBIDDEN'), {
       code: 'FORBIDDEN' as const,
-      message: 'This key cannot edit this calendar event.',
+      message:
+        action === 'edit'
+          ? 'This key cannot edit this calendar event.'
+          : 'This key cannot open this calendar event.',
     })
   }
+
+  return {
+    event: {
+      id: existing.id,
+      title: existing.title,
+      status: existing.status,
+      sourceCalendarId: existing.sourceCalendarId,
+    },
+    board,
+  }
+}
+
+export async function updateCalendarEvent(
+  db: AycDatabase,
+  eventId: string,
+  input: UpsertCalendarEventInput & { status?: 'SCHEDULED' | 'CANCELLED' },
+  scope: UnlockScope,
+  actor: ActorContext,
+) {
+  const { event: existing, board } = await getEventWithBoardAccess(
+    db,
+    eventId,
+    scope,
+    'edit',
+  )
 
   const patch: Partial<typeof calendarEvents.$inferInsert> = {
     updatedAt: new Date(),
