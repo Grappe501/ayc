@@ -4,6 +4,8 @@ import { Badge, Button, Card, LoadingState, PageHeader, Section, Tag } from '@/c
 import { ArchiveContactDialog } from '@/features/leader/ArchiveContactDialog'
 import { ContactForm } from '@/features/leader/ContactForm'
 import { initialFromDetail } from '@/features/leader/contactFormInitial'
+import { PipelineTagsEditor } from '@/features/leader/PipelineTagsEditor'
+import { pipelineTagLabel } from '@/features/leader/pipelineLabels'
 import { RequireLeaderAccess } from '@/features/leader/RequireLeaderAccess'
 import { RestoreContactDialog } from '@/features/leader/RestoreContactDialog'
 import {
@@ -208,6 +210,27 @@ function ContactDetailView() {
                 </li>
               ))}
             </ul>
+          ) : null}
+        </Card>
+      </Section>
+
+      <Section id="pipeline" title="Leadership pipeline">
+        <Card>
+          {contact.pipelineTags.length > 0 ? (
+            <div className="btn-row" style={{ marginBottom: '0.75rem' }}>
+              {contact.pipelineTags.map((tag) => (
+                <Tag key={tag}>{pipelineTagLabel(tag)}</Tag>
+              ))}
+            </div>
+          ) : (
+            <p className="field__hint">No pipeline tags yet.</p>
+          )}
+          {!archived ? (
+            <PipelineTagsEditor
+              personId={contact.id}
+              initialTags={contact.pipelineTags}
+              onSaved={(tags) => setContact((current) => (current ? { ...current, pipelineTags: tags } : current))}
+            />
           ) : null}
         </Card>
       </Section>

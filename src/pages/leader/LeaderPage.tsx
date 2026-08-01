@@ -14,6 +14,7 @@ import {
 import { TEAMS } from '@/content/ayc'
 import { AssignTeamDialog } from '@/features/leader/AssignTeamDialog'
 import { LeaderRosterList } from '@/features/leader/LeaderRosterList'
+import { PIPELINE_TAG_OPTIONS } from '@/features/leader/pipelineLabels'
 import { RequireLeaderAccess } from '@/features/leader/RequireLeaderAccess'
 import { clearLeaderSession } from '@/features/leader/leaderSession'
 import {
@@ -41,7 +42,17 @@ function LeaderBoard() {
     joinForm: 0,
     needsPreferred: 0,
     textReady: 0,
+    readyToLead: 0,
+    needsMentoring: 0,
+    futureLeader: 0,
   })
+
+  function clearPipelineAndContactFilters() {
+    setPipelineFilter('ALL')
+    setGapsOnly(false)
+    setTextReadyOnly(false)
+    setNeedsPreferredOnly(false)
+  }
   const [teams, setTeams] = useState<Array<{ id: string; name: string; slug: string }>>([])
   const [digests, setDigests] = useState<TeamAttentionDigest[]>([])
   const [digestStats, setDigestStats] = useState({
@@ -53,6 +64,7 @@ function LeaderBoard() {
   const [teamFilter, setTeamFilter] = useState('')
   const [statusFilter, setStatusFilter] = useState('ALL')
   const [preferredFilter, setPreferredFilter] = useState('ALL')
+  const [pipelineFilter, setPipelineFilter] = useState('ALL')
   const [gapsOnly, setGapsOnly] = useState(false)
   const [textReadyOnly, setTextReadyOnly] = useState(false)
   const [needsPreferredOnly, setNeedsPreferredOnly] = useState(false)
@@ -77,6 +89,7 @@ function LeaderBoard() {
           team: teamFilter || undefined,
           status: statusFilter === 'ALL' ? undefined : statusFilter,
           preferred: preferredFilter === 'ALL' ? undefined : preferredFilter,
+          pipelineTag: pipelineFilter === 'ALL' ? undefined : pipelineFilter,
           gapsOnly,
           textReadyOnly,
           needsPreferredOnly,
@@ -112,7 +125,16 @@ function LeaderBoard() {
     return () => {
       cancelled = true
     }
-  }, [q, teamFilter, statusFilter, preferredFilter, gapsOnly, textReadyOnly, needsPreferredOnly])
+  }, [
+    q,
+    teamFilter,
+    statusFilter,
+    preferredFilter,
+    pipelineFilter,
+    gapsOnly,
+    textReadyOnly,
+    needsPreferredOnly,
+  ])
 
   const chance = useMemo(
     () => people.find((p) => p.firstName === 'Chance' && p.lastName === 'Bradford'),
@@ -265,7 +287,7 @@ function LeaderBoard() {
                 variant="primary"
                 onClick={() => {
                   setStatusFilter('PROSPECTIVE')
-                  setGapsOnly(false)
+                  clearPipelineAndContactFilters()
                 }}
               >
                 Show join prospectives
@@ -285,6 +307,7 @@ function LeaderBoard() {
                   type="button"
                   variant="secondary"
                   onClick={() => {
+                    clearPipelineAndContactFilters()
                     setGapsOnly(true)
                     setStatusFilter('ALL')
                   }}
@@ -314,9 +337,7 @@ function LeaderBoard() {
                 variant="secondary"
                 onClick={() => {
                   setStatusFilter('PROSPECTIVE')
-                  setGapsOnly(false)
-                  setNeedsPreferredOnly(false)
-                  setTextReadyOnly(false)
+                  clearPipelineAndContactFilters()
                 }}
               >
                 Show prospective
@@ -335,9 +356,8 @@ function LeaderBoard() {
                 type="button"
                 variant="primary"
                 onClick={() => {
+                  clearPipelineAndContactFilters()
                   setNeedsPreferredOnly(true)
-                  setTextReadyOnly(false)
-                  setGapsOnly(false)
                   setStatusFilter('ALL')
                 }}
               >
@@ -356,11 +376,66 @@ function LeaderBoard() {
                 setTextReadyOnly(true)
                 setNeedsPreferredOnly(false)
                 setGapsOnly(false)
+                setPipelineFilter('ALL')
               }}
             >
               Show text-ready
             </Button>
           </Card>
+          {attention.readyToLead > 0 ? (
+            <Card>
+              <Tag>Pipeline</Tag>
+              <h3>{attention.readyToLead} ready to lead</h3>
+              <p>Tagged as ready for more responsibility — review for lead placement.</p>
+              <Button
+                type="button"
+                variant="primary"
+                onClick={() => {
+                  clearPipelineAndContactFilters()
+                  setPipelineFilter('READY_TO_LEAD')
+                  setStatusFilter('ALL')
+                }}
+              >
+                Show ready to lead
+              </Button>
+            </Card>
+          ) : null}
+          {attention.needsMentoring > 0 ? (
+            <Card>
+              <Tag>Pipeline</Tag>
+              <h3>{attention.needsMentoring} need mentoring</h3>
+              <p>Marked for coaching before they take on more lead work.</p>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => {
+                  clearPipelineAndContactFilters()
+                  setPipelineFilter('NEEDS_MENTORING')
+                  setStatusFilter('ALL')
+                }}
+              >
+                Show needs mentoring
+              </Button>
+            </Card>
+          ) : null}
+          {attention.futureLeader > 0 ? (
+            <Card>
+              <Tag>Pipeline</Tag>
+              <h3>{attention.futureLeader} future leaders</h3>
+              <p>Longer-horizon pipeline — keep developing and watching progress.</p>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => {
+                  clearPipelineAndContactFilters()
+                  setPipelineFilter('FUTURE_LEADER')
+                  setStatusFilter('ALL')
+                }}
+              >
+                Show future leaders
+              </Button>
+            </Card>
+          ) : null}
         </div>
       </Section>
 
@@ -411,6 +486,20 @@ function LeaderBoard() {
               <option value="EMAIL">Email</option>
               <option value="EITHER">Either</option>
               <option value="UNKNOWN">Unknown</option>
+            </Select>
+          </Field>
+          <Field id="roster-pipeline" label="Pipeline tag">
+            <Select
+              id="roster-pipeline"
+              value={pipelineFilter}
+              onChange={(e) => setPipelineFilter(e.target.value)}
+            >
+              <option value="ALL">Any</option>
+              {PIPELINE_TAG_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </Select>
           </Field>
           <label className="field" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>

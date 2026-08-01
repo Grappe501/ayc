@@ -9,6 +9,7 @@ import {
   teams,
 } from '../db/schema.ts'
 import { computeContactReachFlags } from '../domain/textReady.ts'
+import { listPipelineTagsForPerson } from '../services/pipelineTagService.ts'
 import { listAuditEventsForEntity } from './audit.ts'
 
 export type ContactDetail = {
@@ -23,6 +24,7 @@ export type ContactDetail = {
   preferredContactMethod: string | null
   textReady: boolean
   needsPreferred: boolean
+  pipelineTags: string[]
   createdAt: Date
   updatedAt: Date
   archivedAt: Date | null
@@ -144,6 +146,7 @@ export async function getContactDetail(
     preferredContactMethod: person.preferredContactMethod,
     phoneConsent: phoneRow?.consentStatus ?? null,
   })
+  const pipelineTags = await listPipelineTagsForPerson(db, personId)
 
   return {
     id: person.id,
@@ -157,6 +160,7 @@ export async function getContactDetail(
     preferredContactMethod: flags.preferredContactMethod,
     textReady: flags.textReady,
     needsPreferred: flags.needsPreferred,
+    pipelineTags,
     createdAt: person.createdAt,
     updatedAt: person.updatedAt,
     archivedAt: person.archivedAt,

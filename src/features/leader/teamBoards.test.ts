@@ -20,6 +20,7 @@ function row(
     preferredContactMethod: 'UNKNOWN',
     textReady: false,
     needsPreferred: false,
+    pipelineTags: [],
     createdAt: '',
     updatedAt: '',
     hasEmail: true,

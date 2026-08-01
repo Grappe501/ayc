@@ -30,6 +30,7 @@ describe('SQL migrations', () => {
     expect(files).toContain('003_person_merge.sql')
     expect(files).toContain('004_team_tasks.sql')
     expect(files).toContain('005_team_resources.sql')
+    expect(files).toContain('006_pipeline_tags.sql')
   })
 
   it('defines person_merge_history in 003_person_merge', () => {
@@ -48,5 +49,12 @@ describe('SQL migrations', () => {
     const sql = readFileSync(path.join(migrationsDir, '005_team_resources.sql'), 'utf8')
     expect(sql).toContain('CREATE TABLE IF NOT EXISTS team_resources')
     expect(sql).toContain('TEAM_RESOURCE_CREATED')
+  })
+
+  it('defines person_pipeline_tags in 006_pipeline_tags', () => {
+    const sql = readFileSync(path.join(migrationsDir, '006_pipeline_tags.sql'), 'utf8')
+    expect(sql).toContain('CREATE TABLE IF NOT EXISTS person_pipeline_tags')
+    expect(sql).toContain('PIPELINE_TAG_ADDED')
+    expect(sql).toContain('PIPELINE_TAG_REMOVED')
   })
 })

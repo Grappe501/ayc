@@ -32,3 +32,4 @@
 | 2026-07-31 | Team Board Mission (#7) | Category mission packs + Today’s priorities on `/leader/teams/:slug` (content-driven; not canonical mission rewrite) |
 | 2026-07-31 | Team Board Tasks (#8) | `team_tasks` table + `/api/team-tasks` + Tasks panel on Team Lead Boards (OPEN/DONE/CANCELLED) |
 | 2026-07-31 | Team Board Resources (#9) | `team_resources` + `/api/team-resources` + Resources panel (LINK/NOTE/TALKING_POINT/CHECKLIST) |
+| 2026-07-31 | Leadership pipeline tags (#10) | Controlled tags on `person_pipeline_tags`; contact editor + Leader Board filter/attention; no free-form tags |

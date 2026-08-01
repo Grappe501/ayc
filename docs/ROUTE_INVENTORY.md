@@ -9,7 +9,7 @@
 | `/leader/feedback` | Complete | Leader-gated beta feedback inbox (status, severity, notes) |
 | `/leader/teams/:teamSlug` | Complete | Five Team Lead Boards + Mission + Tasks + Resources |
 | `/leader/contacts/new` | Complete | Contact create |
-| `/leader/contacts/:personId` | Complete | Contact detail / edit / archive |
+| `/leader/contacts/:personId` | Complete | Contact detail / edit / archive / pipeline tags |
 | `/directory` | Complete | People / teams / locations views |
 | `/directory/:personId` | Complete | Directory person (masked) |
 | `/feedback` | Complete | Beta feedback |

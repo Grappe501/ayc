@@ -1,5 +1,6 @@
 import { Badge, Button, Card, EmptyState, Tag } from '@/components/ui'
 import type { LeaderRosterRow } from '@/features/leader/leaderApi'
+import { pipelineTagLabel } from '@/features/leader/pipelineLabels'
 import { preferredLabel } from '@/features/leader/textReadyLabels'
 import { positionOnTeam } from '@/features/leader/teamBoards'
 
@@ -122,6 +123,11 @@ export function LeaderRosterList({
                       <div className="field__hint">Joined via form</div>
                     ) : null}
                     {person.textReady ? <div className="field__hint">Text-ready</div> : null}
+                    {person.pipelineTags.length > 0 ? (
+                      <div className="field__hint">
+                        {person.pipelineTags.map((tag) => pipelineTagLabel(tag)).join(' · ')}
+                      </div>
+                    ) : null}
                   </td>
                   <td>
                     <div className="btn-row">
@@ -155,6 +161,9 @@ export function LeaderRosterList({
               {person.source === 'JOIN_FORM' ? <Tag>Joined via form</Tag> : null}
               {person.textReady ? <Tag>Text-ready</Tag> : null}
               {person.needsPreferred ? <Tag>Needs preferred</Tag> : null}
+              {person.pipelineTags.map((tag) => (
+                <Tag key={tag}>{pipelineTagLabel(tag)}</Tag>
+              ))}
               <h3>{person.displayName}</h3>
               <p>
                 {person.location

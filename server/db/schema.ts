@@ -241,6 +241,26 @@ export const teamResources = pgTable(
   (table) => [index('team_resources_team_idx').on(table.teamId, table.archivedAt, table.sortOrder)],
 )
 
+export const personPipelineTags = pgTable(
+  'person_pipeline_tags',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    personId: uuid('person_id')
+      .notNull()
+      .references(() => people.id),
+    tag: text('tag').notNull(),
+    note: text('note'),
+    ...timestamps,
+    archivedAt: timestamp('archived_at', { withTimezone: true }),
+    createdByActor: text('created_by_actor'),
+    updatedByActor: text('updated_by_actor'),
+  },
+  (table) => [
+    index('person_pipeline_tags_person_idx').on(table.personId),
+    index('person_pipeline_tags_tag_idx').on(table.tag),
+  ],
+)
+
 export const schemaMigrations = pgTable('schema_migrations', {
   id: text('id').primaryKey(),
   appliedAt: timestamp('applied_at', { withTimezone: true }).notNull().defaultNow(),

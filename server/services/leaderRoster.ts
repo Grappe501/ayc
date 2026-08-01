@@ -13,6 +13,7 @@ import { insertAuditEvent } from '../repos/audit.ts'
 import type { ActorContext } from '../repos/people.ts'
 import { getTeamById } from '../repos/teams.ts'
 import type { TeamPosition } from '../domain/enums.ts'
+import { listPipelineTagsForPeople } from './pipelineTagService.ts'
 
 export type LeaderRosterFilters = {
   q?: string
@@ -22,6 +23,7 @@ export type LeaderRosterFilters = {
   textReadyOnly?: boolean
   needsPreferredOnly?: boolean
   preferred?: string
+  pipelineTag?: string
   limit?: number
 }
 
@@ -36,6 +38,7 @@ export type LeaderRosterRow = {
   preferredContactMethod: string
   textReady: boolean
   needsPreferred: boolean
+  pipelineTags: string[]
   createdAt: Date
   updatedAt: Date
   hasEmail: boolean
@@ -62,6 +65,9 @@ export async function listLeaderRoster(
     joinForm: number
     needsPreferred: number
     textReady: number
+    readyToLead: number
+    needsMentoring: number
+    futureLeader: number
   }
   people: LeaderRosterRow[]
 }> {
@@ -159,6 +165,11 @@ export async function listLeaderRoster(
     assignMap.set(row.personId, current)
   }
 
+  const tagMap = await listPipelineTagsForPeople(
+    db,
+    rows.map((row) => row.id),
+  )
+
   let peopleRows: LeaderRosterRow[] = rows.map((row) => {
     const contact = methodMap.get(row.id) ?? {
       email: false,
@@ -186,6 +197,7 @@ export async function listLeaderRoster(
       preferredContactMethod: flags.preferredContactMethod,
       textReady: flags.textReady,
       needsPreferred: flags.needsPreferred,
+      pipelineTags: tagMap.get(row.id) ?? [],
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
       hasEmail: contact.email,
@@ -222,6 +234,11 @@ export async function listLeaderRoster(
     ).length,
     needsPreferred: peopleRows.filter((p) => p.needsPreferred).length,
     textReady: peopleRows.filter((p) => p.textReady).length,
+    readyToLead: peopleRows.filter((p) => p.pipelineTags.includes('READY_TO_LEAD')).length,
+    needsMentoring: peopleRows.filter((p) =>
+      p.pipelineTags.includes('NEEDS_MENTORING'),
+    ).length,
+    futureLeader: peopleRows.filter((p) => p.pipelineTags.includes('FUTURE_LEADER')).length,
   }
 
   if (filters.gapsOnly) {
@@ -240,6 +257,10 @@ export async function listLeaderRoster(
     peopleRows = peopleRows.filter((p) => p.preferredContactMethod === filters.preferred)
   }
 
+  if (filters.pipelineTag && filters.pipelineTag !== 'ALL') {
+    peopleRows = peopleRows.filter((p) => p.pipelineTags.includes(filters.pipelineTag!))
+  }
+
   if (filters.q?.trim()) {
     const q = filters.q.trim().toLowerCase()
     peopleRows = peopleRows.filter((p) => {
@@ -249,6 +270,7 @@ export async function listLeaderRoster(
         p.lastName,
         p.preferredName,
         p.preferredContactMethod,
+        ...p.pipelineTags,
         p.location?.name,
         p.location?.code,
         p.primaryTeam?.name,

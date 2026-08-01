@@ -42,6 +42,7 @@ export const handler: Handler = async (event) => {
         textReadyOnly: event.queryStringParameters?.textReady === '1',
         needsPreferredOnly: event.queryStringParameters?.needsPreferred === '1',
         preferred: event.queryStringParameters?.preferred ?? undefined,
+        pipelineTag: event.queryStringParameters?.pipelineTag ?? undefined,
       })
       return ok(result)
     })

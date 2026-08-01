@@ -215,6 +215,13 @@ export function updateTeamResource(body: {
   )
 }
 
+export function setPipelineTags(body: { personId: string; tags: string[] }) {
+  return request<{ tags: string[]; contact: ContactDetail | null }>('pipeline-tags', {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  })
+}
+
 export type LeaderRosterRow = {
   id: string
   displayName: string
@@ -226,6 +233,7 @@ export type LeaderRosterRow = {
   preferredContactMethod: string
   textReady: boolean
   needsPreferred: boolean
+  pipelineTags: string[]
   createdAt: string
   updatedAt: string
   hasEmail: boolean
@@ -263,6 +271,7 @@ export function fetchLeaderRoster(params?: {
   textReadyOnly?: boolean
   needsPreferredOnly?: boolean
   preferred?: string
+  pipelineTag?: string
 }) {
   const qs = new URLSearchParams()
   qs.set('view', 'roster')
@@ -273,6 +282,7 @@ export function fetchLeaderRoster(params?: {
   if (params?.textReadyOnly) qs.set('textReady', '1')
   if (params?.needsPreferredOnly) qs.set('needsPreferred', '1')
   if (params?.preferred) qs.set('preferred', params.preferred)
+  if (params?.pipelineTag) qs.set('pipelineTag', params.pipelineTag)
   return request<{
     total: number
     attention: {
@@ -281,6 +291,9 @@ export function fetchLeaderRoster(params?: {
       joinForm: number
       needsPreferred: number
       textReady: number
+      readyToLead: number
+      needsMentoring: number
+      futureLeader: number
     }
     people: LeaderRosterRow[]
   }>(`contacts?${qs.toString()}`)
@@ -399,6 +412,7 @@ export type ContactDetail = {
   preferredContactMethod: string | null
   textReady: boolean
   needsPreferred: boolean
+  pipelineTags: string[]
   createdAt: string
   updatedAt: string
   archivedAt: string | null

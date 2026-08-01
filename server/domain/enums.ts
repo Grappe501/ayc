@@ -93,6 +93,8 @@ export const AUDIT_EVENT_TYPES = [
   'TEAM_RESOURCE_CREATED',
   'TEAM_RESOURCE_UPDATED',
   'TEAM_RESOURCE_ARCHIVED',
+  'PIPELINE_TAG_ADDED',
+  'PIPELINE_TAG_REMOVED',
   'BETA_FEEDBACK_SUBMITTED',
 ] as const
 export type AuditEventType = (typeof AUDIT_EVENT_TYPES)[number]
@@ -104,10 +106,29 @@ export const AUDIT_ENTITY_TYPES = [
   'TEAM_ASSIGNMENT',
   'TEAM_TASK',
   'TEAM_RESOURCE',
+  'PIPELINE_TAG',
   'BETA_FEEDBACK',
   'TEAM',
 ] as const
 export type AuditEntityType = (typeof AUDIT_ENTITY_TYPES)[number]
+
+/** Volume V leadership pipeline — controlled tags only. */
+export const PIPELINE_TAGS = [
+  'FUTURE_LEADER',
+  'NEEDS_MENTORING',
+  'READY_TO_LEAD',
+  'LOCAL_LEAD_CANDIDATE',
+  'CATEGORY_LEAD_CANDIDATE',
+] as const
+export type PipelineTag = (typeof PIPELINE_TAGS)[number]
+
+export const PIPELINE_TAG_LABELS: Record<PipelineTag, string> = {
+  FUTURE_LEADER: 'Future leader',
+  NEEDS_MENTORING: 'Needs mentoring',
+  READY_TO_LEAD: 'Ready to lead',
+  LOCAL_LEAD_CANDIDATE: 'Local lead candidate',
+  CATEGORY_LEAD_CANDIDATE: 'Category lead candidate',
+}
 
 export const TEAM_TASK_STATUSES = ['OPEN', 'DONE', 'CANCELLED'] as const
 export type TeamTaskStatus = (typeof TEAM_TASK_STATUSES)[number]
