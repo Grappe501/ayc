@@ -1,10 +1,15 @@
-import { and, asc, desc, eq, isNull } from 'drizzle-orm'
+import { and, asc, desc, eq, isNull, type SQL } from 'drizzle-orm'
 import type { AycDatabase } from '../db/client.ts'
 import { teamTasks, teams } from '../db/schema.ts'
 import { validateTeamTaskCreate, type TeamTaskInput } from '../domain/validateTeamTask.ts'
 import { insertAuditEvent } from '../repos/audit.ts'
+import { findLocationById } from '../repos/locations.ts'
 import type { ActorContext } from '../repos/people.ts'
 import { getTeamBySlug } from '../repos/teams.ts'
+
+function locationFilter(locationId?: string | null): SQL {
+  return locationId ? eq(teamTasks.locationId, locationId) : isNull(teamTasks.locationId)
+}
 
 function validationError(fields: Record<string, string>): Error {
   return Object.assign(new Error('VALIDATION_ERROR'), {
@@ -24,6 +29,7 @@ export type TeamTaskRow = {
   id: string
   teamId: string
   teamSlug: string
+  locationId: string | null
   title: string
   notes: string | null
   status: string
@@ -43,6 +49,7 @@ function mapTask(
     id: row.id,
     teamId: row.teamId,
     teamSlug,
+    locationId: row.locationId ?? null,
     title: row.title,
     notes: row.notes,
     status: row.status,
@@ -58,8 +65,10 @@ function mapTask(
 export async function listTeamTasks(
   db: AycDatabase,
   teamSlug: string,
+  locationId?: string | null,
 ): Promise<{
   team: { id: string; slug: string; name: string }
+  locationId: string | null
   openCount: number
   highCount: number
   tasks: TeamTaskRow[]
@@ -67,10 +76,21 @@ export async function listTeamTasks(
   const team = await getTeamBySlug(db, teamSlug)
   if (!team || !team.active) throw notFound('Team board was not found.')
 
+  if (locationId) {
+    const location = await findLocationById(db, locationId)
+    if (!location) throw notFound('Location was not found.')
+  }
+
   const rows = await db
     .select()
     .from(teamTasks)
-    .where(and(eq(teamTasks.teamId, team.id), isNull(teamTasks.archivedAt)))
+    .where(
+      and(
+        eq(teamTasks.teamId, team.id),
+        isNull(teamTasks.archivedAt),
+        locationFilter(locationId),
+      ),
+    )
     .orderBy(
       asc(teamTasks.status),
       desc(teamTasks.priority),
@@ -87,6 +107,7 @@ export async function listTeamTasks(
 
   return {
     team: { id: team.id, slug: team.slug, name: team.name },
+    locationId: locationId ?? null,
     openCount: open.length,
     highCount: open.filter((row) => row.priority === 'HIGH').length,
     tasks: ordered.map((row) => mapTask(row, team.slug)),
@@ -98,9 +119,15 @@ export async function createTeamTask(
   teamSlug: string,
   input: TeamTaskInput,
   actor: ActorContext,
+  locationId?: string | null,
 ): Promise<TeamTaskRow> {
   const team = await getTeamBySlug(db, teamSlug)
   if (!team || !team.active) throw notFound('Team board was not found.')
+
+  if (locationId) {
+    const location = await findLocationById(db, locationId)
+    if (!location) throw notFound('Location was not found.')
+  }
 
   const validated = validateTeamTaskCreate({ ...input, status: input.status ?? 'OPEN' })
   if (!validated.ok) {
@@ -113,6 +140,7 @@ export async function createTeamTask(
     .insert(teamTasks)
     .values({
       teamId: team.id,
+      locationId: locationId ?? null,
       title: validated.value.title,
       notes: validated.value.notes,
       status: validated.value.status,
@@ -132,7 +160,12 @@ export async function createTeamTask(
     actorId: actor.actorId,
     actorLabel: actor.actorLabel,
     changeSummary: `Created task “${created.title}” on ${team.name}.`,
-    metadata: { teamId: team.id, teamSlug: team.slug, status: created.status },
+    metadata: {
+      teamId: team.id,
+      teamSlug: team.slug,
+      locationId: locationId ?? null,
+      status: created.status,
+    },
     requestId: actor.requestId,
   })
 

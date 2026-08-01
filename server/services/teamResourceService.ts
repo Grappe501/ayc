@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, isNull } from 'drizzle-orm'
+import { and, asc, desc, eq, isNull, type SQL } from 'drizzle-orm'
 import type { AycDatabase } from '../db/client.ts'
 import { teamResources, teams } from '../db/schema.ts'
 import {
@@ -6,8 +6,15 @@ import {
   type TeamResourceInput,
 } from '../domain/validateTeamResource.ts'
 import { insertAuditEvent } from '../repos/audit.ts'
+import { findLocationById } from '../repos/locations.ts'
 import type { ActorContext } from '../repos/people.ts'
 import { getTeamBySlug } from '../repos/teams.ts'
+
+function locationFilter(locationId?: string | null): SQL {
+  return locationId
+    ? eq(teamResources.locationId, locationId)
+    : isNull(teamResources.locationId)
+}
 
 function validationError(fields: Record<string, string>): Error {
   return Object.assign(new Error('VALIDATION_ERROR'), {
@@ -27,6 +34,7 @@ export type TeamResourceRow = {
   id: string
   teamId: string
   teamSlug: string
+  locationId: string | null
   title: string
   url: string | null
   notes: string | null
@@ -44,6 +52,7 @@ function mapResource(
     id: row.id,
     teamId: row.teamId,
     teamSlug,
+    locationId: row.locationId ?? null,
     title: row.title,
     url: row.url,
     notes: row.notes,
@@ -57,23 +66,37 @@ function mapResource(
 export async function listTeamResources(
   db: AycDatabase,
   teamSlug: string,
+  locationId?: string | null,
 ): Promise<{
   team: { id: string; slug: string; name: string }
+  locationId: string | null
   total: number
   resources: TeamResourceRow[]
 }> {
   const team = await getTeamBySlug(db, teamSlug)
   if (!team || !team.active) throw notFound('Team board was not found.')
 
+  if (locationId) {
+    const location = await findLocationById(db, locationId)
+    if (!location) throw notFound('Location was not found.')
+  }
+
   const rows = await db
     .select()
     .from(teamResources)
-    .where(and(eq(teamResources.teamId, team.id), isNull(teamResources.archivedAt)))
+    .where(
+      and(
+        eq(teamResources.teamId, team.id),
+        isNull(teamResources.archivedAt),
+        locationFilter(locationId),
+      ),
+    )
     .orderBy(asc(teamResources.sortOrder), desc(teamResources.createdAt))
     .limit(100)
 
   return {
     team: { id: team.id, slug: team.slug, name: team.name },
+    locationId: locationId ?? null,
     total: rows.length,
     resources: rows.map((row) => mapResource(row, team.slug)),
   }
@@ -84,9 +107,15 @@ export async function createTeamResource(
   teamSlug: string,
   input: TeamResourceInput,
   actor: ActorContext,
+  locationId?: string | null,
 ): Promise<TeamResourceRow> {
   const team = await getTeamBySlug(db, teamSlug)
   if (!team || !team.active) throw notFound('Team board was not found.')
+
+  if (locationId) {
+    const location = await findLocationById(db, locationId)
+    if (!location) throw notFound('Location was not found.')
+  }
 
   const validated = validateTeamResourceCreate(input)
   if (!validated.ok) {
@@ -99,6 +128,7 @@ export async function createTeamResource(
     .insert(teamResources)
     .values({
       teamId: team.id,
+      locationId: locationId ?? null,
       title: validated.value.title,
       url: validated.value.url,
       notes: validated.value.notes,
@@ -116,7 +146,12 @@ export async function createTeamResource(
     actorId: actor.actorId,
     actorLabel: actor.actorLabel,
     changeSummary: `Added resource “${created.title}” on ${team.name}.`,
-    metadata: { teamId: team.id, teamSlug: team.slug, kind: created.kind },
+    metadata: {
+      teamId: team.id,
+      teamSlug: team.slug,
+      locationId: locationId ?? null,
+      kind: created.kind,
+    },
     requestId: actor.requestId,
   })
 

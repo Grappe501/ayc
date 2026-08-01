@@ -275,6 +275,7 @@ Do **not** pull these in without a new governing decision:
 - [x] Public site — Netlify visitor password off so landing can be shared
 - ~~Brand pack (OG, PWA)~~ — **skipped for now** (per Steve)
 - [x] Location TEAM mission module (V3.1 / former #3) — 2026-08-01
+- [x] Location category Tasks + Resources (location-scoped) — 2026-08-01
 - Notify Chance on join — still deferred (skip queue item #2)
 - Privilege + deep-link hardening (partially shipping)
 - Docs sync

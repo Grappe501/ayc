@@ -39,6 +39,7 @@ describe('SQL migrations', () => {
     expect(files).toContain('012_calendar_recurrence.sql')
     expect(files).toContain('013_user_accounts.sql')
     expect(files).toContain('014_person_profiles.sql')
+    expect(files).toContain('015_location_scoped_tasks_resources.sql')
   })
 
   it('defines person_merge_history in 003_person_merge', () => {
@@ -135,6 +136,17 @@ describe('SQL migrations', () => {
     expect(sql).toContain('CREATE TABLE IF NOT EXISTS person_profile_notes')
     expect(sql).toContain('PROFILE_UPDATED')
     expect(sql).toContain("'PRIVATE'")
+  })
+
+  it('adds location_id to team_tasks and team_resources in 015', () => {
+    const sql = readFileSync(
+      path.join(migrationsDir, '015_location_scoped_tasks_resources.sql'),
+      'utf8',
+    )
+    expect(sql).toContain('location_id')
+    expect(sql).toContain('team_tasks')
+    expect(sql).toContain('team_resources')
+    expect(sql).toContain('REFERENCES locations')
   })
 })
 

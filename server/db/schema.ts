@@ -206,6 +206,7 @@ export const teamTasks = pgTable(
     teamId: uuid('team_id')
       .notNull()
       .references(() => teams.id),
+    locationId: uuid('location_id').references(() => locations.id),
     title: text('title').notNull(),
     notes: text('notes'),
     status: text('status').notNull().default('OPEN'),
@@ -218,7 +219,15 @@ export const teamTasks = pgTable(
     createdByActor: text('created_by_actor'),
     updatedByActor: text('updated_by_actor'),
   },
-  (table) => [index('team_tasks_team_status_idx').on(table.teamId, table.status, table.sortOrder)],
+  (table) => [
+    index('team_tasks_team_status_idx').on(table.teamId, table.status, table.sortOrder),
+    index('team_tasks_team_location_status_idx').on(
+      table.teamId,
+      table.locationId,
+      table.status,
+      table.sortOrder,
+    ),
+  ],
 )
 
 export const teamResources = pgTable(
@@ -228,6 +237,7 @@ export const teamResources = pgTable(
     teamId: uuid('team_id')
       .notNull()
       .references(() => teams.id),
+    locationId: uuid('location_id').references(() => locations.id),
     title: text('title').notNull(),
     url: text('url'),
     notes: text('notes'),
@@ -238,7 +248,15 @@ export const teamResources = pgTable(
     createdByActor: text('created_by_actor'),
     updatedByActor: text('updated_by_actor'),
   },
-  (table) => [index('team_resources_team_idx').on(table.teamId, table.archivedAt, table.sortOrder)],
+  (table) => [
+    index('team_resources_team_idx').on(table.teamId, table.archivedAt, table.sortOrder),
+    index('team_resources_team_location_idx').on(
+      table.teamId,
+      table.locationId,
+      table.archivedAt,
+      table.sortOrder,
+    ),
+  ],
 )
 
 export const personPipelineTags = pgTable(

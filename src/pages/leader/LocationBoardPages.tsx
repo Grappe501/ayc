@@ -17,6 +17,8 @@ import { AssignTeamDialog } from '@/features/leader/AssignTeamDialog'
 import { LeaderRosterList } from '@/features/leader/LeaderRosterList'
 import { LocationTeamMissionPanel } from '@/features/leader/LocationTeamMissionPanel'
 import { RequireLeaderAccess } from '@/features/leader/RequireLeaderAccess'
+import { TeamResourcesPanel } from '@/features/leader/TeamResourcesPanel'
+import { TeamTasksPanel } from '@/features/leader/TeamTasksPanel'
 import { clearLeaderSession } from '@/features/leader/leaderSession'
 import {
   fetchLeaderRoster,
@@ -438,6 +440,9 @@ function LocationCategoryBoard({
         teamSlug={teamSlug}
         title={`${location.name} · ${teamMeta.name} calendar`}
       />
+
+      <TeamTasksPanel teamSlug={teamSlug} locationId={location.id} />
+      <TeamResourcesPanel teamSlug={teamSlug} locationId={location.id} />
 
       <Section id="roster" title={`${teamMeta.name} at ${location.name}`}>
         <LocationFilters

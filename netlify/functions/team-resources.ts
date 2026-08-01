@@ -9,6 +9,7 @@ import { withLeaderDb } from './_shared.ts'
 
 type Body = {
   team?: string
+  locationId?: string | null
   id?: string
   title?: string
   url?: string | null
@@ -28,12 +29,13 @@ function actorFrom(event: Parameters<Handler>[0]) {
 export const handler: Handler = async (event) => {
   if (event.httpMethod === 'GET') {
     const team = event.queryStringParameters?.team?.trim()
+    const locationId = event.queryStringParameters?.locationId?.trim() || null
     if (!team) {
       return fail('VALIDATION_ERROR', 'team query parameter is required.')
     }
     return withLeaderDb(event, async (db) => {
       try {
-        return ok(await listTeamResources(db, team))
+        return ok(await listTeamResources(db, team, locationId))
       } catch (error) {
         const err = error as { code?: string; message?: string }
         if (err.code === 'NOT_FOUND') {
@@ -49,9 +51,16 @@ export const handler: Handler = async (event) => {
     return withLeaderDb(event, async (db) => {
       const body = parseJsonBody<Body>(event.body)
       const team = body?.team?.trim()
+      const locationId = body?.locationId?.trim() || null
       if (!team) return fail('VALIDATION_ERROR', 'team is required.')
       try {
-        const resource = await createTeamResource(db, team, body ?? {}, actorFrom(event))
+        const resource = await createTeamResource(
+          db,
+          team,
+          body ?? {},
+          actorFrom(event),
+          locationId,
+        )
         return ok({ status: 'created', resource }, 201)
       } catch (error) {
         const err = error as {

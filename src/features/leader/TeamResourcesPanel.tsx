@@ -14,6 +14,8 @@ import type { TeamBoardSlug } from '@/features/leader/teamBoards'
 
 type Props = {
   teamSlug: TeamBoardSlug
+  /** When set, scopes resources to this location category board (not statewide). */
+  locationId?: string
 }
 
 function kindLabel(kind: string) {
@@ -31,7 +33,7 @@ function kindLabel(kind: string) {
   }
 }
 
-export function TeamResourcesPanel({ teamSlug }: Props) {
+export function TeamResourcesPanel({ teamSlug, locationId }: Props) {
   const starters = getTeamResourceStarters(teamSlug)
   const [resources, setResources] = useState<TeamResource[]>([])
   const [loading, setLoading] = useState(true)
@@ -45,7 +47,7 @@ export function TeamResourcesPanel({ teamSlug }: Props) {
   async function load() {
     setLoading(true)
     setError('')
-    const result = await fetchTeamResources(teamSlug)
+    const result = await fetchTeamResources(teamSlug, locationId)
     if (!result.ok) {
       setError(result.error.message)
       setLoading(false)
@@ -60,7 +62,7 @@ export function TeamResourcesPanel({ teamSlug }: Props) {
     ;(async () => {
       setLoading(true)
       setError('')
-      const result = await fetchTeamResources(teamSlug)
+      const result = await fetchTeamResources(teamSlug, locationId)
       if (cancelled) return
       if (!result.ok) {
         setError(result.error.message)
@@ -73,7 +75,7 @@ export function TeamResourcesPanel({ teamSlug }: Props) {
     return () => {
       cancelled = true
     }
-  }, [teamSlug])
+  }, [teamSlug, locationId])
 
   async function onCreate(event: FormEvent) {
     event.preventDefault()
@@ -81,6 +83,7 @@ export function TeamResourcesPanel({ teamSlug }: Props) {
     setError('')
     const result = await createTeamResource({
       team: teamSlug,
+      locationId: locationId ?? null,
       title,
       url: url.trim() || null,
       notes: notes.trim() || null,
@@ -103,6 +106,7 @@ export function TeamResourcesPanel({ teamSlug }: Props) {
     setError('')
     const result = await createTeamResource({
       team: teamSlug,
+      locationId: locationId ?? null,
       title: starter.title,
       url: starter.url ?? null,
       notes: starter.notes ?? null,
@@ -131,8 +135,9 @@ export function TeamResourcesPanel({ teamSlug }: Props) {
   return (
     <Section id="resources" title="Resources">
       <p className="field__hint" style={{ marginBottom: '1rem' }}>
-        Lightweight library for this category — links, talking points, notes, and checklists.
-        Keep it practical for phone use.
+        {locationId
+          ? 'Local library for this category at this location — separate from statewide resources.'
+          : 'Lightweight library for this category — links, talking points, notes, and checklists. Keep it practical for phone use.'}
       </p>
 
       <div className="team-tasks-stats">

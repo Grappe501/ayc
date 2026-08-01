@@ -122,6 +122,7 @@ export type TeamTask = {
   id: string
   teamId: string
   teamSlug: string
+  locationId: string | null
   title: string
   notes: string | null
   status: string
@@ -133,17 +134,21 @@ export type TeamTask = {
   completedAt: string | null
 }
 
-export function fetchTeamTasks(teamSlug: string) {
+export function fetchTeamTasks(teamSlug: string, locationId?: string) {
+  const qs = new URLSearchParams({ team: teamSlug })
+  if (locationId) qs.set('locationId', locationId)
   return request<{
     team: { id: string; slug: string; name: string }
+    locationId: string | null
     openCount: number
     highCount: number
     tasks: TeamTask[]
-  }>(`team-tasks?team=${encodeURIComponent(teamSlug)}`)
+  }>(`team-tasks?${qs.toString()}`)
 }
 
 export function createTeamTask(body: {
   team: string
+  locationId?: string | null
   title: string
   notes?: string | null
   priority?: string
@@ -174,6 +179,7 @@ export type TeamResource = {
   id: string
   teamId: string
   teamSlug: string
+  locationId: string | null
   title: string
   url: string | null
   notes: string | null
@@ -183,16 +189,20 @@ export type TeamResource = {
   updatedAt: string
 }
 
-export function fetchTeamResources(teamSlug: string) {
+export function fetchTeamResources(teamSlug: string, locationId?: string) {
+  const qs = new URLSearchParams({ team: teamSlug })
+  if (locationId) qs.set('locationId', locationId)
   return request<{
     team: { id: string; slug: string; name: string }
+    locationId: string | null
     total: number
     resources: TeamResource[]
-  }>(`team-resources?team=${encodeURIComponent(teamSlug)}`)
+  }>(`team-resources?${qs.toString()}`)
 }
 
 export function createTeamResource(body: {
   team: string
+  locationId?: string | null
   title: string
   url?: string | null
   notes?: string | null

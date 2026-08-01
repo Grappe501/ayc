@@ -11,9 +11,11 @@ import type { TeamBoardSlug } from '@/features/leader/teamBoards'
 
 type Props = {
   teamSlug: TeamBoardSlug
+  /** When set, scopes tasks to this location category board (not statewide). */
+  locationId?: string
 }
 
-export function TeamTasksPanel({ teamSlug }: Props) {
+export function TeamTasksPanel({ teamSlug, locationId }: Props) {
   const mission = getTeamMission(teamSlug)
   const [tasks, setTasks] = useState<TeamTask[]>([])
   const [openCount, setOpenCount] = useState(0)
@@ -29,7 +31,7 @@ export function TeamTasksPanel({ teamSlug }: Props) {
   async function load() {
     setLoading(true)
     setError('')
-    const result = await fetchTeamTasks(teamSlug)
+    const result = await fetchTeamTasks(teamSlug, locationId)
     if (!result.ok) {
       setError(result.error.message)
       setLoading(false)
@@ -46,7 +48,7 @@ export function TeamTasksPanel({ teamSlug }: Props) {
     ;(async () => {
       setLoading(true)
       setError('')
-      const result = await fetchTeamTasks(teamSlug)
+      const result = await fetchTeamTasks(teamSlug, locationId)
       if (cancelled) return
       if (!result.ok) {
         setError(result.error.message)
@@ -61,7 +63,7 @@ export function TeamTasksPanel({ teamSlug }: Props) {
     return () => {
       cancelled = true
     }
-  }, [teamSlug])
+  }, [teamSlug, locationId])
 
   const openTasks = tasks.filter((task) => task.status === 'OPEN')
   const doneTasks = tasks.filter((task) => task.status === 'DONE')
@@ -72,6 +74,7 @@ export function TeamTasksPanel({ teamSlug }: Props) {
     setError('')
     const result = await createTeamTask({
       team: teamSlug,
+      locationId: locationId ?? null,
       title,
       notes: notes.trim() || null,
       priority,
@@ -111,6 +114,7 @@ export function TeamTasksPanel({ teamSlug }: Props) {
     setError('')
     const result = await createTeamTask({
       team: teamSlug,
+      locationId: locationId ?? null,
       title: focus,
       priority: 'NORMAL',
     })
@@ -125,8 +129,9 @@ export function TeamTasksPanel({ teamSlug }: Props) {
   return (
     <Section id="tasks" title="Tasks">
       <p className="field__hint" style={{ marginBottom: '1rem' }}>
-        Lightweight team checklist for this category board. Mark done when finished — full
-        project management stays out of scope.
+        {locationId
+          ? 'Lightweight checklist for this category at this location only — separate from the statewide board.'
+          : 'Lightweight team checklist for this category board. Mark done when finished — full project management stays out of scope.'}
       </p>
 
       <div className="team-tasks-stats">
