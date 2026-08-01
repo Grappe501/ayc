@@ -37,6 +37,7 @@ export const handler: Handler = async (event) => {
       const result = await listLeaderRoster(db, {
         q: event.queryStringParameters?.q ?? undefined,
         teamSlug: event.queryStringParameters?.team ?? undefined,
+        locationId: event.queryStringParameters?.locationId ?? undefined,
         status: event.queryStringParameters?.status ?? undefined,
         gapsOnly: event.queryStringParameters?.gaps === '1',
         textReadyOnly: event.queryStringParameters?.textReady === '1',

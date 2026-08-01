@@ -266,6 +266,7 @@ export function fetchRecentContacts() {
 export function fetchLeaderRoster(params?: {
   q?: string
   team?: string
+  locationId?: string
   status?: string
   gapsOnly?: boolean
   textReadyOnly?: boolean
@@ -277,6 +278,7 @@ export function fetchLeaderRoster(params?: {
   qs.set('view', 'roster')
   if (params?.q) qs.set('q', params.q)
   if (params?.team) qs.set('team', params.team)
+  if (params?.locationId) qs.set('locationId', params.locationId)
   if (params?.status) qs.set('status', params.status)
   if (params?.gapsOnly) qs.set('gaps', '1')
   if (params?.textReadyOnly) qs.set('textReady', '1')
@@ -366,20 +368,24 @@ export function fetchTeams() {
   >('teams')
 }
 
+export type LeaderLocation = {
+  id: string
+  locationType: string
+  code: string
+  compositeCode: string
+  name: string
+  shortName: string | null
+  city: string | null
+  countyName: string | null
+}
+
 export function fetchLocations(type?: string) {
   const qs = type ? `?type=${encodeURIComponent(type)}` : ''
-  return request<
-    Array<{
-      id: string
-      locationType: string
-      code: string
-      compositeCode: string
-      name: string
-      shortName: string | null
-      city: string | null
-      countyName: string | null
-    }>
-  >(`locations${qs}`)
+  return request<LeaderLocation[]>(`locations${qs}`)
+}
+
+export function fetchLocation(locationId: string) {
+  return request<LeaderLocation>(`locations?id=${encodeURIComponent(locationId)}`)
 }
 
 export function createLocation(body: {

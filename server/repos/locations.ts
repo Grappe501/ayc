@@ -16,6 +16,15 @@ export type CreateLocationInput = {
   actor?: string | null
 }
 
+export async function findLocationById(db: AycDatabase, locationId: string) {
+  const rows = await db
+    .select()
+    .from(locations)
+    .where(and(eq(locations.id, locationId), isNull(locations.archivedAt)))
+    .limit(1)
+  return rows[0] ?? null
+}
+
 export async function findLocationByCompositeCode(db: AycDatabase, compositeCode: string) {
   const rows = await db
     .select()

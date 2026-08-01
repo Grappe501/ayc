@@ -73,7 +73,10 @@ function SegmentBoard({ segment }: { segment: SegmentSlug }) {
   )
 
   const locations = useMemo(() => {
-    const map = new Map<string, { code: string; name: string; count: number }>()
+    const map = new Map<
+      string,
+      { id: string; code: string; name: string; count: number }
+    >()
     for (const person of scoped) {
       if (!person.location) continue
       const current = map.get(person.location.id)
@@ -81,6 +84,7 @@ function SegmentBoard({ segment }: { segment: SegmentSlug }) {
         current.count += 1
       } else {
         map.set(person.location.id, {
+          id: person.location.id,
           code: person.location.code,
           name: person.location.name,
           count: 1,
@@ -139,15 +143,15 @@ function SegmentBoard({ segment }: { segment: SegmentSlug }) {
 
       <Section id="role" title="Your charge">
         <Card>
-          <Tag>Phase 2A shell</Tag>
+          <Tag>Segment lead</Tag>
           <p>
             Category Campaign Leads still own their functional boards at every location type. Your
-            job is to grow <strong>location leadership</strong> — people who can run a school or
-            county TEAM board when those boards open.
+            job is to grow <strong>location leadership</strong> — open each location TEAM board to
+            see who is there and who can lead next.
           </p>
           <p className="field__hint">
-            Full segment workspace (develop-local-leads queues, location board network) ships in
-            Phase 2F. Location TEAM boards ship in Phase 2E.
+            Full segment workspace (develop-local-leads queues) ships in Phase 2F. Location TEAM and
+            category boards are live now.
           </p>
         </Card>
       </Section>
@@ -189,13 +193,15 @@ function SegmentBoard({ segment }: { segment: SegmentSlug }) {
         {!loading && locations.length > 0 ? (
           <div className="team-board-leads">
             {locations.map((location) => (
-              <Card key={`${location.code}-${location.name}`}>
+              <Card key={location.id}>
                 <Tag>{location.code}</Tag>
                 <h3>{location.name}</h3>
                 <p>
                   {location.count} {location.count === 1 ? 'person' : 'people'} on roster
                 </p>
-                <p className="field__hint">Location TEAM board opens in Phase 2E.</p>
+                <Button to={`/leader/locations/${location.id}`} variant="primary">
+                  Open location board
+                </Button>
               </Card>
             ))}
           </div>

@@ -4,10 +4,12 @@ import { isValidLocationCode, toCompositeCode } from '../domain/locationCodes.ts
 import { normalizeLocationName } from '../domain/normalize.ts'
 import {
   createLocation,
+  findLocationById,
   findLocationByTypeAndCode,
   listActiveLocations,
 } from '../repos/locations.ts'
 import { insertAuditEvent } from '../repos/audit.ts'
+import { ensureLocationBoards } from './ensureLocationBoards.ts'
 
 export type CreateLocationRequest = {
   locationType: LocationType
@@ -21,6 +23,10 @@ export type CreateLocationRequest = {
 
 export async function listLocations(db: AycDatabase, locationType?: LocationType) {
   return listActiveLocations(db, locationType)
+}
+
+export async function getLocationById(db: AycDatabase, locationId: string) {
+  return findLocationById(db, locationId)
 }
 
 export async function createLocationRecord(db: AycDatabase, input: CreateLocationRequest) {
@@ -71,6 +77,12 @@ export async function createLocationRecord(db: AycDatabase, input: CreateLocatio
       normalizedName: normalizeLocationName(name),
     },
   })
+
+  try {
+    await ensureLocationBoards(db, location.id)
+  } catch (error) {
+    console.error('ensureLocationBoards failed after location create', error)
+  }
 
   return location
 }

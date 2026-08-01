@@ -7,6 +7,10 @@ import { DuplicateMergePage } from '@/pages/leader/DuplicateMergePage'
 import { GapFillPage } from '@/pages/leader/GapFillPage'
 import { LeaderPage } from '@/pages/leader/LeaderPage'
 import { NewContactPage } from '@/pages/leader/NewContactPage'
+import {
+  LocationCategoryBoardPage,
+  LocationTeamBoardPage,
+} from '@/pages/leader/LocationBoardPages'
 import { SegmentBoardPage } from '@/pages/leader/SegmentBoardPage'
 import { GraphicDesignBoardPage, TeamBoardPage } from '@/pages/leader/TeamBoardPage'
 import { DirectoryPage } from '@/pages/directory/DirectoryPage'
@@ -30,6 +34,11 @@ export function App() {
         />
         <Route path="/leader/teams/:teamSlug" element={<TeamBoardPage />} />
         <Route path="/leader/segments/:segmentSlug" element={<SegmentBoardPage />} />
+        <Route path="/leader/locations/:locationId" element={<LocationTeamBoardPage />} />
+        <Route
+          path="/leader/locations/:locationId/teams/:teamSlug"
+          element={<LocationCategoryBoardPage />}
+        />
         <Route path="/leader/contacts/new" element={<NewContactPage />} />
         <Route path="/leader/contacts/:personId" element={<ContactDetailPage />} />
         <Route path="/directory" element={<DirectoryPage />} />

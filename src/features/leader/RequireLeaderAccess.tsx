@@ -8,6 +8,8 @@ import {
 } from '@/features/leader/leaderSession'
 import {
   homePathForScope,
+  scopeCanAccessLocationCategoryBoard,
+  scopeCanAccessLocationTeamBoard,
   scopeCanAccessSegmentBoard,
   scopeCanAccessStatewideLeaderBoard,
   scopeCanAccessTeamBoard,
@@ -19,6 +21,10 @@ type Props = {
   teamSlug?: string
   /** When set, require access to this segment shell. */
   segment?: 'high-school' | 'working-class'
+  /** Location TEAM board — pass location type (COLLEGE / HIGH_SCHOOL / COUNTY). */
+  locationType?: string
+  /** Location category board — requires teamSlug + locationType. */
+  locationCategorySlug?: string
   /** Require statewide Leader Board (master or segment). */
   requireStatewide?: boolean
   /** Lead Organizer master key only. */
@@ -29,6 +35,8 @@ export function RequireLeaderAccess({
   children,
   teamSlug,
   segment,
+  locationType,
+  locationCategorySlug,
   requireStatewide,
   requireMaster,
 }: Props) {
@@ -58,7 +66,15 @@ export function RequireLeaderAccess({
     return <Navigate to={homePathForScope(scope)} replace />
   }
 
-  if (teamSlug && !scopeCanAccessTeamBoard(scope, teamSlug)) {
+  if (locationCategorySlug && locationType) {
+    if (!scopeCanAccessLocationCategoryBoard(scope, locationCategorySlug)) {
+      return <Navigate to={homePathForScope(scope)} replace />
+    }
+  } else if (locationType && !scopeCanAccessLocationTeamBoard(scope, locationType)) {
+    return <Navigate to={homePathForScope(scope)} replace />
+  }
+
+  if (teamSlug && !locationCategorySlug && !scopeCanAccessTeamBoard(scope, teamSlug)) {
     return <Navigate to={homePathForScope(scope)} replace />
   }
 

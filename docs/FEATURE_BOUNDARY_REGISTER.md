@@ -16,22 +16,23 @@
 - Public Join page (`/join`) → Prospective people (`JOIN_FORM`) on chosen team + feedback notify  
 - Netlify site password + hierarchical board keys (`AYC_MASTER_KEY` + `AYC_KEY_*`)  
 
-## Phase 2 opened (hierarchy foundation)
+## Phase 2 opened
 
 - Roles catalog + `person_leadership_roles` + `boards` registry  
 - Graphic Design secondary board under Social Media (`/leader/teams/social-media/graphic-design`)  
 - HS / WC segment shells (`/leader/segments/*`)  
 - Hierarchical keys including optional `AYC_KEY_GRAPHIC_DESIGN`  
+- Location TEAM + five location category boards per location (`/leader/locations/*`)  
 
 ## Phase 2 still deferred
 
 Canonical plan: `docs/master-build-plan/10-PHASE-2-MASTER-PLAN.md`
 
-- Location TEAM + location category boards (2E)  
 - Full HS / WC segment workspaces (2F)  
 - Person-linked `canAccessBoard` (2G) — keys remain until then  
 - Membership applications inbox (2B), notify email (2C)  
-- Nested calendars (CAL track), reports hub (2H)
+- Nested calendars (CAL track), reports hub (2H)  
+- Location-level Graphic Design boards (GD stays statewide)
 
 ## Phase 1 forbidden
 

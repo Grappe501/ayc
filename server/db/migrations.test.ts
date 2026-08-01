@@ -32,6 +32,7 @@ describe('SQL migrations', () => {
     expect(files).toContain('005_team_resources.sql')
     expect(files).toContain('006_pipeline_tags.sql')
     expect(files).toContain('007_hierarchy_foundation.sql')
+    expect(files).toContain('008_location_boards.sql')
   })
 
   it('defines person_merge_history in 003_person_merge', () => {
@@ -67,5 +68,11 @@ describe('SQL migrations', () => {
     expect(sql).toContain('graphic-design')
     expect(sql).toContain('LEAD_ORGANIZER')
     expect(sql).toContain('ROLE_GRANTED')
+  })
+
+  it('defines location board indexes in 008_location_boards', () => {
+    const sql = readFileSync(path.join(migrationsDir, '008_location_boards.sql'), 'utf8')
+    expect(sql).toContain('boards_location_team_uidx')
+    expect(sql).toContain('boards_location_category_uidx')
   })
 })

@@ -18,6 +18,7 @@ import { listPipelineTagsForPeople } from './pipelineTagService.ts'
 export type LeaderRosterFilters = {
   q?: string
   teamSlug?: string
+  locationId?: string
   status?: string
   gapsOnly?: boolean
   textReadyOnly?: boolean
@@ -223,6 +224,10 @@ export async function listLeaderRoster(
         p.primaryTeam?.slug === filters.teamSlug ||
         p.additionalTeams.some((t) => t.slug === filters.teamSlug),
     )
+  }
+
+  if (filters.locationId) {
+    peopleRows = peopleRows.filter((p) => p.location?.id === filters.locationId)
   }
 
   // Attention reflects the board/team scope before list filters (gaps / preferred / search).

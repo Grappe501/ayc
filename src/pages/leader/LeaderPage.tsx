@@ -228,7 +228,7 @@ function LeaderBoard() {
           <Card>
             <Tag>Segment</Tag>
             <h3>High School Lead Organizer</h3>
-            <p>Rollup shell for HS locations and people. Full workspace later.</p>
+            <p>Rollup shell for HS locations and people — open location TEAM boards from there.</p>
             <Button to="/leader/segments/high-school" variant="primary">
               Open HS board
             </Button>
@@ -236,10 +236,29 @@ function LeaderBoard() {
           <Card>
             <Tag>Segment</Tag>
             <h3>Working Class Lead Organizer</h3>
-            <p>Rollup shell for county / non-student locations. Full workspace later.</p>
+            <p>Rollup shell for county / non-student locations.</p>
             <Button to="/leader/segments/working-class" variant="primary">
               Open WC board
             </Button>
+          </Card>
+          <Card>
+            <Tag>Locations</Tag>
+            <h3>Location TEAM boards</h3>
+            <p>
+              Every school, campus, and county has a TEAM board plus five category boards. Open from
+              HS / WC segment lists, or from a contact’s location.
+            </p>
+            <div className="btn-row">
+              <Button to="/leader/segments/high-school" variant="secondary">
+                HS locations
+              </Button>
+              <Button to="/leader/segments/working-class" variant="secondary">
+                County locations
+              </Button>
+              <Button to="/directory" variant="secondary">
+                Directory
+              </Button>
+            </div>
           </Card>
         </div>
       </Section>

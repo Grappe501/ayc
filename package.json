@@ -15,7 +15,8 @@
     "db:migrate": "node --experimental-strip-types server/db/migrate.ts",
     "db:seed-teams": "node --experimental-strip-types server/db/seed-teams.ts",
     "db:seed-roster": "node --experimental-strip-types server/db/seed-leadership-roster.ts",
-    "db:seed-hierarchy": "node --experimental-strip-types server/db/seed-hierarchy.ts"
+    "db:seed-hierarchy": "node --experimental-strip-types server/db/seed-hierarchy.ts",
+    "db:seed-location-boards": "node --experimental-strip-types server/db/seed-location-boards.ts"
   },
   "dependencies": {
     "@netlify/database": "^1.1.0",
