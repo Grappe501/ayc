@@ -90,6 +90,6 @@ export const HOW_WE_WORK = [
 export const COMING_NEXT = [
   'Civic education sessions and leadership practice',
   'A surrogate speaking team for travel and public voice',
-  'Stronger high school and working-class pathways',
-  'Location boards, calendars, and more ways to serve',
+  'Account-based board unlock (one login for profiles and workbenches)',
+  'Outbound join alerts, richer location boards, and college pathways',
 ] as const

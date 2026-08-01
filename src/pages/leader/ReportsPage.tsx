@@ -377,7 +377,7 @@ function ReportsHub() {
 
 export function ReportsPage() {
   return (
-    <RequireLeaderAccess>
+    <RequireLeaderAccess requireMaster>
       <ReportsHub />
     </RequireLeaderAccess>
   )

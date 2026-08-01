@@ -368,7 +368,7 @@ function ApplicationsInbox() {
 
 export function ApplicationsInboxPage() {
   return (
-    <RequireLeaderAccess>
+    <RequireLeaderAccess requireMaster>
       <ApplicationsInbox />
     </RequireLeaderAccess>
   )

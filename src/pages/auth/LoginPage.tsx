@@ -42,7 +42,7 @@ export function LoginPage() {
       <PageHeader
         eyebrow="Personal account"
         title="Log in"
-        lede="Invite-only accounts. Use the email and password from your claim invite."
+        lede="Invite-only accounts. Use the email and password from your claim invite to edit your directory profile and leave notes."
         actions={
           <Button to="/claim" variant="secondary">
             Claim invite
@@ -50,9 +50,16 @@ export function LoginPage() {
         }
       />
 
+      <p className="field__hint" style={{ marginBottom: '1rem', maxWidth: '36rem' }}>
+        Looking for a team board? Personal login is separate from board unlock. Open{' '}
+        <Link to="/leader">Workbench</Link> and enter your leadership access key.
+      </p>
+
       {!configured ? (
         <div className="error-state" role="alert">
-          Personal login is not configured on this environment yet.
+          Personal login is not configured on this environment yet. You can still browse the{' '}
+          <Link to="/directory">Directory</Link> and unlock the{' '}
+          <Link to="/leader">Workbench</Link> with a leadership key.
         </div>
       ) : (
         <form onSubmit={onSubmit} className="calendar-create" style={{ maxWidth: '28rem' }}>

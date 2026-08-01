@@ -23,7 +23,11 @@
 | `/leader/calendar/event/:eventId` | Complete | Leader event detail + RSVPs |
 | `/login` | Complete | Personal account login (Supabase Auth) |
 | `/claim` | Complete | Claim invite + set password (invite-only) |
-| `/join` | Complete | Public join → creates `PROSPECTIVE` person (`JOIN_FORM`) on chosen team + feedback notify |
+| `/join` | Complete | Public join → `membership_applications` queue (person created on Accept) |
+| `/join/thanks` | Complete | Join confirmation + reference code |
+| `/leader/applications` | Complete | Join applications inbox (master key) |
+| `/leader/reports` | Complete | Coverage + pipeline hub (master key) |
+| `/leader/calendar` | Complete | Nested calendars hub + create |
 | `/workbench` | Alias → Leader | |
 | `/people` | Alias → Directory | |
 | `/add-contact` | Alias → New contact | |
@@ -32,6 +36,8 @@
 Reserved for later phases (do not ship stubs): `/teams` (public/future RBAC boards), `/admin`, `/events`, `/training`, `/messages`, `/analytics`, `/profile`, `/settings`
 
 Phase 2 live: `/join`, `/join/thanks`, `/calendar`, `/login`, `/claim`, `/leader/applications`, `/leader/reports`, `/leader/calendar`, `/leader/segments/*`, `/leader/locations/*`, `/leader/teams/social-media/graphic-design`. Directory person pages are full Directory Profiles.
+
+V3 upgrade plan: `docs/plans/AYC_V3_UPGRADE_PLAN.md`
 
 Phase 1 Team Lead Boards live under `/leader/teams/*` (same unlock as Leader Board). Full Phase 2 Team Boards (tasks, resources, communication, reports) remain deferred.
 

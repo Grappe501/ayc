@@ -1,6 +1,7 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useEffect, useId, useRef, useState } from 'react'
 import { AYC_SITE_NAME } from '@/content/ayc'
+import { AycLogoMark } from '@/components/brand/AycLogoMark'
 import { BetaFeedbackButton } from '@/components/feedback/BetaFeedbackButton'
 import { focusFirst, trapTabKey } from '@/components/ui/focusTrap'
 import { useAuth } from '@/features/auth/AuthProvider'
@@ -11,7 +12,16 @@ const NAV = [
   { to: '/join', label: 'Join' },
   { to: '/calendar', label: 'Calendar' },
   { to: '/directory', label: 'Directory' },
-  { to: '/leader', label: 'Leaders' },
+  { to: '/leader', label: 'Workbench' },
+  { to: '/feedback', label: 'Feedback' },
+] as const
+
+const FOOTER_LINKS = [
+  { to: '/', label: 'Home' },
+  { to: '/join', label: 'Join' },
+  { to: '/calendar', label: 'Calendar' },
+  { to: '/directory', label: 'Directory' },
+  { to: '/leader', label: 'Workbench' },
   { to: '/feedback', label: 'Feedback' },
 ] as const
 
@@ -62,8 +72,8 @@ export function AppShell() {
       <header className="topbar">
         <div className="topbar__inner">
           <NavLink to="/" className="brand" end aria-label="AYC Leadership Workbench home">
-            <span className="brand__mark" aria-hidden="true">
-              AYC
+            <span className="brand__mark">
+              <AycLogoMark size="nav" decorative />
             </span>
             <span className="brand__text">
               <span className="brand__org">Arkansas Youth Coalition</span>
@@ -209,9 +219,20 @@ export function AppShell() {
 
       <footer className="footer">
         <div className="footer__inner">
-          <p>Arkansas Youth Coalition</p>
-          <p>Leadership Workbench</p>
-          <p>Leadership Beta</p>
+          <div className="footer__brand">
+            <AycLogoMark size="sm" decorative />
+            <div>
+              <p className="footer__org">Arkansas Youth Coalition</p>
+              <p>Leadership Workbench · Leadership Beta</p>
+            </div>
+          </div>
+          <nav className="footer__nav" aria-label="Footer">
+            {FOOTER_LINKS.map((item) => (
+              <NavLink key={item.to} to={item.to} end={item.to === '/'}>
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
           <p className="footer__copy">© Arkansas Youth Coalition</p>
         </div>
       </footer>

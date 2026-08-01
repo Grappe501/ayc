@@ -500,6 +500,8 @@ export function DirectoryPage() {
       {!loading && view === 'locations' ? (
         <LocationsGrouped
           locations={locations}
+          locationTypeFilter={locationType}
+          leaderUnlocked={hasLeaderSession()}
           onSelect={(id) => {
             update({
               location: id,
@@ -519,9 +521,13 @@ export function DirectoryPage() {
 function LocationsGrouped({
   locations,
   onSelect,
+  leaderUnlocked,
+  locationTypeFilter,
 }: {
   locations: DirectoryLocation[]
   onSelect: (id: string) => void
+  leaderUnlocked: boolean
+  locationTypeFilter: string
 }) {
   const groups: Array<{ type: string; title: string; empty: string }> = [
     { type: 'COLLEGE', title: 'Colleges', empty: 'No colleges are represented yet.' },
@@ -531,7 +537,7 @@ function LocationsGrouped({
       empty: 'No high schools are represented yet.\nLocations will appear as leaders and volunteers are added.',
     },
     { type: 'COUNTY', title: 'Counties', empty: 'No counties are represented yet.' },
-  ]
+  ].filter((group) => !locationTypeFilter || group.type === locationTypeFilter)
 
   return (
     <div className="card-grid">
@@ -545,28 +551,27 @@ function LocationsGrouped({
             ) : (
               <div className="card-grid card-grid--2">
                 {items.map((loc) => (
-                  <Card key={loc.id} interactive>
-                    <button
-                      type="button"
-                      style={{
-                        all: 'unset',
-                        cursor: 'pointer',
-                        display: 'block',
-                        width: '100%',
-                      }}
-                      onClick={() => onSelect(loc.id)}
-                    >
-                      <Tag>{loc.code}</Tag>
-                      <h3>{loc.name}</h3>
-                      <p>{labelType(loc.locationType)}</p>
-                      <p>
-                        {loc.activePeople} active people
-                        <br />
-                        {loc.leads} leads
-                        <br />
-                        {loc.teamsRepresented} teams represented
-                      </p>
-                    </button>
+                  <Card key={loc.id}>
+                    <Tag>{loc.code}</Tag>
+                    <h3>{loc.name}</h3>
+                    <p>{labelType(loc.locationType)}</p>
+                    <p>
+                      {loc.activePeople} active people
+                      <br />
+                      {loc.leads} leads
+                      <br />
+                      {loc.teamsRepresented} teams represented
+                    </p>
+                    <div className="btn-row" style={{ marginTop: '0.75rem' }}>
+                      <Button type="button" variant="secondary" onClick={() => onSelect(loc.id)}>
+                        View people
+                      </Button>
+                      {leaderUnlocked ? (
+                        <Button to={`/leader/locations/${loc.id}`} variant="primary">
+                          Open TEAM board
+                        </Button>
+                      ) : null}
+                    </div>
                   </Card>
                 ))}
               </div>

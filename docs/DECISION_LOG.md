@@ -38,6 +38,9 @@
 | 2026-08-01 | Public calendar | `/calendar` + `GET /api/public-calendar-events` + `GET /api/public-calendar-ics`; only `PUBLIC`+`SCHEDULED`; leaders toggle visibility (default INTERNAL) |
 | 2026-08-01 | Personal login | Invite/claim-only Supabase Auth (email+password); `user_accounts` linked to `people`; leader keys remain for boards |
 | 2026-08-01 | Directory Profiles | Affiliation header + photo + narrative + public/private notes; owner or leader edits; notes require login |
+| 2026-08-01 | Brand Mark F | Torch + white letters + orange diamond is canonical product mark (nav, favicon, empty/404, hero) |
+| 2026-08-01 | Applications / Reports access | Master (Lead Organizer) key required — not any category key |
+| 2026-08-01 | V3 upgrade plan | `docs/plans/AYC_V3_UPGRADE_PLAN.md` is planning authority for next major cycle |
 | 2026-08-01 | Calendar grid views | Shared month/week/day CalendarBoard with prev/next; event click → detail routes; embedded on Main + board pages |
 | 2026-07-31 | Green canvas theme | Page background `#2E5A3D` with light text; light surfaces keep dark text |
 | 2026-07-31 | Join → Prospective pipeline | `/join` creates people with status `PROSPECTIVE`, source `JOIN_FORM`, on selected team board |

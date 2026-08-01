@@ -260,7 +260,7 @@ function LeaderBoard() {
             <h3>Location TEAM boards</h3>
             <p>
               Every school, campus, and county has a TEAM board plus five category boards. Open from
-              HS / WC segment lists, or from a contact’s location.
+              segment lists, a contact’s location, or Directory locations (college campuses included).
             </p>
             <div className="btn-row">
               <Button to="/leader/segments/high-school" variant="secondary">
@@ -269,8 +269,11 @@ function LeaderBoard() {
               <Button to="/leader/segments/working-class" variant="secondary">
                 County locations
               </Button>
-              <Button to="/directory" variant="secondary">
-                Directory
+              <Button to="/directory?view=locations&locationType=COLLEGE" variant="secondary">
+                College campuses
+              </Button>
+              <Button to="/directory?view=locations" variant="secondary">
+                All locations
               </Button>
             </div>
           </Card>

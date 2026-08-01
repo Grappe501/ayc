@@ -38,12 +38,14 @@
 
 ## Phase 2 still deferred
 
-Canonical plan: `docs/master-build-plan/10-PHASE-2-MASTER-PLAN.md`
+Canonical plan: `docs/master-build-plan/10-PHASE-2-MASTER-PLAN.md`  
+V3 upgrade plan: `docs/plans/AYC_V3_UPGRADE_PLAN.md`
 
 - Replacing shared leader keys with account-based board unlock  
 - Google / social OAuth  
 - Notify Chance email outbox (2C) — skipped for now, add later  
-- Location-level Graphic Design boards (GD stays statewide)
+- Location-level Graphic Design boards (GD stays statewide)  
+- Location board Mission / Tasks / Resources parity (roster + calendar today)
 
 ## Phase 1 forbidden
 

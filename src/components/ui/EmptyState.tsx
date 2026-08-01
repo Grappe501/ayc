@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react'
+import { AycLogoMark } from '@/components/brand/AycLogoMark'
 import { Button } from './Button'
 
 type Props = {
+  /** Optional text icon override. Default is the AYC logo mark. */
   icon?: string
   title: string
   description: string
@@ -10,11 +12,11 @@ type Props = {
   children?: ReactNode
 }
 
-export function EmptyState({ icon = 'AYC', title, description, actionTo, actionLabel, children }: Props) {
+export function EmptyState({ icon, title, description, actionTo, actionLabel, children }: Props) {
   return (
     <div className="card empty-state ayc-fade-in">
       <div className="empty-state__icon" aria-hidden="true">
-        {icon}
+        {icon ? icon : <AycLogoMark size="sm" decorative />}
       </div>
       <h2>{title}</h2>
       <p>{description}</p>

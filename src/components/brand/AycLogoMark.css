@@ -1,0 +1,28 @@
+.ayc-logo-mark {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  user-select: none;
+}
+
+.ayc-logo-mark--nav {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.ayc-logo-mark--sm {
+  width: 3rem;
+  height: 3rem;
+}
+
+.ayc-logo-mark--md {
+  width: 4.5rem;
+  height: 4.5rem;
+}
+
+.ayc-logo-mark--lg {
+  width: 7rem;
+  height: 7rem;
+}

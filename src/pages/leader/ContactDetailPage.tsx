@@ -233,6 +233,14 @@ function ContactDetailView() {
               <p>{statusLabel(contact.location.locationType)}</p>
               {contact.location.city ? <p>City: {contact.location.city}</p> : null}
               {contact.location.countyName ? <p>County: {contact.location.countyName}</p> : null}
+              <div className="btn-row" style={{ marginTop: '0.75rem' }}>
+                <Button to={`/leader/locations/${contact.location.id}`} variant="secondary">
+                  Open location TEAM board
+                </Button>
+                <Button to={`/directory/${contact.id}`} variant="secondary">
+                  View directory profile
+                </Button>
+              </div>
             </>
           ) : (
             <p>No primary location on file.</p>
