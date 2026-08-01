@@ -8,6 +8,7 @@ import {
 } from '@/features/leader/leaderSession'
 import {
   homePathForScope,
+  scopeCanAccessSegmentBoard,
   scopeCanAccessStatewideLeaderBoard,
   scopeCanAccessTeamBoard,
 } from '@/features/leader/accessScope'
@@ -16,6 +17,8 @@ type Props = {
   children: ReactNode
   /** When set, require access to this team board slug. */
   teamSlug?: string
+  /** When set, require access to this segment shell. */
+  segment?: 'high-school' | 'working-class'
   /** Require statewide Leader Board (master or segment). */
   requireStatewide?: boolean
   /** Lead Organizer master key only. */
@@ -25,6 +28,7 @@ type Props = {
 export function RequireLeaderAccess({
   children,
   teamSlug,
+  segment,
   requireStatewide,
   requireMaster,
 }: Props) {
@@ -47,6 +51,10 @@ export function RequireLeaderAccess({
   }
 
   if (requireStatewide && !scopeCanAccessStatewideLeaderBoard(scope)) {
+    return <Navigate to={homePathForScope(scope)} replace />
+  }
+
+  if (segment && !scopeCanAccessSegmentBoard(scope, segment)) {
     return <Navigate to={homePathForScope(scope)} replace />
   }
 

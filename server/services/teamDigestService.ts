@@ -10,7 +10,7 @@ import { listLeaderRoster } from './leaderRoster.ts'
 const TEAM_META = CANONICAL_TEAMS.map((team, index) => ({
   slug: team.slug,
   name: team.name,
-  mark: String(index + 1).padStart(2, '0'),
+  mark: team.slug === 'graphic-design' ? 'GD' : String(index + 1).padStart(2, '0'),
   shortLabel: team.name,
 }))
 

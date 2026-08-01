@@ -2,16 +2,24 @@ import { describe, expect, it } from 'vitest'
 import { AUDIT_EVENT_TYPES, CANONICAL_TEAMS } from './enums.ts'
 
 describe('canonical teams and audit types', () => {
-  it('seeds five Phase 1 teams with stable slugs and codes', () => {
-    expect(CANONICAL_TEAMS).toHaveLength(5)
+  it('seeds five categories plus Graphic Design with stable slugs and codes', () => {
+    expect(CANONICAL_TEAMS).toHaveLength(6)
     expect(CANONICAL_TEAMS.map((t) => t.slug)).toEqual([
       'organizer',
       'voter-registration',
       'social-media',
       'events',
       'outreach',
+      'graphic-design',
     ])
-    expect(CANONICAL_TEAMS.map((t) => t.code)).toEqual(['ORG', 'VRE', 'SOC', 'EVT', 'OUT'])
+    expect(CANONICAL_TEAMS.map((t) => t.code)).toEqual([
+      'ORG',
+      'VRE',
+      'SOC',
+      'EVT',
+      'OUT',
+      'GRD',
+    ])
   })
 
   it('includes required audit event types', () => {

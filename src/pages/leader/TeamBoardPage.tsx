@@ -27,10 +27,11 @@ import {
   type TeamAttentionDigest,
 } from '@/features/leader/leaderApi'
 import {
+  CATEGORY_BOARD_SLUGS,
   getTeamBoardMeta,
   isTeamBoardSlug,
+  pathForTeamBoard,
   summarizeTeamRoster,
-  TEAM_BOARD_SLUGS,
   type TeamBoardSlug,
 } from '@/features/leader/teamBoards'
 import { TEAMS } from '@/content/ayc'
@@ -113,21 +114,37 @@ function TeamBoard({ teamSlug }: { teamSlug: TeamBoardSlug }) {
   return (
     <div className={`team-board team-board--${teamSlug}`}>
       <PageHeader
-        eyebrow="Team Lead Board"
+        eyebrow={
+          teamSlug === 'graphic-design' ? 'Secondary Team Board' : 'Team Lead Board'
+        }
         title={`${meta.name} Lead Board`}
-        lede={`${meta.shortLabel}. Mission, priorities, roster, and attention for this statewide category.`}
+        lede={
+          teamSlug === 'graphic-design'
+            ? `${meta.shortLabel}. Statewide design roster under Social Media — mission, tasks, resources, and attention.`
+            : `${meta.shortLabel}. Mission, priorities, roster, and attention for this statewide category.`
+        }
         actions={
           <>
             <Button to="/leader" variant="secondary">
               All teams
             </Button>
-            <Button to={`/leader/teams/${teamSlug}#mission`} variant="secondary">
+            {teamSlug === 'graphic-design' ? (
+              <Button to="/leader/teams/social-media" variant="secondary">
+                Social Media parent
+              </Button>
+            ) : null}
+            {teamSlug === 'social-media' ? (
+              <Button to="/leader/teams/social-media/graphic-design" variant="secondary">
+                Graphic Design
+              </Button>
+            ) : null}
+            <Button to={`${pathForTeamBoard(teamSlug)}#mission`} variant="secondary">
               Mission
             </Button>
-            <Button to={`/leader/teams/${teamSlug}#tasks`} variant="secondary">
+            <Button to={`${pathForTeamBoard(teamSlug)}#tasks`} variant="secondary">
               Tasks
             </Button>
-            <Button to={`/leader/teams/${teamSlug}#resources`} variant="secondary">
+            <Button to={`${pathForTeamBoard(teamSlug)}#resources`} variant="secondary">
               Resources
             </Button>
             <Button to="/leader/contacts/new" variant="primary">
@@ -153,7 +170,8 @@ function TeamBoard({ teamSlug }: { teamSlug: TeamBoardSlug }) {
             key={team.id}
             to={`/leader/teams/${team.id}`}
             className={
-              team.id === teamSlug
+              team.id === teamSlug ||
+              (team.id === 'social-media' && teamSlug === 'graphic-design')
                 ? 'team-board-switcher__link team-board-switcher__link--active'
                 : 'team-board-switcher__link'
             }
@@ -162,6 +180,19 @@ function TeamBoard({ teamSlug }: { teamSlug: TeamBoardSlug }) {
             {team.name}
           </Link>
         ))}
+        {teamSlug === 'social-media' || teamSlug === 'graphic-design' ? (
+          <Link
+            to="/leader/teams/social-media/graphic-design"
+            className={
+              teamSlug === 'graphic-design'
+                ? 'team-board-switcher__link team-board-switcher__link--active'
+                : 'team-board-switcher__link'
+            }
+          >
+            <span className="team-board-switcher__mark">GD</span>
+            Graphic Design
+          </Link>
+        ) : null}
       </nav>
 
       {error ? (
@@ -380,19 +411,31 @@ function TeamBoard({ teamSlug }: { teamSlug: TeamBoardSlug }) {
 
       <Section id="other-teams" title="Other team boards">
         <div className="team-board-hub">
-          {TEAM_BOARD_SLUGS.filter((slug) => slug !== teamSlug).map((slug) => {
+          {CATEGORY_BOARD_SLUGS.filter(
+            (slug) => slug !== teamSlug && !(teamSlug === 'graphic-design' && slug === 'social-media'),
+          ).map((slug) => {
             const other = getTeamBoardMeta(slug)
             return (
               <Card key={slug}>
                 <span className="team-board-hub__mark">{other.mark}</span>
                 <h3>{other.name}</h3>
                 <p>{other.shortLabel}</p>
-                <Button to={`/leader/teams/${slug}`} variant="secondary">
+                <Button to={pathForTeamBoard(slug)} variant="secondary">
                   Open board
                 </Button>
               </Card>
             )
           })}
+          {teamSlug !== 'graphic-design' ? (
+            <Card>
+              <span className="team-board-hub__mark">GD</span>
+              <h3>Graphic Design</h3>
+              <p>Under Social Media</p>
+              <Button to="/leader/teams/social-media/graphic-design" variant="secondary">
+                Open board
+              </Button>
+            </Card>
+          ) : null}
         </div>
       </Section>
 
@@ -418,8 +461,12 @@ function TeamBoard({ teamSlug }: { teamSlug: TeamBoardSlug }) {
   )
 }
 
-function TeamBoardGate() {
-  const { teamSlug } = useParams()
+function TeamBoardGate({ forcedSlug }: { forcedSlug?: TeamBoardSlug }) {
+  const { teamSlug: paramSlug } = useParams()
+  const teamSlug = forcedSlug ?? paramSlug
+  if (!forcedSlug && teamSlug === 'graphic-design') {
+    return <Navigate to="/leader/teams/social-media/graphic-design" replace />
+  }
   if (!isTeamBoardSlug(teamSlug)) {
     return <Navigate to="/leader" replace />
   }
@@ -430,6 +477,10 @@ function TeamBoardGate() {
   )
 }
 
-export function TeamBoardPage() {
-  return <TeamBoardGate />
+export function TeamBoardPage({ forcedSlug }: { forcedSlug?: TeamBoardSlug } = {}) {
+  return <TeamBoardGate forcedSlug={forcedSlug} />
+}
+
+export function GraphicDesignBoardPage() {
+  return <TeamBoardPage forcedSlug="graphic-design" />
 }

@@ -46,6 +46,11 @@ export function listRegisteredKeys(): RegisteredKey[] {
       label: 'Voter Registration Campaign Lead',
     },
     { env: 'AYC_KEY_SOCIAL_MEDIA', teamSlug: 'social-media', label: 'Social Media Campaign Lead' },
+    {
+      env: 'AYC_KEY_GRAPHIC_DESIGN',
+      teamSlug: 'graphic-design',
+      label: 'Graphic Design Lead',
+    },
     { env: 'AYC_KEY_EVENTS', teamSlug: 'events', label: 'Events Campaign Lead' },
     { env: 'AYC_KEY_OUTREACH', teamSlug: 'outreach', label: 'Outreach Campaign Lead' },
   ]
@@ -156,11 +161,19 @@ export function scopeCanAccessTeamBoard(scope: UnlockScope, teamSlug: string): b
   if (scope.kind === 'master') return true
   if (scope.kind === 'segment') return false
   if (scope.teamSlug === teamSlug) return true
-  // Social Media Campaign Lead also unlocks Graphic Design (when that board ships).
+  // Social Media Campaign Lead also unlocks Graphic Design secondary board.
   if (scope.teamSlug === 'social-media' && teamSlug === 'graphic-design') return true
   return false
 }
 
 export function scopeCanAccessStatewideLeaderBoard(scope: UnlockScope): boolean {
   return scope.kind === 'master' || scope.kind === 'segment'
+}
+
+export function scopeCanAccessSegmentBoard(
+  scope: UnlockScope,
+  segment: 'high-school' | 'working-class',
+): boolean {
+  if (scope.kind === 'master') return true
+  return scope.kind === 'segment' && scope.segment === segment
 }

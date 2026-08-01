@@ -7,7 +7,10 @@
 | `/leader/gaps` | Complete | Contact gap-fill sprint (phone/email queue) |
 | `/leader/duplicates` | Complete | Duplicate pair queue + merge into survivor (archives loser) |
 | `/leader/feedback` | Complete | Leader-gated beta feedback inbox (status, severity, notes) |
-| `/leader/teams/:teamSlug` | Complete | Five Team Lead Boards + Mission + Tasks + Resources |
+| `/leader/teams/:teamSlug` | Complete | Five statewide Category Boards + Mission + Tasks + Resources |
+| `/leader/teams/social-media/graphic-design` | Complete | Graphic Design secondary board (under Social Media) |
+| `/leader/segments/high-school` | Complete | HS Lead Organizer shell (2A; full workspace later in 2F) |
+| `/leader/segments/working-class` | Complete | WC Lead Organizer shell (2A; full workspace later in 2F) |
 | `/leader/contacts/new` | Complete | Contact create |
 | `/leader/contacts/:personId` | Complete | Contact detail / edit / archive / pipeline tags |
 | `/directory` | Complete | People / teams / locations views |

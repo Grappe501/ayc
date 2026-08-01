@@ -1,4 +1,4 @@
-import { TEAMS } from '@/content/ayc'
+import type { AnyTeamBoardId } from '@/content/boardTeams'
 
 export type TeamResourceStarter = {
   title: string
@@ -7,7 +7,7 @@ export type TeamResourceStarter = {
   notes?: string | null
 }
 
-type TeamSlug = (typeof TEAMS)[number]['id']
+type TeamSlug = AnyTeamBoardId
 
 /** Suggested starters for empty team resource libraries (not auto-inserted). */
 export const TEAM_RESOURCE_STARTERS: Record<TeamSlug, TeamResourceStarter[]> = {
@@ -101,6 +101,24 @@ export const TEAM_RESOURCE_STARTERS: Record<TeamSlug, TeamResourceStarter[]> = {
       title: 'Partner follow-up',
       kind: 'CHECKLIST',
       notes: 'Thank-you · AYC one-pager · Join link · named Organizer hand-off.',
+    },
+  ],
+  'graphic-design': [
+    {
+      title: 'Social Media parent board',
+      kind: 'LINK',
+      url: '/leader/teams/social-media',
+      notes: 'Graphic Design rolls up under Social Media.',
+    },
+    {
+      title: 'Brand palette note',
+      kind: 'NOTE',
+      notes: 'Dominant green #2E5A3D · secondary #FF6B35 · keep type readable on phone.',
+    },
+    {
+      title: 'Asset hand-off checklist',
+      kind: 'CHECKLIST',
+      notes: 'Final file · alt text · where it posts · Social Media owner notified.',
     },
   ],
 }

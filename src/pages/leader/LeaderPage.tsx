@@ -14,6 +14,7 @@ import {
 import { TEAMS } from '@/content/ayc'
 import { AssignTeamDialog } from '@/features/leader/AssignTeamDialog'
 import { LeaderRosterList } from '@/features/leader/LeaderRosterList'
+import { teamBoardPath } from '@/features/leader/accessScope'
 import { PIPELINE_TAG_OPTIONS } from '@/features/leader/pipelineLabels'
 import { RequireLeaderAccess } from '@/features/leader/RequireLeaderAccess'
 import { clearLeaderSession } from '@/features/leader/leaderSession'
@@ -198,6 +199,51 @@ function LeaderBoard() {
         <StatCard value={String(stats.locationsRepresented)} label="Locations Represented" />
       </div>
 
+      <Section id="hierarchy" title="Leadership hierarchy">
+        <p className="field__hint" style={{ marginBottom: '1rem' }}>
+          Lead Organizer command board. Category boards are statewide; Graphic Design sits under
+          Social Media; HS and Working Class segment shells develop location leadership.
+        </p>
+        <div className="leader-attention">
+          <Card>
+            <Tag>Category</Tag>
+            <h3>Statewide category boards</h3>
+            <p>Organizer, Voter Registration, Social Media, Events, Outreach.</p>
+            <div className="btn-row">
+              {TEAMS.map((team) => (
+                <Button key={team.id} to={`/leader/teams/${team.id}`} variant="secondary">
+                  {team.name}
+                </Button>
+              ))}
+            </div>
+          </Card>
+          <Card>
+            <Tag>Secondary</Tag>
+            <h3>Graphic Design</h3>
+            <p>Statewide designers under Social Media — own roster, rolls into Social Media.</p>
+            <Button to="/leader/teams/social-media/graphic-design" variant="primary">
+              Open Graphic Design
+            </Button>
+          </Card>
+          <Card>
+            <Tag>Segment</Tag>
+            <h3>High School Lead Organizer</h3>
+            <p>Rollup shell for HS locations and people. Full workspace later.</p>
+            <Button to="/leader/segments/high-school" variant="primary">
+              Open HS board
+            </Button>
+          </Card>
+          <Card>
+            <Tag>Segment</Tag>
+            <h3>Working Class Lead Organizer</h3>
+            <p>Rollup shell for county / non-student locations. Full workspace later.</p>
+            <Button to="/leader/segments/working-class" variant="primary">
+              Open WC board
+            </Button>
+          </Card>
+        </div>
+      </Section>
+
       <Section id="team-digests" title="Team attention digests">
         <p className="field__hint" style={{ marginBottom: '1rem' }}>
           Per-team snapshot for Chance and category leads — gaps, joins, preferred contact, and
@@ -255,10 +301,10 @@ function LeaderBoard() {
                 ))}
               </ul>
               <div className="btn-row">
-                <Button to={`/leader/teams/${digest.slug}`} variant="primary">
+                <Button to={teamBoardPath(digest.slug)} variant="primary">
                   Open board
                 </Button>
-                <Button to={`/leader/teams/${digest.slug}#mission`} variant="secondary">
+                <Button to={`${teamBoardPath(digest.slug)}#mission`} variant="secondary">
                   Mission
                 </Button>
                 {digest.missingContact > 0 ? (

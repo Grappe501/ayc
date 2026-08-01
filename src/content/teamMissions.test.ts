@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { TEAMS } from './ayc'
+import { ALL_TEAM_BOARDS } from './boardTeams'
 import { getTeamMission, TEAM_MISSIONS, listTeamMissionSlugs } from './teamMissions'
 
 describe('team missions', () => {
-  it('covers every Phase 1 team board slug', () => {
-    expect(listTeamMissionSlugs()).toEqual(TEAMS.map((team) => team.id))
-    for (const team of TEAMS) {
+  it('covers every team board slug including Graphic Design', () => {
+    expect(listTeamMissionSlugs()).toEqual(ALL_TEAM_BOARDS.map((team) => team.id))
+    for (const team of ALL_TEAM_BOARDS) {
       expect(TEAM_MISSIONS[team.id]).toBeDefined()
       const mission = getTeamMission(team.id)
       expect(mission.charge.length).toBeGreaterThan(10)

@@ -1,6 +1,6 @@
-import { TEAMS } from '@/content/ayc'
+import { ALL_TEAM_BOARDS, type AnyTeamBoardId } from '@/content/boardTeams'
 
-export type TeamMissionSlug = (typeof TEAMS)[number]['id']
+export type TeamMissionSlug = AnyTeamBoardId
 
 export type TeamMissionPack = {
   slug: TeamMissionSlug
@@ -140,13 +140,37 @@ export const TEAM_MISSIONS: Record<TeamMissionSlug, TeamMissionPack> = {
       'Outreach feeds Join and team placement, not dead ends',
     ],
   },
+  'graphic-design': {
+    slug: 'graphic-design',
+    charge: 'Make AYC’s message clear, shareable, and on-brand.',
+    purpose:
+      'Graphic Design creates visuals and design assets for the coalition. Designers statewide sit on this secondary board under Social Media.',
+    servesCoalition:
+      'This craft makes opportunities and stories easy to recognize — so young people can find AYC and take the next step.',
+    focusAreas: [
+      'Support Social Media launches with clear visuals',
+      'Keep a shared library of reusable templates',
+      'Respond to Events and Outreach design asks',
+      'Maintain brand-safe color and type choices',
+    ],
+    leadOwns: [
+      'Statewide Graphic Design roster under Social Media',
+      'Request intake and turnaround expectations',
+      'Hand-offs of finished assets back to Social Media',
+    ],
+    successLooksLike: [
+      'Design requests have an owner and due date',
+      'Finished assets land where Social Media can publish',
+      'Designers are on the roster with preferred contact',
+    ],
+  },
 }
 
 export function getTeamMission(slug: TeamMissionSlug): TeamMissionPack {
   return TEAM_MISSIONS[slug]
 }
 
-/** Guard: every TEAMS entry must have a mission pack. */
+/** Guard: every team board entry must have a mission pack. */
 export function listTeamMissionSlugs(): TeamMissionSlug[] {
-  return TEAMS.map((team) => team.id)
+  return ALL_TEAM_BOARDS.map((team) => team.id)
 }

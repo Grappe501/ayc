@@ -31,6 +31,7 @@ describe('SQL migrations', () => {
     expect(files).toContain('004_team_tasks.sql')
     expect(files).toContain('005_team_resources.sql')
     expect(files).toContain('006_pipeline_tags.sql')
+    expect(files).toContain('007_hierarchy_foundation.sql')
   })
 
   it('defines person_merge_history in 003_person_merge', () => {
@@ -56,5 +57,15 @@ describe('SQL migrations', () => {
     expect(sql).toContain('CREATE TABLE IF NOT EXISTS person_pipeline_tags')
     expect(sql).toContain('PIPELINE_TAG_ADDED')
     expect(sql).toContain('PIPELINE_TAG_REMOVED')
+  })
+
+  it('defines hierarchy foundation in 007_hierarchy_foundation', () => {
+    const sql = readFileSync(path.join(migrationsDir, '007_hierarchy_foundation.sql'), 'utf8')
+    expect(sql).toContain('CREATE TABLE IF NOT EXISTS leadership_roles')
+    expect(sql).toContain('CREATE TABLE IF NOT EXISTS person_leadership_roles')
+    expect(sql).toContain('CREATE TABLE IF NOT EXISTS boards')
+    expect(sql).toContain('graphic-design')
+    expect(sql).toContain('LEAD_ORGANIZER')
+    expect(sql).toContain('ROLE_GRANTED')
   })
 })

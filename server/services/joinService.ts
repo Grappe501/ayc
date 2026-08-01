@@ -48,13 +48,13 @@ function mapAffiliation(locationType: LocationType, rawPath: string | undefined)
 
 function mapTeamSlug(interest: string | undefined): string {
   const value = (interest ?? 'unsure').toLowerCase()
-  if (value === 'graphic-design') return 'social-media'
   if (
     value === 'organizer' ||
     value === 'voter-registration' ||
     value === 'social-media' ||
     value === 'events' ||
-    value === 'outreach'
+    value === 'outreach' ||
+    value === 'graphic-design'
   ) {
     return value
   }

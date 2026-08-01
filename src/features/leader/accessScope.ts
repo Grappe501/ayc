@@ -15,8 +15,21 @@ export function scopeCanAccessStatewideLeaderBoard(scope: UnlockScope): boolean 
   return scope.kind === 'master' || scope.kind === 'segment'
 }
 
+export function scopeCanAccessSegmentBoard(
+  scope: UnlockScope,
+  segment: 'high-school' | 'working-class',
+): boolean {
+  if (scope.kind === 'master') return true
+  return scope.kind === 'segment' && scope.segment === segment
+}
+
+export function teamBoardPath(teamSlug: string): string {
+  if (teamSlug === 'graphic-design') return '/leader/teams/social-media/graphic-design'
+  return `/leader/teams/${teamSlug}`
+}
+
 export function homePathForScope(scope: UnlockScope): string {
-  if (scope.kind === 'category') return `/leader/teams/${scope.teamSlug}`
-  // Segment boards (HS / WC) ship in Phase 2F — statewide Leader Board is the home until then.
+  if (scope.kind === 'category') return teamBoardPath(scope.teamSlug)
+  if (scope.kind === 'segment') return `/leader/segments/${scope.segment}`
   return '/leader'
 }

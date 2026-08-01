@@ -95,6 +95,8 @@ export const AUDIT_EVENT_TYPES = [
   'TEAM_RESOURCE_ARCHIVED',
   'PIPELINE_TAG_ADDED',
   'PIPELINE_TAG_REMOVED',
+  'ROLE_GRANTED',
+  'ROLE_REVOKED',
   'BETA_FEEDBACK_SUBMITTED',
 ] as const
 export type AuditEventType = (typeof AUDIT_EVENT_TYPES)[number]
@@ -107,6 +109,8 @@ export const AUDIT_ENTITY_TYPES = [
   'TEAM_TASK',
   'TEAM_RESOURCE',
   'PIPELINE_TAG',
+  'LEADERSHIP_ROLE',
+  'BOARD',
   'BETA_FEEDBACK',
   'TEAM',
 ] as const
@@ -191,4 +195,46 @@ export const CANONICAL_TEAMS = [
       'Build connections with schools, communities, organizations, and young people who have not yet found a place in political life.',
     displayOrder: 5,
   },
+  {
+    name: 'Graphic Design',
+    slug: 'graphic-design',
+    code: 'GRD',
+    description:
+      'Create clear visuals and design assets for the coalition. Statewide designers sit here under Social Media.',
+    displayOrder: 6,
+  },
 ] as const
+
+/** Five statewide category teams (excludes Graphic Design secondary). */
+export const STATEWIDE_CATEGORY_SLUGS = [
+  'organizer',
+  'voter-registration',
+  'social-media',
+  'events',
+  'outreach',
+] as const
+
+export const LEADERSHIP_ROLE_CODES = [
+  'LEAD_ORGANIZER',
+  'CATEGORY_LEAD',
+  'GRAPHIC_DESIGN_LEAD',
+  'HS_LEAD_ORGANIZER',
+  'WC_LEAD_ORGANIZER',
+  'LOCATION_LEAD',
+  'LOCATION_TEAM_LEAD',
+  'VOLUNTEER',
+] as const
+export type LeadershipRoleCode = (typeof LEADERSHIP_ROLE_CODES)[number]
+
+export const BOARD_KINDS = [
+  'MAIN',
+  'STATEWIDE_CATEGORY',
+  'SECONDARY',
+  'SEGMENT',
+  'LOCATION_TEAM',
+  'LOCATION_CATEGORY',
+] as const
+export type BoardKind = (typeof BOARD_KINDS)[number]
+
+export const ROLE_SEGMENTS = ['HIGH_SCHOOL', 'WORKING_CLASS', 'COLLEGE', 'ALL'] as const
+export type RoleSegment = (typeof ROLE_SEGMENTS)[number]

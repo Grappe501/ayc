@@ -1,18 +1,28 @@
 import { TEAMS } from '@/content/ayc'
+import { ALL_TEAM_BOARDS, getAnyTeamBoard, type AnyTeamBoardId } from '@/content/boardTeams'
 import type { LeaderRosterRow } from '@/features/leader/leaderApi'
+import { teamBoardPath } from '@/features/leader/accessScope'
 
-export const TEAM_BOARD_SLUGS = TEAMS.map((team) => team.id)
+/** Five statewide category boards (landing / primary switcher). */
+export const CATEGORY_BOARD_SLUGS = TEAMS.map((team) => team.id)
 
-export type TeamBoardSlug = (typeof TEAMS)[number]['id']
+/** All roster team boards including Graphic Design. */
+export const TEAM_BOARD_SLUGS = ALL_TEAM_BOARDS.map((team) => team.id)
+
+export type TeamBoardSlug = AnyTeamBoardId
 
 export function isTeamBoardSlug(value: string | undefined): value is TeamBoardSlug {
   return Boolean(value && TEAM_BOARD_SLUGS.includes(value as TeamBoardSlug))
 }
 
 export function getTeamBoardMeta(slug: TeamBoardSlug) {
-  const team = TEAMS.find((entry) => entry.id === slug)
+  const team = getAnyTeamBoard(slug)
   if (!team) throw new Error(`Unknown team board: ${slug}`)
   return team
+}
+
+export function pathForTeamBoard(slug: TeamBoardSlug): string {
+  return teamBoardPath(slug)
 }
 
 /** Position on this team (primary or additional). */

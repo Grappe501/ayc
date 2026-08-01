@@ -34,17 +34,20 @@ function row(
 }
 
 describe('teamBoards', () => {
-  it('exposes the five Phase 1 team board slugs', () => {
+  it('exposes category boards plus Graphic Design', () => {
     expect(TEAM_BOARD_SLUGS).toEqual([
       'organizer',
       'voter-registration',
       'social-media',
       'events',
       'outreach',
+      'graphic-design',
     ])
     expect(isTeamBoardSlug('social-media')).toBe(true)
+    expect(isTeamBoardSlug('graphic-design')).toBe(true)
     expect(isTeamBoardSlug('admin')).toBe(false)
     expect(getTeamBoardMeta('organizer').name).toBe('Organizer')
+    expect(getTeamBoardMeta('graphic-design').name).toBe('Graphic Design')
   })
 
   it('summarizes leads and gaps for a team roster', () => {

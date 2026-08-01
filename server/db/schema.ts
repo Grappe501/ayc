@@ -261,6 +261,61 @@ export const personPipelineTags = pgTable(
   ],
 )
 
+export const leadershipRoles = pgTable('leadership_roles', {
+  code: text('code').primaryKey(),
+  label: text('label').notNull(),
+  description: text('description'),
+  displayOrder: integer('display_order').notNull().default(0),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+})
+
+export const personLeadershipRoles = pgTable(
+  'person_leadership_roles',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    personId: uuid('person_id')
+      .notNull()
+      .references(() => people.id),
+    roleCode: text('role_code')
+      .notNull()
+      .references(() => leadershipRoles.code),
+    teamId: uuid('team_id').references(() => teams.id),
+    locationId: uuid('location_id').references(() => locations.id),
+    segment: text('segment'),
+    isPrimary: boolean('is_primary').notNull().default(false),
+    grantedByActor: text('granted_by_actor'),
+    grantedAt: timestamp('granted_at', { withTimezone: true }).notNull().defaultNow(),
+    revokedAt: timestamp('revoked_at', { withTimezone: true }),
+    ...timestamps,
+  },
+  (table) => [
+    index('person_leadership_roles_person_idx').on(table.personId),
+    index('person_leadership_roles_role_idx').on(table.roleCode),
+  ],
+)
+
+export const boards = pgTable(
+  'boards',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    kind: text('kind').notNull(),
+    slug: text('slug').notNull().unique(),
+    name: text('name').notNull(),
+    parentBoardId: uuid('parent_board_id'),
+    teamId: uuid('team_id').references(() => teams.id),
+    locationId: uuid('location_id').references(() => locations.id),
+    segment: text('segment'),
+    displayOrder: integer('display_order').notNull().default(0),
+    active: boolean('active').notNull().default(true),
+    ...timestamps,
+    archivedAt: timestamp('archived_at', { withTimezone: true }),
+  },
+  (table) => [
+    index('boards_kind_idx').on(table.kind),
+    index('boards_parent_idx').on(table.parentBoardId),
+  ],
+)
+
 export const schemaMigrations = pgTable('schema_migrations', {
   id: text('id').primaryKey(),
   appliedAt: timestamp('applied_at', { withTimezone: true }).notNull().defaultNow(),
