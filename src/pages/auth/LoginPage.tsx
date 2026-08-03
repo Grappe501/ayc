@@ -3,7 +3,8 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { DocumentMeta } from '@/components/seo/DocumentMeta'
 import { Button, Field, Input, PageHeader } from '@/components/ui'
 import { useAuth } from '@/features/auth/AuthProvider'
-import { signInWithPassword } from '@/features/auth/authSession'
+import { isGoogleOAuthUiEnabled } from '@/features/auth/oauth'
+import { signInWithGoogle, signInWithPassword } from '@/features/auth/authSession'
 
 export function LoginPage() {
   const navigate = useNavigate()
@@ -12,7 +13,9 @@ export function LoginPage() {
   const [email, setEmail] = useState(params.get('email') ?? '')
   const [password, setPassword] = useState('')
   const [busy, setBusy] = useState(false)
+  const [googleBusy, setGoogleBusy] = useState(false)
   const [error, setError] = useState('')
+  const googleEnabled = isGoogleOAuthUiEnabled()
 
   useEffect(() => {
     if (!me) return
@@ -37,6 +40,17 @@ export function LoginPage() {
     await refresh()
     setBusy(false)
     // Navigation handled by me effect after refresh.
+  }
+
+  async function onGoogle() {
+    setError('')
+    setGoogleBusy(true)
+    const result = await signInWithGoogle(params.get('next'))
+    if (!result.ok) {
+      setGoogleBusy(false)
+      setError(result.error.message)
+    }
+    // On success the browser redirects to Google /auth/callback.
   }
 
   return (
@@ -95,13 +109,30 @@ export function LoginPage() {
             </div>
           ) : null}
           <div className="btn-row">
-            <Button type="submit" variant="primary" disabled={busy}>
+            <Button type="submit" variant="primary" disabled={busy || googleBusy}>
               {busy ? 'Signing in…' : 'Log in'}
             </Button>
             <Button to="/forgot-password" variant="secondary">
               Forgot password
             </Button>
           </div>
+          {googleEnabled ? (
+            <>
+              <p className="field__hint" style={{ margin: '1rem 0 0.5rem' }}>
+                Or continue with Google — same invite-only emails.
+              </p>
+              <div className="btn-row">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  disabled={busy || googleBusy}
+                  onClick={() => void onGoogle()}
+                >
+                  {googleBusy ? 'Redirecting…' : 'Continue with Google'}
+                </Button>
+              </div>
+            </>
+          ) : null}
           <p className="field__hint">
             Need an account? Ask a leader to invite you, then{' '}
             <Link to="/claim">claim your invite</Link>.

@@ -17,6 +17,7 @@ import {
 } from '@/pages/leader/LocationBoardPages'
 import { SegmentBoardPage } from '@/pages/leader/SegmentBoardPage'
 import { GraphicDesignBoardPage, TeamBoardPage } from '@/pages/leader/TeamBoardPage'
+import { AuthCallbackPage } from '@/pages/auth/AuthCallbackPage'
 import { ClaimPage } from '@/pages/auth/ClaimPage'
 import { ForgotPasswordPage } from '@/pages/auth/ForgotPasswordPage'
 import { LoginPage } from '@/pages/auth/LoginPage'
@@ -67,6 +68,7 @@ export function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/auth/callback" element={<AuthCallbackPage />} />
         <Route path="/claim" element={<ClaimPage />} />
         <Route path="/join" element={<JoinPage />} />
         <Route path="/join/thanks" element={<JoinThanksPage />} />

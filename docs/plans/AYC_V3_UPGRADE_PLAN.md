@@ -88,7 +88,7 @@ Canonical mission remains locked (`docs/master-build-plan/02-AYC-VISION-CANONICA
 | A3 | Role-aware home: after login, land on the highest board you own | Reduces “where do I go?” | `homePathForRoles` |
 | A4 | Invite flows for category leads, segment leads, location leads | ContactDetail invite exists; extend to role grants | Invite = account + role |
 | A5 | Session clarity in UI: “Signed in as … · Boards: …” | Dual-auth confusion | Trust |
-| A6 | Optional Google OAuth **after** email/password is solid | Phase 2 deferred | Lower friction for 16–24 |
+| A6 | Optional Google OAuth **after** email/password is solid | **Shipped 2026-08-03** (invite-gated) | Lower friction for 16–24 |
 | A7 | Password reset / recovery emails | **Shipped 2026-08-01** (`/forgot-password`, `/reset-password`) | Support load ↓ |
 | A8 | Audit log: who unlocked what, who accepted applications | Hardening | Accountability |
 
@@ -296,7 +296,7 @@ Do **not** pull these in without a new governing decision:
 - Calendar share / RSVP email
 - Reports v2 funnel
 - Mobile gap-fill polish
-- Optional Google OAuth
+- [x] Optional Google OAuth (invite-gated) — 2026-08-03
 
 ### V3.3 — “Comms light & command” (optional)
 
@@ -316,7 +316,7 @@ Do **not** pull these in without a new governing decision:
 4. Invite = account + role grant  
 5. UI session clarity (profile vs boards)  
 6. [x] Password recovery — 2026-08-01  
-7. Optional Google OAuth  
+7. [x] Optional Google OAuth (invite-gated) — 2026-08-03  
 8. Access audit log  
 
 ### Brand & trust
@@ -417,7 +417,8 @@ Do **not** pull these in without a new governing decision:
 3. [x] Location TEAM mission module (WS-D1) (+ location category Tasks/Resources)  
 4. [x] OG image + PWA manifest (WS-B) — 2026-08-01  
 5. [x] Playwright smoke for public + master paths (WS-L) — 2026-08-01  
-6. [x] Password recovery (WS-A7) — 2026-08-01
+6. [x] Password recovery (WS-A7) — 2026-08-01  
+7. [x] Optional Google OAuth invite-gated (WS-A6) — 2026-08-03
 
 ---
 

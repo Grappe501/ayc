@@ -1,4 +1,5 @@
 import { getSupabaseBrowserClient, isBrowserAuthConfigured } from './supabaseClient'
+import { googleOAuthRedirectTo } from './oauth'
 import { passwordResetRedirectTo } from './passwordReset'
 
 export async function getAccessToken(): Promise<string | null> {
@@ -24,6 +25,31 @@ export async function signInWithPassword(email: string, password: string) {
     }
   }
   return { ok: true as const, session: data.session }
+}
+
+export async function signInWithGoogle(nextPath?: string | null) {
+  const client = getSupabaseBrowserClient()
+  if (!client) {
+    return {
+      ok: false as const,
+      error: { message: 'Login is not configured on this environment.' },
+    }
+  }
+  const redirectTo = googleOAuthRedirectTo(window.location.origin, nextPath)
+  const { error } = await client.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo,
+      queryParams: { prompt: 'select_account' },
+    },
+  })
+  if (error) {
+    return {
+      ok: false as const,
+      error: { message: error.message || 'Could not start Google sign-in.' },
+    }
+  }
+  return { ok: true as const }
 }
 
 export async function requestPasswordReset(email: string) {

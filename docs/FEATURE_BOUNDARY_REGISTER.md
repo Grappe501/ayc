@@ -36,6 +36,7 @@
 - Calendar month/week/day grids with scroll navigation + event detail drill-down (leader + public); board page embeds  
 - Personal login (invite/claim) — Supabase Auth email+password; `user_accounts` ↔ `people`  
 - Password recovery — `/forgot-password` + `/reset-password` via Supabase Auth reset email  
+- Google OAuth (optional) — invite-gated only; binds to `user_accounts` / open invite; no open signup  
 - Directory Profiles — photo, narrative, public/private notes on `/directory/:personId`  
 
 ## Phase 2 still deferred
@@ -43,7 +44,7 @@
 Canonical plan: `docs/master-build-plan/10-PHASE-2-MASTER-PLAN.md`  
 V3 upgrade plan: `docs/plans/AYC_V3_UPGRADE_PLAN.md`
 
-- Google / social OAuth  
+- Other social OAuth providers (Apple, etc.)  
 - Notify Chance email outbox (2C) — skipped for now, add later  
 - Location-level Graphic Design boards (GD stays statewide)  
 - ~~Location category Tasks / Resources~~ shipped 2026-08-01 (`location_id` on team_tasks / team_resources)

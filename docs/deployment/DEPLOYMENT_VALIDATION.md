@@ -25,16 +25,22 @@ Repo: https://github.com/Grappe501/ayc (`main`)
 
 Credentials are **not** stored in git. Share emergency board keys out-of-band (Steve / `.env` / Netlify env). Invite accounts for day-to-day board access.
 
-### Supabase Auth (password recovery)
+### Supabase Auth (password recovery + Google)
 
 In Supabase → Authentication → URL configuration:
 
 - **Site URL:** `https://arkansasyouth.netlify.app`
 - **Redirect URLs** must include:
   - `https://arkansasyouth.netlify.app/reset-password`
+  - `https://arkansasyouth.netlify.app/auth/callback`
   - `http://localhost:5173/reset-password` (local Vite)
+  - `http://localhost:5173/auth/callback` (local Vite)
 
-Without those allowlisted redirects, forgot-password emails will not land on `/reset-password`.
+Without those allowlisted redirects, forgot-password / Google OAuth will not land correctly.
+
+**Google provider (optional):** Authentication → Providers → Google — enable with Google Cloud OAuth client ID/secret. Hide the button with `VITE_AYC_GOOGLE_OAUTH=false` if the provider is off.
+
+Server bind requires `SUPABASE_SERVICE_ROLE_KEY` (already used for invite claim).
 
 ## Post-deploy checks (Vol VII §28)
 

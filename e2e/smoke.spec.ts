@@ -58,6 +58,14 @@ test.describe('public paths', () => {
     const unconfigured = page.getByText(/not configured on this environment/i)
     await expect(email.or(unconfigured)).toBeVisible()
   })
+
+  test('login offers Google when configured', async ({ page }) => {
+    await page.goto('/login')
+    await expect(page.getByRole('heading', { name: /^log in$/i })).toBeVisible()
+    const google = page.getByRole('button', { name: /continue with google/i })
+    const unconfigured = page.getByText(/not configured on this environment/i)
+    await expect(google.or(unconfigured)).toBeVisible()
+  })
 })
 
 test.describe('master unlock + board', () => {

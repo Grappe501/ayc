@@ -20,6 +20,7 @@ const PAGE_LABELS: Record<string, string> = {
   '/login': 'Personal login',
   '/forgot-password': 'Forgot password',
   '/reset-password': 'Set new password',
+  '/auth/callback': 'Google sign-in callback',
   '/claim': 'Claim invite',
   '/leader': 'Leader Board / Workbench',
   '/leader/gaps': 'Gap fill',

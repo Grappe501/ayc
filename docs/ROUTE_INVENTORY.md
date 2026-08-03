@@ -24,6 +24,7 @@
 | `/login` | Complete | Personal account login (Supabase Auth) |
 | `/forgot-password` | Complete | Request password reset email (invite accounts) |
 | `/reset-password` | Complete | Set new password from recovery link |
+| `/auth/callback` | Complete | Google OAuth callback → invite-gated bind |
 | `/claim` | Complete | Claim invite + set password (invite-only) |
 | `/join` | Complete | Public join → `membership_applications` queue (person created on Accept) |
 | `/join/thanks` | Complete | Join confirmation + reference code |

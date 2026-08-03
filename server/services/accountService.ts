@@ -285,6 +285,194 @@ export async function touchAccountLogin(db: AycDatabase, accountId: string) {
     .where(eq(userAccounts.id, accountId))
 }
 
+/**
+ * Bind a Supabase Auth session (Google OAuth) to an invite-only AYC account.
+ * - Existing user_accounts by authSubject → ok
+ * - Existing user_accounts by email → rebind authSubject to this login
+ * - Open unused invite for email → create user_accounts (claim via Google)
+ * - Otherwise reject and delete the orphan Auth user (no open signup)
+ */
+export async function bindOAuthAccount(
+  db: AycDatabase,
+  input: {
+    accessToken: string
+    requestId?: string | null
+  },
+) {
+  if (!isSupabaseConfigured()) {
+    throw Object.assign(new Error('MISCONFIGURED'), {
+      code: 'MISCONFIGURED' as const,
+      message: 'Supabase Auth is not configured on this environment.',
+    })
+  }
+
+  const admin = getSupabaseAdmin()
+  const { data, error } = await admin.auth.getUser(input.accessToken)
+  if (error || !data.user?.email) {
+    throw Object.assign(new Error('UNAUTHORIZED'), {
+      code: 'UNAUTHORIZED' as const,
+      message: 'Could not verify the Google login. Please try again.',
+    })
+  }
+
+  const authSubject = data.user.id
+  const email = normalizeEmail(data.user.email)
+
+  const [bySubject] = await db
+    .select({
+      id: userAccounts.id,
+      personId: userAccounts.personId,
+      email: userAccounts.email,
+      accountStatus: userAccounts.accountStatus,
+    })
+    .from(userAccounts)
+    .where(eq(userAccounts.authSubject, authSubject))
+    .limit(1)
+
+  if (bySubject) {
+    if (bySubject.accountStatus !== 'ACTIVE') {
+      throw Object.assign(new Error('FORBIDDEN'), {
+        code: 'FORBIDDEN' as const,
+        message: 'This account has been disabled.',
+      })
+    }
+    await touchAccountLogin(db, bySubject.id)
+    return {
+      bound: 'existing' as const,
+      account: {
+        id: bySubject.id,
+        personId: bySubject.personId,
+        email: bySubject.email,
+      },
+    }
+  }
+
+  const [byEmail] = await db
+    .select({
+      id: userAccounts.id,
+      personId: userAccounts.personId,
+      email: userAccounts.email,
+      accountStatus: userAccounts.accountStatus,
+      authSubject: userAccounts.authSubject,
+    })
+    .from(userAccounts)
+    .where(eq(userAccounts.email, email))
+    .limit(1)
+
+  if (byEmail) {
+    if (byEmail.accountStatus !== 'ACTIVE') {
+      await admin.auth.admin.deleteUser(authSubject).catch(() => undefined)
+      throw Object.assign(new Error('FORBIDDEN'), {
+        code: 'FORBIDDEN' as const,
+        message: 'This account has been disabled.',
+      })
+    }
+    const previousSubject = byEmail.authSubject
+    await db
+      .update(userAccounts)
+      .set({ authSubject, lastLoginAt: new Date(), updatedAt: new Date() })
+      .where(eq(userAccounts.id, byEmail.id))
+
+    if (previousSubject && previousSubject !== authSubject) {
+      await admin.auth.admin.deleteUser(previousSubject).catch(() => undefined)
+    }
+
+    await insertAuditEvent(db, {
+      eventType: 'ACCOUNT_LOGIN',
+      entityType: 'USER_ACCOUNT',
+      entityId: byEmail.id,
+      actorType: 'USER',
+      actorId: byEmail.id,
+      actorLabel: email,
+      changeSummary: `Google login linked for ${email}.`,
+      metadata: { personId: byEmail.personId, provider: 'google', action: 'oauth_rebind' },
+      requestId: input.requestId,
+    })
+
+    return {
+      bound: 'rebound' as const,
+      account: {
+        id: byEmail.id,
+        personId: byEmail.personId,
+        email: byEmail.email,
+      },
+    }
+  }
+
+  const [invite] = await db
+    .select()
+    .from(accountInvites)
+    .where(and(eq(accountInvites.email, email), isNull(accountInvites.usedAt)))
+    .orderBy(desc(accountInvites.createdAt))
+    .limit(1)
+
+  if (invite && invite.expiresAt.getTime() >= Date.now()) {
+    const existingForPerson = await getAccountForPerson(db, invite.personId)
+    if (existingForPerson) {
+      await admin.auth.admin.deleteUser(authSubject).catch(() => undefined)
+      throw Object.assign(new Error('VALIDATION_ERROR'), {
+        code: 'VALIDATION_ERROR' as const,
+        message: 'This person already has a login account. Use email login or contact a leader.',
+      })
+    }
+
+    const [account] = await db
+      .insert(userAccounts)
+      .values({
+        personId: invite.personId,
+        authSubject,
+        email,
+        accountStatus: 'ACTIVE',
+        lastLoginAt: new Date(),
+      })
+      .returning()
+
+    await db
+      .update(accountInvites)
+      .set({ usedAt: new Date() })
+      .where(eq(accountInvites.id, invite.id))
+
+    await admin.auth.admin.updateUserById(authSubject, {
+      user_metadata: { person_id: invite.personId },
+      email_confirm: true,
+    })
+
+    const [person] = await db
+      .select()
+      .from(people)
+      .where(eq(people.id, invite.personId))
+      .limit(1)
+
+    await insertAuditEvent(db, {
+      eventType: 'ACCOUNT_CLAIMED',
+      entityType: 'USER_ACCOUNT',
+      entityId: account!.id,
+      actorType: 'USER',
+      actorId: account!.id,
+      actorLabel: person?.displayName ?? email,
+      changeSummary: `Account claimed via Google for ${email}.`,
+      metadata: { personId: invite.personId, provider: 'google' },
+      requestId: input.requestId,
+    })
+
+    return {
+      bound: 'claimed' as const,
+      account: {
+        id: account!.id,
+        personId: account!.personId,
+        email: account!.email,
+      },
+    }
+  }
+
+  await admin.auth.admin.deleteUser(authSubject).catch(() => undefined)
+  throw Object.assign(new Error('FORBIDDEN'), {
+    code: 'FORBIDDEN' as const,
+    message:
+      'Google sign-in is invite-only. Ask a leader to invite your email, then try again — or claim with your invite code.',
+  })
+}
+
 export async function getMePayload(db: AycDatabase, personId: string) {
   const [person] = await db.select().from(people).where(eq(people.id, personId)).limit(1)
   const account = await getAccountForPerson(db, personId)

@@ -73,6 +73,13 @@ export function fetchMe() {
   return authRequest<AuthMe>('account-me')
 }
 
+export function bindOAuthAccount() {
+  return authRequest<{
+    bound: 'existing' | 'rebound' | 'claimed'
+    account: { id: string; personId: string; email: string }
+  }>('account-oauth-bind', { method: 'POST' })
+}
+
 export async function inviteAccount(personId: string, email?: string | null) {
   const secret = getLeaderWriteSecret()
   const headers: Record<string, string> = {}
