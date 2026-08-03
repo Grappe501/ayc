@@ -41,6 +41,10 @@ export function rolesGrantLeaderWrite(roles: RoleGrant[]): boolean {
   return roles.some((role) => WRITE_ROLE_CODES.has(role.roleCode))
 }
 
+export function rolesGrantMasterAccess(roles: RoleGrant[]): boolean {
+  return roles.some((role) => role.roleCode === 'LEAD_ORGANIZER')
+}
+
 /**
  * Board / leader writes: break-glass key header, or logged-in account with leadership roles.
  * Bearer JWT is never treated as a shared key (keys use X-AYC-Leader-Write-Secret only).
@@ -71,6 +75,27 @@ export async function requireBoardWriteAccess(
   if (!rolesGrantLeaderWrite(roles)) return { ok: false, reason: 'unauthorized' }
 
   return { ok: true, mode: 'account', personId: person.session.personId, roles }
+}
+
+/**
+ * Lead Organizer only: master break-glass key, or account with LEAD_ORGANIZER.
+ */
+export async function requireMasterAccess(
+  db: AycDatabase,
+  event: HandlerEvent,
+): Promise<
+  | { ok: true; mode: 'key'; scope: UnlockScope }
+  | { ok: true; mode: 'account'; personId: string; roles: RoleGrant[] }
+  | { ok: false; reason: 'misconfigured' | 'unauthorized' }
+> {
+  const access = await requireBoardWriteAccess(db, event)
+  if (!access.ok) return access
+  if (access.mode === 'key') {
+    if (access.scope.kind !== 'master') return { ok: false, reason: 'unauthorized' }
+    return access
+  }
+  if (!rolesGrantMasterAccess(access.roles)) return { ok: false, reason: 'unauthorized' }
+  return access
 }
 
 export function accountCanRevealContacts(roles: RoleGrant[]): boolean {

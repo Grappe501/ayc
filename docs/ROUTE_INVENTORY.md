@@ -30,6 +30,7 @@
 | `/join/thanks` | Complete | Join confirmation + reference code |
 | `/leader/applications` | Complete | Join applications inbox (master key) |
 | `/leader/reports` | Complete | Coverage + pipeline hub (master key) |
+| `/leader/access-log` | Complete | Access audit: unlocks, logins, invites, application decisions (master) |
 | `/leader/calendar` | Complete | Nested calendars hub + create |
 | `/workbench` | Alias → Leader | |
 | `/people` | Alias → Directory | |

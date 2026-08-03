@@ -37,6 +37,7 @@
 - Personal login (invite/claim) — Supabase Auth email+password; `user_accounts` ↔ `people`  
 - Password recovery — `/forgot-password` + `/reset-password` via Supabase Auth reset email  
 - Google OAuth (optional) — invite-gated only; binds to `user_accounts` / open invite; no open signup  
+- Access audit log — `/leader/access-log` (master): board unlocks, account logins, invites, application accept/decline, role grant/revoke  
 - Directory Profiles — photo, narrative, public/private notes on `/directory/:personId`  
 
 ## Phase 2 still deferred

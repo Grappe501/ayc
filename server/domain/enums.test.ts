@@ -28,5 +28,6 @@ describe('canonical teams and audit types', () => {
     expect(AUDIT_EVENT_TYPES).toContain('LOCATION_CODE_CHANGED')
     expect(AUDIT_EVENT_TYPES).toContain('APPLICATION_SUBMITTED')
     expect(AUDIT_EVENT_TYPES).toContain('APPLICATION_ACCEPTED')
+    expect(AUDIT_EVENT_TYPES).toContain('BOARD_UNLOCKED')
   })
 })

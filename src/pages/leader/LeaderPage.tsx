@@ -165,6 +165,9 @@ function LeaderBoard() {
             <Button to="/leader/reports" variant="secondary">
               Reports
             </Button>
+            <Button to="/leader/access-log" variant="secondary">
+              Access log
+            </Button>
             <Button to="/leader/calendar" variant="secondary">
               Calendar
             </Button>

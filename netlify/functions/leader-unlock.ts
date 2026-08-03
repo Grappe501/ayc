@@ -2,6 +2,8 @@ import type { Handler } from '@netlify/functions'
 import { verifyUnlockCode } from '../../server/http/auth.ts'
 import { checkRateLimit, clientKey } from '../../server/http/rateLimit.ts'
 import { fail, ok, parseJsonBody, rateLimited } from '../../server/http/response.ts'
+import { recordBoardUnlock } from '../../server/services/accessAuditService.ts'
+import { withPublicDb } from './_shared.ts'
 
 type Body = { code?: string }
 
@@ -26,5 +28,16 @@ export const handler: Handler = async (event) => {
     )
   }
 
-  return ok({ unlocked: true, scope: result.scope })
+  return withPublicDb(async (db) => {
+    try {
+      await recordBoardUnlock(db, {
+        scope: result.scope,
+        requestId: event.headers['x-nf-request-id'] ?? null,
+      })
+    } catch (error) {
+      console.error('board unlock audit failed', error)
+      // Unlock still succeeds — audit must not block access.
+    }
+    return ok({ unlocked: true, scope: result.scope })
+  })
 }

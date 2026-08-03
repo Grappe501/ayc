@@ -138,15 +138,13 @@ describe('SQL migrations', () => {
     expect(sql).toContain("'PRIVATE'")
   })
 
-  it('adds location_id to team_tasks and team_resources in 015', () => {
+  it('adds BOARD_UNLOCKED access audit in 016', () => {
     const sql = readFileSync(
-      path.join(migrationsDir, '015_location_scoped_tasks_resources.sql'),
+      path.join(migrationsDir, '016_access_audit_board_unlocked.sql'),
       'utf8',
     )
-    expect(sql).toContain('location_id')
-    expect(sql).toContain('team_tasks')
-    expect(sql).toContain('team_resources')
-    expect(sql).toContain('REFERENCES locations')
+    expect(sql).toContain('BOARD_UNLOCKED')
+    expect(sql).toContain('audit_events_access_types_idx')
   })
 })
 

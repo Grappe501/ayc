@@ -790,6 +790,26 @@ export function fetchLeaderReports() {
   return request<LeaderReportsPayload>('leader-reports')
 }
 
+export type AccessAuditEvent = {
+  id: string
+  eventType: string
+  entityType: string
+  entityId: string
+  actorType: string
+  actorId: string | null
+  actorLabel: string | null
+  changeSummary: string
+  metadata: Record<string, unknown> | null
+  requestId: string | null
+  createdAt: string
+}
+
+export function fetchAccessAuditLog(limit = 100) {
+  return request<{ events: AccessAuditEvent[] }>(
+    `leader-access-log?limit=${encodeURIComponent(String(limit))}`,
+  )
+}
+
 export type CalendarBoardRef = {
   id: string
   kind: string

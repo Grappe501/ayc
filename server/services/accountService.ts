@@ -279,10 +279,20 @@ export async function claimPersonAccount(
 }
 
 export async function touchAccountLogin(db: AycDatabase, accountId: string) {
+  const [existing] = await db
+    .select({ lastLoginAt: userAccounts.lastLoginAt })
+    .from(userAccounts)
+    .where(eq(userAccounts.id, accountId))
+    .limit(1)
+
   await db
     .update(userAccounts)
     .set({ lastLoginAt: new Date(), updatedAt: new Date() })
     .where(eq(userAccounts.id, accountId))
+
+  const previous = existing?.lastLoginAt?.getTime() ?? 0
+  const stale = !previous || Date.now() - previous > 30 * 60_000
+  return { shouldAuditLogin: stale }
 }
 
 /**

@@ -28,6 +28,7 @@ const PAGE_LABELS: Record<string, string> = {
   '/leader/feedback': 'Feedback inbox',
   '/leader/applications': 'Join applications',
   '/leader/reports': 'Reports',
+  '/leader/access-log': 'Access log',
   '/leader/calendar': 'Leader calendar',
   '/leader/contacts/new': 'Add Contact',
   '/directory': 'Leadership Directory',

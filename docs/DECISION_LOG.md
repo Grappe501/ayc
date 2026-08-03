@@ -50,6 +50,7 @@
 | 2026-08-01 | Playwright smoke | `e2e/smoke.spec.ts` covers public paths + master unlock + one category board; browsers on `H:\playwright-browsers` |
 | 2026-08-01 | Password recovery | Supabase `resetPasswordForEmail` → `/forgot-password` + `/reset-password`; invite-only accounts; no open signup |
 | 2026-08-03 | Google OAuth | Optional invite-gated Google login; binds/rebinds `user_accounts` or claims open invite; orphans deleted — no open signup |
+| 2026-08-03 | Access audit log | `BOARD_UNLOCKED` + login/invite/application/role events on `/leader/access-log` (Lead Organizer) |
 | 2026-07-31 | Green canvas theme | Page background `#2E5A3D` with light text; light surfaces keep dark text |
 | 2026-07-31 | Join → Prospective pipeline | `/join` creates people with status `PROSPECTIVE`, source `JOIN_FORM`, on selected team board |
 | 2026-07-31 | Duplicate merge (#4) | `/leader/duplicates` queue + merge into survivor; `person_merge_history` + `PERSON_MERGED` audit |

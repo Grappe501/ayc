@@ -65,6 +65,9 @@ function ReportsHub() {
             <Button to="/leader/applications" variant="primary">
               Join applications
             </Button>
+            <Button to="/leader/access-log" variant="secondary">
+              Access log
+            </Button>
             <Button to="/leader/gaps" variant="secondary">
               Contact gaps
             </Button>

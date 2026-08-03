@@ -3,6 +3,7 @@ import { AppShell } from '@/components/layout/AppShell'
 import { HomePage } from '@/pages/landing/HomePage'
 import { ContactDetailPage } from '@/pages/leader/ContactDetailPage'
 import { ApplicationsInboxPage } from '@/pages/leader/ApplicationsInboxPage'
+import { AccessLogPage } from '@/pages/leader/AccessLogPage'
 import { FeedbackInboxPage } from '@/pages/leader/FeedbackInboxPage'
 import { CalendarEventDetailPage } from '@/pages/leader/CalendarEventDetailPage'
 import { CalendarPage } from '@/pages/leader/CalendarPage'
@@ -42,6 +43,7 @@ export function App() {
         <Route path="/leader/feedback" element={<FeedbackInboxPage />} />
         <Route path="/leader/applications" element={<ApplicationsInboxPage />} />
         <Route path="/leader/reports" element={<ReportsPage />} />
+        <Route path="/leader/access-log" element={<AccessLogPage />} />
         <Route path="/leader/calendar" element={<CalendarPage />} />
         <Route
           path="/leader/calendar/event/:eventId"
