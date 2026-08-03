@@ -379,8 +379,9 @@
 }
 
 .error-state {
-  border-color: rgba(226, 85, 32, 0.35);
-  background: var(--color-error-soft);
+  border-color: rgba(143, 30, 24, 0.45);
+  /* Opaque cream so dark ink stays readable on the hunter canvas */
+  background: color-mix(in srgb, var(--color-secondary) 12%, var(--color-surface));
 }
 
 .spinner {

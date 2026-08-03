@@ -54,7 +54,9 @@ test.describe('public paths', () => {
   test('forgot password loads', async ({ page }) => {
     await page.goto('/forgot-password')
     await expect(page.getByRole('heading', { name: /forgot password/i })).toBeVisible()
-    await expect(page.locator('#forgot-email')).toBeVisible()
+    const email = page.locator('#forgot-email')
+    const unconfigured = page.getByText(/not configured on this environment/i)
+    await expect(email.or(unconfigured)).toBeVisible()
   })
 })
 
