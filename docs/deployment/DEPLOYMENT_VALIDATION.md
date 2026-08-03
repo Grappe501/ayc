@@ -21,6 +21,7 @@ Repo: https://github.com/Grappe501/ayc (`main`)
 - [x] Optional `AYC_ALLOWED_ORIGIN=https://arkansasyouth.netlify.app` for explicit CORS
 - [x] Site password **disabled** (2026-08-01) — public landing/join/directory/calendar are shareable
 - [x] Workbench access: account login + leadership roles; shared keys = break-glass only
+- [x] `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` set (browser auth / password recovery) — 2026-08-01
 
 Credentials are **not** stored in git. Share emergency board keys out-of-band (Steve / `.env` / Netlify env). Invite accounts for day-to-day board access.
 
