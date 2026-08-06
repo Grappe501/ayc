@@ -1,226 +1,302 @@
 import { Link, useParams } from 'react-router-dom'
-import { MISSION, SLIDES } from './content'
+import { SLIDES } from './content'
 import { meetingPath } from './paths'
+import {
+  DRILL_DOWNS,
+  getDrillDown,
+  getPresenterBrief,
+  PRESENTER_NAV,
+  PRESENTER_SLIDES,
+  presenterSlideIndex,
+  type PresenterBlock,
+} from './presenterContent'
 
-type Note = { goal: string; talk: string[]; ask: string; watch: string }
-
-const NOTES: Record<string, Note> = {
-  welcome: {
-    goal: 'Set warmth, urgency and youth ownership.',
-    talk: [
-      'Welcome everyone by name if possible.',
-      'This is a working leadership meeting, not a lecture.',
-      'Preview the five-person challenge and tonight’s decisions.',
-    ],
-    ask: 'Stay present and decide what you will own.',
-    watch: 'Keep this to two minutes; do not front-load details.',
-  },
-  why: {
-    goal: 'Explain why a connected youth network matters now.',
-    talk: [
-      'Young people already lead in separate places.',
-      'AYC connects campuses and counties so knowledge travels.',
-      'Collective power means coordinated people who can influence laws and elections.',
-    ],
-    ask: 'Think of the first person outside this room you will invite.',
-    watch: 'Say power as shared civic capacity, not domination.',
-  },
-  vision: {
-    goal: 'Land the mission and measurable growth challenge.',
-    talk: [
-      MISSION,
-      'State the current count from the live roster before the meeting; do not guess.',
-      'Every leader adds five people by next Thursday: 11 leaders can reach 55.',
-      'Each five becomes a durable local unit, not a one-time contact list.',
-    ],
-    ask: 'Text your five names into your notes tonight.',
-    watch: 'Update the live membership number from the AYC workbench before speaking.',
-  },
-  elections: {
-    goal: 'Turn election urgency into lawful, youth-led campus action.',
-    talk: [
-      'Election Day is November 3, 2026.',
-      'Registration drives begin as campuses reopen.',
-      'Teach students how to evaluate candidates and issues; never tell them how they must vote.',
-      'Add early voting, voting plans, rides, poll-worker education and ballot-issue learning.',
-    ],
-    ask: 'Schedule one registration-plus-social event now.',
-    watch:
-      'Keep AYC activity nonpartisan unless a separately authorized campaign event is clearly identified.',
-  },
-  operation: {
-    goal: 'Make statewide coverage feel achievable.',
-    talk: [
-      'Goal: every college, high school and county connected by Labor Day.',
-      'Start with existing friends, jobs, clubs and family networks.',
-      'Each five owns follow-up and reaches one new geography.',
-      'A short daily message or introduction is enough to keep momentum.',
-    ],
-    ask: 'Name your campus/county and one place you can connect next.',
-    watch:
-      'Do not promise complete chapters everywhere; the target is a real point of contact and pathway to organize.',
-  },
-  events: {
-    goal: 'Give leaders easy, repeatable social-event models.',
-    talk: [
-      'Make it recurring: same time and place builds habit.',
-      'Put fun first and add a short civic action.',
-      'Lunch, coffee, apartment hangouts, games and creative nights all count.',
-      'Every event needs a welcome person and one next step.',
-    ],
-    ask: 'Put one recurring gathering on the calendar.',
-    watch: 'Keep events accessible, safe and age-appropriate.',
-  },
-  tollette: {
-    goal: 'Use a real story to show youth leadership in public.',
-    talk: [
-      'Correct spelling is Tollette, in Howard County.',
-      'Describe what Keithan and Tyler saw and felt.',
-      'Chance introduced AYC and Kelly Grappe at a candidate rally.',
-      'Showing up in small communities builds trust and visibility.',
-    ],
-    ask: 'Volunteer to tell AYC’s story at the next community event.',
-    watch: 'The requested video was not found locally; do not improvise a social-media link.',
-  },
-  teams: {
-    goal: 'Make the five lanes concrete and interdependent.',
-    talk: [
-      'Organizer holds the unit together.',
-      'Social Media tells the story.',
-      'Outreach expands relationships.',
-      'Events create belonging.',
-      'Voter Registration turns civic interest into participation.',
-      'People may lead one team and volunteer on another.',
-    ],
-    ask: 'Choose one primary lane and one supporting lane.',
-    watch: 'Keep every duty tied to recruiting, growing, educating or acting together.',
-  },
-  strike: {
-    goal: 'Launch five fun, flexible regional action teams.',
-    talk: [
-      'Five regions: Northwest, Northeast, Central, Southwest, Southeast.',
-      'Team chooses Saturday or Sunday and the time.',
-      'Start with food, music and games; then canvass or engage campus.',
-      'Target two to three hours, not an all-day burden.',
-    ],
-    ask: 'Pick a region and help choose the first date.',
-    watch: 'Plan adult support, transportation and safety for minors.',
-  },
-  calendar: {
-    goal: 'Turn the weekend into the immediate action opportunity.',
-    talk: [
-      'Friday 6:30 PM Arkadelphia: pizzas and leadership retreat.',
-      'Saturday morning Hope: festival lesson and team outreach; leave at 2 PM.',
-      'Saturday Henderson: donated college table at Clinton Day Dinner; business/semi-formal.',
-      'Saturday movie night; Sunday country breakfast by Steve.',
-    ],
-    ask: 'Confirm who is driving, who needs a ride and who is joining each segment.',
-    watch: 'Verify exact meeting address, transport contacts and festival credentials before sharing publicly.',
-  },
-  close: {
-    goal: 'End with named commitments and space for questions.',
-    talk: [
-      'Repeat: five new people each by next Thursday.',
-      'Ask each leader to name a team lane and one calendar action.',
-      'Capture unanswered questions and assign follow-up owners.',
-    ],
-    ask: 'Say your commitment out loud before leaving.',
-    watch: 'Do not let Q/A erase the commitment round.',
-  },
+function BlockList({ heading, bullets }: { heading: string; bullets: string[] }) {
+  return (
+    <section className="p-block">
+      <h3>{heading}</h3>
+      <ul>
+        {bullets.map((b) => (
+          <li key={b}>{b}</li>
+        ))}
+      </ul>
+    </section>
+  )
 }
+
+const SPEAKER_GROUPS: { name: string; ids: string[] }[] = [
+  { name: 'Chance', ids: ['welcome', 'vision', 'close'] },
+  { name: 'Xay', ids: ['why'] },
+  { name: 'Marlena', ids: ['elections', 'events'] },
+  { name: 'Maverick', ids: ['operation', 'teams'] },
+  { name: 'Keithan & Tyler', ids: ['tollette'] },
+  { name: 'Keithan & Maverick', ids: ['teams'] },
+  { name: 'Xavion', ids: ['strike'] },
+  { name: 'Madison', ids: ['calendar'] },
+]
 
 export function PresenterHub() {
   return (
     <div className="presenter">
       <header className="presenter-hero">
-        <p className="eyebrow">Private · link-only</p>
+        <p className="eyebrow">Private · Presenters only · Link-only</p>
         <h1>AYC Presenter Board</h1>
         <p className="lead">
-          Speaker notes for tonight’s leadership meeting. This route is intentionally absent from
-          public navigation.
+          Dense briefing for speakers. Mirror the audience deck on one screen; keep this board on another. Use the
+          meeting clock when Zoom starts. This board is intentionally absent from public navigation.
         </p>
-      </header>
-      <div className="presenter-path">
-        {SLIDES.map((s, i) => (
-          <Link className="presenter-path-card" to={meetingPath(`/presenter/${s.id}`)} key={s.id}>
-            <span className="num">{i + 1}</span>
-            <span>
-              <strong>{s.navLabel}</strong>
-              <em>{s.speaker}</em>
-            </span>
+        <div className="cta-row">
+          <Link className="btn btn-gold" to={meetingPath('/presenter/welcome')}>
+            Start at Welcome
           </Link>
-        ))}
-      </div>
+          <Link className="btn btn-outline" to={meetingPath('/')}>
+            Open audience view
+          </Link>
+        </div>
+      </header>
+
+      <section className="p-section">
+        <h2>How to use this board</h2>
+        <div className="grid grid-3">
+          <div className="card">
+            <h3>1. Mirror the deck</h3>
+            <p>Each notes page matches an audience slide. Keep the audience tab on Zoom share.</p>
+          </div>
+          <div className="card">
+            <h3>2. Speak from blocks</h3>
+            <p>Why you’re here · Why it matters · Network fit · Talking points · Lines · Asks · Watch-outs · If they ask.</p>
+          </div>
+          <div className="card">
+            <h3>3. Drill when you need depth</h3>
+            <p>Open a drill-down for elections fence, five-person math, weekend logistics—without derailing the live hour.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="p-section">
+        <h2>Presentation path</h2>
+        <div className="presenter-path">
+          {PRESENTER_NAV.map((item, i) => (
+            <Link key={item.id} className="presenter-path-card" to={item.path}>
+              <span className="num">{i + 1}</span>
+              <span>
+                <strong>{item.label}</strong>
+                <em>{item.speaker}</em>
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="p-section">
+        <h2>Deep drill-downs</h2>
+        <div className="grid grid-2">
+          {DRILL_DOWNS.map((d) => (
+            <Link key={d.id} className="card drill-card" to={meetingPath(`/presenter/drill/${d.id}`)}>
+              <h3>{d.title}</h3>
+              <p>{d.subtitle}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="p-section">
+        <h2>By speaker</h2>
+        <div className="grid grid-2">
+          {SPEAKER_GROUPS.map((group) => (
+            <div className="card" key={group.name}>
+              <h3>{group.name}</h3>
+              <ul className="link-list">
+                {[...new Set(group.ids)].map((id) => {
+                  const slide = SLIDES.find((s) => s.id === id)
+                  return (
+                    <li key={id}>
+                      <Link to={meetingPath(`/presenter/${id}`)}>{slide?.navLabel ?? id}</Link>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   )
 }
 
 export function PresenterSlidePage() {
   const { slideId = 'welcome' } = useParams()
-  const i = SLIDES.findIndex((s) => s.id === slideId)
-  const s = SLIDES[i]
-  const n = NOTES[slideId]
-  if (!s || !n) return <NavigateHome />
+  const brief = getPresenterBrief(slideId)
+  const idx = presenterSlideIndex(slideId)
+  const prev = idx > 0 ? PRESENTER_SLIDES[idx - 1] : null
+  const next = idx >= 0 && idx < PRESENTER_SLIDES.length - 1 ? PRESENTER_SLIDES[idx + 1] : null
+
+  if (!brief) {
+    return (
+      <div className="presenter">
+        <p>Presenter notes not found.</p>
+        <Link to={meetingPath('/presenter')}>Back to Presenters Board</Link>
+      </div>
+    )
+  }
+
+  const audienceSlide = SLIDES.find((s) => s.id === brief.slideId)
+
   return (
     <div className="presenter">
       <div className="presenter-toolbar">
-        <Link to={meetingPath('/presenter')}>← Board</Link>
+        <Link to={meetingPath('/presenter')}>← Board home</Link>
         <span>
-          {i + 1} / {SLIDES.length}
+          {idx + 1} / {PRESENTER_SLIDES.length} · {brief.timeBox}
         </span>
-        <Link to={s.path}>Audience slide ↗</Link>
+        <Link to={brief.audiencePath}>Audience slide ↗</Link>
       </div>
+
       <header className="presenter-slide-head">
-        <p className="eyebrow">Speaker · {s.speaker}</p>
-        <h1>{s.title}</h1>
+        <p className="eyebrow">
+          Presenter notes · {brief.timeBox} · {brief.speaker}
+        </p>
+        <h1>{audienceSlide?.title ?? brief.slideId}</h1>
+        <p className="speaker-line">Speaker: {brief.speaker}</p>
       </header>
+
       <div className="presenter-grid">
         <aside className="presenter-rail">
           <div className="card accent">
-            <h3>Purpose</h3>
-            <p>{n.goal}</p>
-          </div>
-          <div className="card">
-            <h3>Direct ask</h3>
-            <p>{n.ask}</p>
-          </div>
-        </aside>
-        <main>
-          <section className="p-block">
-            <h3>Talking points</h3>
+            <h3>Audience sees</h3>
             <ul>
-              {n.talk.map((x) => (
-                <li key={x}>{x}</li>
+              {brief.audienceSees.map((a) => (
+                <li key={a}>{a}</li>
               ))}
             </ul>
-          </section>
-          <section className="p-block">
-            <h3>Watch-out</h3>
-            <p>{n.watch}</p>
-          </section>
-          <div className="presenter-toolbar">
-            {i > 0 ? (
-              <Link to={meetingPath(`/presenter/${SLIDES[i - 1].id}`)}>← Previous</Link>
-            ) : (
-              <span />
-            )}
-            {i < SLIDES.length - 1 ? (
-              <Link to={meetingPath(`/presenter/${SLIDES[i + 1].id}`)}>Next →</Link>
-            ) : (
-              <Link to={meetingPath('/presenter')}>Finish</Link>
-            )}
+            <Link className="btn btn-outline" style={{ marginTop: '0.75rem' }} to={brief.audiencePath}>
+              Open audience page
+            </Link>
           </div>
-        </main>
+          <div className="card">
+            <h3>Open with</h3>
+            <ul>
+              {brief.openWith.map((a) => (
+                <li key={a}>{a}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="card">
+            <h3>Lines to land</h3>
+            <ul className="lines">
+              {brief.linesToLand.map((a) => (
+                <li key={a}>“{a}”</li>
+              ))}
+            </ul>
+          </div>
+          {brief.drillDownIds.length ? (
+            <div className="card">
+              <h3>Drill deeper</h3>
+              <ul className="link-list">
+                {brief.drillDownIds.map((id) => {
+                  const d = getDrillDown(id)
+                  return (
+                    <li key={id}>
+                      <Link to={meetingPath(`/presenter/drill/${id}`)}>{d?.title ?? id}</Link>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          ) : null}
+        </aside>
+
+        <div className="presenter-main">
+          <div className="p-callout">
+            <h3>Why you are presenting</h3>
+            <p>{brief.whyYouAreHere}</p>
+          </div>
+          <div className="p-callout gold">
+            <h3>Why it matters</h3>
+            <p>{brief.whyItMatters}</p>
+          </div>
+          <div className="p-callout">
+            <h3>How it fits the network</h3>
+            <p>{brief.networkFit}</p>
+          </div>
+
+          {brief.talkingPoints.map((block: PresenterBlock) => (
+            <BlockList key={block.heading} heading={block.heading} bullets={block.bullets} />
+          ))}
+
+          <BlockList heading="Asks on this slide" bullets={brief.asks} />
+          <BlockList heading="Watch-outs" bullets={brief.watchOuts} />
+
+          {brief.ifTheyAsk.map((block) => (
+            <BlockList key={block.heading} heading={block.heading} bullets={block.bullets} />
+          ))}
+        </div>
       </div>
+
+      <nav className="presenter-pager">
+        {prev ? (
+          <Link className="btn btn-outline" to={meetingPath(`/presenter/${prev.slideId}`)}>
+            ← {SLIDES.find((s) => s.id === prev.slideId)?.navLabel}
+          </Link>
+        ) : (
+          <span />
+        )}
+        {next ? (
+          <Link className="btn btn-gold" to={meetingPath(`/presenter/${next.slideId}`)}>
+            {SLIDES.find((s) => s.id === next.slideId)?.navLabel} →
+          </Link>
+        ) : (
+          <Link className="btn btn-gold" to={meetingPath('/presenter')}>
+            Back to board
+          </Link>
+        )}
+      </nav>
     </div>
   )
 }
 
-function NavigateHome() {
+export function PresenterDrillPage() {
+  const { drillId = '' } = useParams()
+  const drill = getDrillDown(drillId)
+  if (!drill) {
+    return (
+      <div className="presenter">
+        <p>Drill-down not found.</p>
+        <Link to={meetingPath('/presenter')}>Back to Presenters Board</Link>
+      </div>
+    )
+  }
+
   return (
     <div className="presenter">
-      <h1>Notes not found</h1>
-      <Link to={meetingPath('/presenter')}>Return to board</Link>
+      <div className="presenter-toolbar">
+        <Link to={meetingPath('/presenter')}>← Board home</Link>
+        <span>Deep dive</span>
+        <Link to={meetingPath('/presenter/welcome')}>Slide notes</Link>
+      </div>
+      <header className="presenter-slide-head">
+        <p className="eyebrow">Drill-down</p>
+        <h1>{drill.title}</h1>
+        <p className="lead">{drill.subtitle}</p>
+      </header>
+      <div className="presenter-main" style={{ maxWidth: '48rem' }}>
+        {drill.sections.map((s) => (
+          <BlockList key={s.heading} heading={s.heading} bullets={s.bullets} />
+        ))}
+        <div className="card">
+          <h3>Related slides</h3>
+          <ul className="link-list">
+            {drill.relatedSlideIds.map((id) => {
+              const slide = SLIDES.find((s) => s.id === id)
+              return (
+                <li key={id}>
+                  <Link to={meetingPath(`/presenter/${id}`)}>{slide?.navLabel ?? id}</Link>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      </div>
     </div>
   )
 }

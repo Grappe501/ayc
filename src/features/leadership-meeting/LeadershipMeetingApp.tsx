@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { PresenterHub, PresenterSlidePage } from './PresenterBoard'
+import { PresenterDrillPage, PresenterHub, PresenterSlidePage } from './PresenterBoard'
 import { Shell } from './Shell'
 import {
   Calendar,
@@ -40,6 +40,7 @@ export function LeadershipMeetingApp() {
           <Route path="close" element={<Close />} />
           <Route path="join" element={<Join />} />
           <Route path="presenter" element={<PresenterHub />} />
+          <Route path="presenter/drill/:drillId" element={<PresenterDrillPage />} />
           <Route path="presenter/:slideId" element={<PresenterSlidePage />} />
           <Route path="*" element={<Navigate to={MEETING_BASE} replace />} />
         </Route>
