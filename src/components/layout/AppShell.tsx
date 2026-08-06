@@ -9,6 +9,7 @@ import './AppShell.css'
 
 const NAV = [
   { to: '/', label: 'Home', end: true },
+  { to: '/leadership-meeting', label: 'AYC Leadership Meeting' },
   { to: '/join', label: 'Join' },
   { to: '/calendar', label: 'Calendar' },
   { to: '/directory', label: 'Directory' },
@@ -18,6 +19,7 @@ const NAV = [
 
 const FOOTER_LINKS = [
   { to: '/', label: 'Home' },
+  { to: '/leadership-meeting', label: 'AYC Leadership Meeting' },
   { to: '/join', label: 'Join' },
   { to: '/calendar', label: 'Calendar' },
   { to: '/directory', label: 'Directory' },

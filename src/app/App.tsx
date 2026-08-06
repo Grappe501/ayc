@@ -31,10 +31,14 @@ import { FeedbackPage } from '@/pages/feedback/FeedbackPage'
 import { JoinPage } from '@/pages/join/JoinPage'
 import { JoinThanksPage } from '@/pages/join/JoinThanksPage'
 import { NotFoundPage } from '@/pages/not-found/NotFoundPage'
+import { LeadershipMeetingApp } from '@/features/leadership-meeting/LeadershipMeetingApp'
 
 export function App() {
   return (
     <Routes>
+      {/* Presentation + presenter board — outside workbench chrome */}
+      <Route path="/leadership-meeting/*" element={<LeadershipMeetingApp />} />
+
       <Route element={<AppShell />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/leader" element={<LeaderPage />} />

@@ -1,0 +1,220 @@
+import { meetingPath } from './paths'
+
+export type Slide = {
+  id: string
+  path: string
+  navLabel: string
+  title: string
+  eyebrow?: string
+  speaker?: string
+}
+
+export const MISSION =
+  'Arkansas Youth Coalition is a statewide, youth-led network of young Arkansans organizing, leading, registering voters, creating community, and building lasting civic power.'
+
+export const SLIDES: Slide[] = [
+  {
+    id: 'welcome',
+    path: meetingPath('/'),
+    navLabel: 'Welcome',
+    title: 'Young Arkansas Is Ready',
+    eyebrow: 'AYC Leadership Meeting',
+    speaker: 'Chance',
+  },
+  {
+    id: 'why',
+    path: meetingPath('/why'),
+    navLabel: 'Why We’re Here',
+    title: 'This Is Our Moment to Build',
+    speaker: 'Xay',
+  },
+  {
+    id: 'vision',
+    path: meetingPath('/vision'),
+    navLabel: 'AYC Vision',
+    title: 'Five People Each. One Statewide Power Base.',
+    speaker: 'Chance',
+  },
+  {
+    id: 'elections',
+    path: meetingPath('/elections'),
+    navLabel: 'Election & Citizen Power',
+    title: 'Youth Will Make the Difference',
+    speaker: 'Marlena',
+  },
+  {
+    id: 'operation',
+    path: meetingPath('/operation-arkansas'),
+    navLabel: 'Operation Arkansas',
+    title: 'Every Campus. Every County. By Labor Day.',
+    speaker: 'Maverick',
+  },
+  {
+    id: 'events',
+    path: meetingPath('/events'),
+    navLabel: 'Social Event Model',
+    title: 'Make It Social. Make It Regular. Make It a Thing.',
+    speaker: 'Marlena',
+  },
+  {
+    id: 'tollette',
+    path: meetingPath('/tollette'),
+    navLabel: 'Tollette',
+    title: 'AYC Showed Up in Howard County',
+    speaker: 'Keithan & Tyler',
+  },
+  {
+    id: 'teams',
+    path: meetingPath('/teams'),
+    navLabel: 'Five Local Teams',
+    title: 'Five Teams Build Collective Power',
+    speaker: 'Keithan & Maverick',
+  },
+  {
+    id: 'strike',
+    path: meetingPath('/strike-teams'),
+    navLabel: 'Strike Teams',
+    title: 'Five Regions. One Fun Weekend Mission.',
+    speaker: 'Xavion',
+  },
+  {
+    id: 'calendar',
+    path: meetingPath('/calendar'),
+    navLabel: 'This Weekend',
+    title: 'Arkadelphia · Hope · Henderson',
+    speaker: 'Madison',
+  },
+  {
+    id: 'close',
+    path: meetingPath('/close'),
+    navLabel: 'Close & Q/A',
+    title: 'What Will You Lead Next?',
+    speaker: 'Chance',
+  },
+]
+
+export const TEAMS = [
+  {
+    name: 'Lead Organizer',
+    icon: '01',
+    duties: [
+      'Keep the five-person unit connected',
+      'Welcome and place new members',
+      'Set the weekly goal and follow up',
+    ],
+  },
+  {
+    name: 'Social Media',
+    icon: '02',
+    duties: [
+      'Tell the team’s story',
+      'Make short videos and campus posts',
+      'Promote events and explain issues',
+    ],
+  },
+  {
+    name: 'Outreach',
+    icon: '03',
+    duties: [
+      'Invite friends, clubs, teachers and coworkers',
+      'Connect other schools and counties',
+      'Build relationships beyond campus',
+    ],
+  },
+  {
+    name: 'Events',
+    icon: '04',
+    duties: [
+      'Create recurring social gatherings',
+      'Make civic participation fun and welcoming',
+      'Turn attendance into relationships',
+    ],
+  },
+  {
+    name: 'Voter Registration',
+    icon: '05',
+    duties: [
+      'Help eligible students get registered',
+      'Share accurate deadlines and voting information',
+      'Build a campus voting culture',
+    ],
+  },
+]
+
+export const COUNTIES = [
+  'Arkansas',
+  'Ashley',
+  'Baxter',
+  'Benton',
+  'Boone',
+  'Bradley',
+  'Calhoun',
+  'Carroll',
+  'Chicot',
+  'Clark',
+  'Clay',
+  'Cleburne',
+  'Cleveland',
+  'Columbia',
+  'Conway',
+  'Craighead',
+  'Crawford',
+  'Crittenden',
+  'Cross',
+  'Dallas',
+  'Desha',
+  'Drew',
+  'Faulkner',
+  'Franklin',
+  'Fulton',
+  'Garland',
+  'Grant',
+  'Greene',
+  'Hempstead',
+  'Hot Spring',
+  'Howard',
+  'Independence',
+  'Izard',
+  'Jackson',
+  'Jefferson',
+  'Johnson',
+  'Lafayette',
+  'Lawrence',
+  'Lee',
+  'Lincoln',
+  'Little River',
+  'Logan',
+  'Lonoke',
+  'Madison',
+  'Marion',
+  'Miller',
+  'Mississippi',
+  'Monroe',
+  'Montgomery',
+  'Nevada',
+  'Newton',
+  'Ouachita',
+  'Perry',
+  'Phillips',
+  'Pike',
+  'Poinsett',
+  'Polk',
+  'Pope',
+  'Prairie',
+  'Pulaski',
+  'Randolph',
+  'St. Francis',
+  'Saline',
+  'Scott',
+  'Searcy',
+  'Sebastian',
+  'Sevier',
+  'Sharp',
+  'Stone',
+  'Union',
+  'Van Buren',
+  'Washington',
+  'White',
+  'Woodruff',
+  'Yell',
+]
