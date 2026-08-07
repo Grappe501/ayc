@@ -8,12 +8,12 @@
   --ayc-red: #bf212f;
   --ayc-red-deep: #9a1a26;
   --ayc-red-soft: #d64550;
-  --ayc-green: #006f3c;
-  --ayc-green-deep: #005530;
-  --ayc-green-soft: #1a8a55;
   --ayc-blue: #264b96;
   --ayc-blue-deep: #1c3a75;
   --ayc-blue-soft: #3d66b0;
+  --ayc-green: #006f3c;
+  --ayc-green-deep: #005530;
+  --ayc-green-soft: #1a8a55;
   --ayc-white: #ffffff;
   --ayc-mist: #f4f6f9;
   --ayc-cloud: #e8eef6;
@@ -21,13 +21,13 @@
   --ayc-ink-muted: #4a5568;
 
   /* Legacy brand aliases (map old names → new roles) */
-  --ayc-hunter: var(--ayc-green);
-  --ayc-midnight: var(--ayc-green-deep);
+  --ayc-hunter: var(--ayc-blue);
+  --ayc-midnight: var(--ayc-blue-deep);
   --ayc-berry: var(--ayc-red);
   --ayc-berry-deep: var(--ayc-red-deep);
   --ayc-papaya: var(--ayc-mist);
   --ayc-cream: var(--ayc-white);
-  --ayc-cotton: var(--ayc-blue-soft);
+  --ayc-cotton: var(--ayc-green-soft);
   --ayc-onyx: var(--ayc-ink);
 
   /* Page — white canvas */
@@ -44,22 +44,22 @@
   --color-primary-soft: var(--ayc-red-soft);
   --color-primary-wash: rgba(191, 33, 47, 0.12);
 
-  /* Secondary A — green (equal weight with blue) */
-  --color-secondary: var(--ayc-green);
-  --color-secondary-deep: var(--ayc-green-deep);
-  --color-secondary-soft: var(--ayc-green-soft);
-  --color-secondary-wash: rgba(0, 111, 60, 0.12);
+  /* Secondary A — blue (equal weight with green) */
+  --color-secondary: var(--ayc-blue);
+  --color-secondary-deep: var(--ayc-blue-deep);
+  --color-secondary-soft: var(--ayc-blue-soft);
+  --color-secondary-wash: rgba(38, 75, 150, 0.12);
 
-  /* Secondary B / tertiary — blue (equal weight with green) */
-  --color-tertiary: var(--ayc-blue);
-  --color-tertiary-deep: var(--ayc-blue-deep);
-  --color-tertiary-soft: var(--ayc-blue-soft);
-  --color-tertiary-wash: rgba(38, 75, 150, 0.14);
+  /* Secondary B / tertiary — green (equal weight with blue) */
+  --color-tertiary: var(--ayc-green);
+  --color-tertiary-deep: var(--ayc-green-deep);
+  --color-tertiary-soft: var(--ayc-green-soft);
+  --color-tertiary-wash: rgba(0, 111, 60, 0.14);
 
-  --color-splash: var(--ayc-blue);
-  --color-splash-deep: var(--ayc-blue-deep);
-  --color-splash-soft: var(--ayc-blue-soft);
-  --color-splash-wash: rgba(38, 75, 150, 0.12);
+  --color-splash: var(--ayc-green);
+  --color-splash-deep: var(--ayc-green-deep);
+  --color-splash-soft: var(--ayc-green-soft);
+  --color-splash-wash: rgba(0, 111, 60, 0.12);
 
   /* Legacy aliases → new roles */
   --color-gold: var(--color-surface-elevated);

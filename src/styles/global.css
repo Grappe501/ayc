@@ -17,8 +17,8 @@ body {
   color: var(--color-text);
   background:
     radial-gradient(ellipse 65% 42% at 0% -10%, rgba(191, 33, 47, 0.1), transparent 55%),
-    radial-gradient(ellipse 50% 40% at 100% 0%, rgba(38, 75, 150, 0.1), transparent 52%),
-    radial-gradient(ellipse 45% 35% at 70% 100%, rgba(0, 111, 60, 0.08), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 100% 0%, rgba(0, 111, 60, 0.1), transparent 52%),
+    radial-gradient(ellipse 45% 35% at 70% 100%, rgba(38, 75, 150, 0.08), transparent 55%),
     linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-soft) 55%, var(--color-bg) 100%);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;

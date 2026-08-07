@@ -2,14 +2,14 @@
   min-height: 100%;
   box-sizing: border-box;
   --navy: #BF212F;
-  --gold: #006F3C;
-  --sky: #264B96;
+  --gold: #264B96;
+  --sky: #006F3C;
   --white: #ffffff;
   --fog: #F4F6F9;
   --mist: #E8EEF6;
   --text: #0C1220;
   --secondary: #4A5568;
-  --soft: #264B96;
+  --soft: #006F3C;
   --border: rgba(191, 33, 47, 0.18);
   --radius: 1.25rem;
   --shadow: 0 12px 40px rgba(12, 18, 32, 0.08);
@@ -104,7 +104,7 @@
   .btn-gold {
     background: var(--gold);
     color: #ffffff;
-    box-shadow: 0 8px 28px rgba(0, 111, 60, 0.28);
+    box-shadow: 0 8px 28px rgba(38, 75, 150, 0.28);
   }
   
   .btn-navy {
@@ -232,8 +232,8 @@
   }
   
   .card.accent {
-    border-color: rgba(0, 111, 60, 0.4);
-    box-shadow: 0 0 0 1px rgba(0, 111, 60, 0.2), var(--shadow);
+    border-color: rgba(38, 75, 150, 0.4);
+    box-shadow: 0 0 0 1px rgba(38, 75, 150, 0.2), var(--shadow);
   }
   
   .hero-navy {
@@ -385,7 +385,7 @@
   
   .success {
     background: white;
-    border: 1px solid rgba(0, 111, 60, 0.45);
+    border: 1px solid rgba(38, 75, 150, 0.45);
     border-radius: var(--radius);
     padding: 1.5rem;
     box-shadow: var(--shadow);
@@ -842,8 +842,8 @@
   }
   
   .leg.tone-priority {
-    background: rgba(0, 111, 60, 0.12);
-    color: #005530;
+    background: rgba(38, 75, 150, 0.12);
+    color: #1c3a75;
     border-color: var(--gold);
   }
   
@@ -945,7 +945,7 @@
   
   .org-card.tone-priority {
     border-color: var(--gold);
-    box-shadow: 0 0 0 1px rgba(0, 111, 60, 0.28), var(--shadow);
+    box-shadow: 0 0 0 1px rgba(38, 75, 150, 0.28), var(--shadow);
   }
   
   .org-card.tone-open {

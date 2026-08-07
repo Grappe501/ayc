@@ -381,8 +381,8 @@
   border-radius: var(--radius-xl);
   background:
     radial-gradient(ellipse 60% 80% at 100% 0%, rgba(191, 33, 47, 0.35), transparent 50%),
-    radial-gradient(ellipse 50% 60% at 0% 100%, rgba(0, 111, 60, 0.28), transparent 55%),
-    linear-gradient(145deg, var(--color-tertiary) 0%, var(--color-tertiary-deep) 100%);
+    radial-gradient(ellipse 50% 60% at 0% 100%, rgba(38, 75, 150, 0.28), transparent 55%),
+    linear-gradient(145deg, var(--color-secondary) 0%, var(--color-secondary-deep) 100%);
   color: #ffffff;
   box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.18);
   overflow: hidden;
