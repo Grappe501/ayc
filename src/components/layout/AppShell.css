@@ -26,9 +26,9 @@
   position: sticky;
   top: 0;
   z-index: 40;
-  background: rgba(245, 245, 245, 0.94);
+  background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(16px) saturate(1.1);
-  border-bottom: 1px solid rgba(26, 26, 26, 0.1);
+  border-bottom: 3px solid var(--color-primary);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset, var(--shadow-sm);
   color: var(--color-text-on-light);
 }
@@ -101,9 +101,9 @@
   min-width: var(--touch);
   padding: 0 var(--space-4);
   border-radius: var(--radius-pill);
-  border: 1.5px solid var(--color-border-strong);
+  border: 1.5px solid var(--color-primary);
   background: var(--color-surface);
-  color: var(--color-secondary);
+  color: var(--color-primary);
   font-weight: 700;
   cursor: pointer;
   box-shadow: var(--shadow-xs), var(--shadow-inset);
@@ -131,7 +131,7 @@
 }
 
 .primary-nav__link--active {
-  color: var(--color-secondary);
+  color: var(--color-primary);
 }
 
 .primary-nav__link--active::after {
@@ -140,9 +140,9 @@
   left: 0.75rem;
   right: 0.75rem;
   bottom: 0.45rem;
-  height: 2px;
+  height: 3px;
   border-radius: var(--radius-pill);
-  background: linear-gradient(90deg, var(--color-secondary), var(--color-splash));
+  background: linear-gradient(90deg, var(--color-primary), var(--color-tertiary), var(--color-secondary));
 }
 
 .mobile-nav {
@@ -221,9 +221,9 @@
 }
 
 .footer {
-  border-top: 1px solid rgba(245, 245, 245, 0.14);
-  background: linear-gradient(180deg, var(--color-bg-elevated) 0%, var(--color-bg-deep) 100%);
-  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.18);
+  border-top: 3px solid var(--color-primary);
+  background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-soft) 100%);
+  box-shadow: 0 -8px 24px rgba(12, 18, 32, 0.06);
   color: var(--color-text);
 }
 

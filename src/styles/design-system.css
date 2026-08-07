@@ -34,27 +34,27 @@
 }
 
 .btn--primary {
-  background: linear-gradient(180deg, var(--color-secondary-soft) 0%, var(--color-secondary) 48%, var(--color-secondary-deep) 100%);
+  background: linear-gradient(180deg, var(--color-primary-soft) 0%, var(--color-primary) 48%, var(--color-primary-deep) 100%);
   color: var(--color-text-inverse);
-  border-color: rgba(226, 85, 32, 0.35);
+  border-color: rgba(191, 33, 47, 0.45);
   box-shadow: var(--shadow-sm), var(--shadow-inset);
 }
 
 .btn--primary:hover {
-  background: linear-gradient(180deg, var(--color-secondary) 0%, var(--color-secondary-deep) 100%);
+  background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-deep) 100%);
   color: var(--color-text-inverse);
   box-shadow: var(--shadow-lift), var(--shadow-inset);
 }
 
 .btn--secondary {
   background: var(--color-surface);
-  border-color: var(--color-border-strong);
-  color: var(--color-secondary);
+  border-color: var(--color-secondary);
+  color: var(--color-secondary-deep);
   box-shadow: var(--shadow-xs), var(--shadow-inset);
 }
 
 .btn--secondary:hover {
-  border-color: var(--color-secondary);
+  border-color: var(--color-secondary-deep);
   color: var(--color-secondary-deep);
   background: var(--color-secondary-wash);
   box-shadow: var(--shadow-sm);
@@ -138,8 +138,9 @@
   border-radius: var(--radius-pill);
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.7),
-    rgba(143, 30, 24, 0.55),
+    var(--color-primary),
+    var(--color-tertiary),
+    var(--color-secondary),
     transparent
   );
 }
@@ -151,7 +152,7 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-secondary-soft);
+  color: var(--color-primary);
 }
 
 .page-header__title {
@@ -183,8 +184,9 @@
   height: min(26rem, 70vw);
   border-radius: 50%;
   background:
-    radial-gradient(circle at 30% 30%, rgba(143, 30, 24, 0.22), transparent 55%),
-    radial-gradient(circle at 70% 60%, rgba(173, 198, 228, 0.16), transparent 60%);
+    radial-gradient(circle at 30% 30%, rgba(191, 33, 47, 0.2), transparent 55%),
+    radial-gradient(circle at 70% 60%, rgba(38, 75, 150, 0.16), transparent 60%),
+    radial-gradient(circle at 50% 80%, rgba(0, 111, 60, 0.12), transparent 55%);
   filter: blur(10px);
   pointer-events: none;
 }
@@ -193,8 +195,8 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(53, 85, 50, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(53, 85, 50, 0.05) 1px, transparent 1px);
+    linear-gradient(rgba(38, 75, 150, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 111, 60, 0.06) 1px, transparent 1px);
   background-size: 28px 28px;
   mask-image: radial-gradient(ellipse 70% 60% at 70% 40%, black, transparent);
   pointer-events: none;
@@ -379,7 +381,7 @@
 }
 
 .error-state {
-  border-color: rgba(143, 30, 24, 0.45);
+  border-color: rgba(191, 33, 47, 0.4);
   /* Opaque cream so dark ink stays readable on the hunter canvas */
   background: color-mix(in srgb, var(--color-secondary) 12%, var(--color-surface));
 }
@@ -443,7 +445,7 @@
 .field input:hover,
 .field select:hover,
 .field textarea:hover {
-  border-color: rgba(53, 85, 50, 0.35);
+  border-color: rgba(0, 111, 60, 0.35);
 }
 
 .field input:focus,

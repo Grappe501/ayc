@@ -1,23 +1,23 @@
 .ayc-lm {
   min-height: 100%;
   box-sizing: border-box;
-  --navy: #000066;
-  --gold: #ca913d;
-  --sky: #8eb6dc;
+  --navy: #BF212F;
+  --gold: #006F3C;
+  --sky: #264B96;
   --white: #ffffff;
-  --fog: #e8f0fa;
-  --mist: #dce8f5;
-  --text: #12124a;
-  --secondary: #2e3d5c;
-  --soft: #364272;
-  --border: rgba(0, 0, 102, 0.16);
+  --fog: #F4F6F9;
+  --mist: #E8EEF6;
+  --text: #0C1220;
+  --secondary: #4A5568;
+  --soft: #264B96;
+  --border: rgba(191, 33, 47, 0.18);
   --radius: 1.25rem;
-  --shadow: 0 12px 40px rgba(0, 0, 102, 0.08);
+  --shadow: 0 12px 40px rgba(12, 18, 32, 0.08);
   --font-heading: "League Spartan", system-ui, sans-serif;
   --font-body: Raleway, system-ui, sans-serif;
   font-family: var(--font-body);
   color: var(--text);
-  background: var(--fog);
+  background: #ffffff;
   
   * {
     box-sizing: border-box;
@@ -68,7 +68,7 @@
   .brand-sub {
     margin: 0.15rem 0 0;
     font-size: 0.9rem;
-    color: #c5d2ea;
+    color: #E8EEF6;
   }
   
   .header-actions {
@@ -127,7 +127,7 @@
   
   .menu {
     border-top: 1px solid rgba(255, 255, 255, 0.15);
-    background: #07074a;
+    background: #9A1A26;
     padding: 1rem 1.25rem;
   }
   
@@ -145,7 +145,7 @@
     padding: 0.55rem 0.7rem;
     border-radius: 0.5rem;
     text-decoration: none;
-    color: #e8f0fa;
+    color: #F4F6F9;
     font-size: 0.9rem;
   }
   
@@ -254,7 +254,7 @@
   }
   
   .hero-navy p {
-    color: #c5d2ea;
+    color: #E8EEF6;
   }
   
   .word-row {
@@ -835,9 +835,9 @@
   }
   
   .leg.tone-ops {
-    background: #0a0a7a;
+    background: #9A1A26;
     color: white;
-    border-color: #0a0a7a;
+    border-color: #9A1A26;
   }
   
   .leg.tone-priority {
@@ -924,13 +924,13 @@
   }
   
   .org-card.tone-kelly .org-note {
-    color: #c5d2ea;
+    color: #E8EEF6;
   }
   
   .org-card.tone-ops {
-    background: linear-gradient(180deg, #0a0a7a, var(--navy));
+    background: linear-gradient(180deg, #9A1A26, var(--navy));
     color: white;
-    border-color: #0a0a7a;
+    border-color: #9A1A26;
   }
   
   .org-card.tone-ops .org-role {
@@ -939,7 +939,7 @@
   
   .org-card.tone-ops .org-name,
   .org-card.tone-ops .org-note {
-    color: #e8f0fa;
+    color: #F4F6F9;
   }
   
   .org-card.tone-priority {

@@ -16,10 +16,10 @@ body {
   line-height: var(--leading-body);
   color: var(--color-text);
   background:
-    radial-gradient(ellipse 70% 45% at 0% -8%, rgba(143, 30, 24, 0.14), transparent 55%),
-    radial-gradient(ellipse 50% 40% at 100% 0%, rgba(173, 198, 228, 0.16), transparent 52%),
-    radial-gradient(ellipse 45% 35% at 80% 100%, rgba(255, 255, 255, 0.06), transparent 55%),
-    linear-gradient(180deg, var(--color-bg-soft) 0%, var(--color-bg) 40%, var(--color-bg-deep) 100%);
+    radial-gradient(ellipse 65% 42% at 0% -10%, rgba(191, 33, 47, 0.1), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 100% 0%, rgba(38, 75, 150, 0.1), transparent 52%),
+    radial-gradient(ellipse 45% 35% at 70% 100%, rgba(0, 111, 60, 0.08), transparent 55%),
+    linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-soft) 55%, var(--color-bg) 100%);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -30,7 +30,7 @@ body {
 }
 
 ::selection {
-  background: rgba(143, 30, 24, 0.35);
+  background: rgba(191, 33, 47, 0.28);
   color: #ffffff;
 }
 
@@ -40,13 +40,13 @@ img {
 }
 
 a {
-  color: var(--color-tertiary);
+  color: var(--color-tertiary-deep);
   text-decoration: none;
   transition: color var(--duration-fast) var(--ease);
 }
 
 a:hover {
-  color: var(--color-tertiary-soft);
+  color: var(--color-primary);
 }
 
 h1,
@@ -240,9 +240,9 @@ textarea {
 }
 
 .pipeline-tag-chip--active {
-  border-color: var(--color-primary-deep, #053b2d);
-  background: color-mix(in srgb, var(--color-primary-deep, #053b2d) 16%, white);
-  color: var(--color-primary-deep, #053b2d);
+  border-color: var(--color-primary-deep, #9a1a26);
+  background: color-mix(in srgb, var(--color-primary-deep, #9a1a26) 14%, white);
+  color: var(--color-primary-deep, #9a1a26);
   font-weight: 600;
 }
 
