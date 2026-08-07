@@ -62,13 +62,13 @@
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--gold);
+    color: #ffffff;
   }
   
   .brand-sub {
     margin: 0.15rem 0 0;
     font-size: 0.9rem;
-    color: #E8EEF6;
+    color: rgba(255, 255, 255, 0.88);
   }
   
   .header-actions {
@@ -103,25 +103,25 @@
   
   .btn-gold {
     background: var(--gold);
-    color: var(--navy);
-    box-shadow: 0 8px 28px rgba(202, 145, 61, 0.38);
+    color: #ffffff;
+    box-shadow: 0 8px 28px rgba(0, 111, 60, 0.28);
   }
   
   .btn-navy {
     background: var(--navy);
-    color: var(--white);
+    color: #ffffff;
   }
   
   .btn-outline {
     background: transparent;
-    border: 2px solid rgba(0, 0, 102, 0.25);
+    border: 2px solid rgba(191, 33, 47, 0.28);
     color: var(--navy);
   }
   
   .btn-ghost {
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    color: var(--white);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: #ffffff;
     font-size: 0.8rem;
   }
   
@@ -151,8 +151,8 @@
   
   .menu a.active,
   .menu a:hover {
-    background: rgba(255, 255, 255, 0.12);
-    color: var(--gold);
+    background: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
   }
   
   .main {
@@ -232,29 +232,30 @@
   }
   
   .card.accent {
-    border-color: rgba(202, 145, 61, 0.5);
-    box-shadow: 0 0 0 1px rgba(202, 145, 61, 0.25), var(--shadow);
+    border-color: rgba(0, 111, 60, 0.4);
+    box-shadow: 0 0 0 1px rgba(0, 111, 60, 0.2), var(--shadow);
   }
   
   .hero-navy {
     background: var(--navy);
-    color: var(--white);
+    color: #ffffff;
     border-radius: var(--radius);
     padding: 1.5rem;
   }
   
   .hero-navy .eyebrow {
-    color: var(--gold);
+    color: rgba(255, 255, 255, 0.85);
   }
   
   .hero-navy h2 {
     margin: 0.35rem 0 0;
     font-family: var(--font-heading);
     font-size: clamp(1.5rem, 3vw, 2rem);
+    color: #ffffff;
   }
   
   .hero-navy p {
-    color: #E8EEF6;
+    color: rgba(255, 255, 255, 0.9);
   }
   
   .word-row {
@@ -265,7 +266,7 @@
   
   .word {
     background: var(--navy);
-    color: var(--gold);
+    color: #ffffff;
     border-radius: var(--radius);
     padding: 1.5rem 0.75rem;
     text-align: center;
@@ -384,7 +385,7 @@
   
   .success {
     background: white;
-    border: 1px solid rgba(202, 145, 61, 0.45);
+    border: 1px solid rgba(0, 111, 60, 0.45);
     border-radius: var(--radius);
     padding: 1.5rem;
     box-shadow: var(--shadow);
@@ -675,7 +676,7 @@
   
   .manage-stats .stat.active {
     border-color: var(--navy);
-    background: rgba(0, 0, 102, 0.06);
+    background: rgba(191, 33, 47, 0.06);
   }
   
   .manage-filters {
@@ -737,7 +738,7 @@
     text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--secondary);
-    background: rgba(0, 0, 102, 0.03);
+    background: rgba(191, 33, 47, 0.03);
   }
   
   .manage-table tbody tr {
@@ -746,7 +747,7 @@
   
   .manage-table tbody tr:hover,
   .manage-table tbody tr.selected {
-    background: rgba(0, 0, 102, 0.04);
+    background: rgba(191, 33, 47, 0.04);
   }
   
   .manage-detail {
@@ -830,7 +831,7 @@
   
   .leg.tone-kelly {
     background: var(--navy);
-    color: var(--gold);
+    color: #ffffff;
     border-color: var(--navy);
   }
   
@@ -841,8 +842,8 @@
   }
   
   .leg.tone-priority {
-    background: rgba(202, 145, 61, 0.18);
-    color: var(--navy);
+    background: rgba(0, 111, 60, 0.12);
+    color: #005530;
     border-color: var(--gold);
   }
   
@@ -886,7 +887,7 @@
     left: 50%;
     width: 2px;
     height: 1rem;
-    background: rgba(0, 0, 102, 0.22);
+    background: rgba(191, 33, 47, 0.22);
   }
   
   .org-tree > .org-node::before {
@@ -916,7 +917,7 @@
   }
   
   .org-card.tone-kelly .org-role {
-    color: var(--gold);
+    color: rgba(255, 255, 255, 0.85);
   }
   
   .org-card.tone-kelly .org-name {
@@ -924,7 +925,7 @@
   }
   
   .org-card.tone-kelly .org-note {
-    color: #E8EEF6;
+    color: rgba(255, 255, 255, 0.88);
   }
   
   .org-card.tone-ops {
@@ -934,17 +935,17 @@
   }
   
   .org-card.tone-ops .org-role {
-    color: var(--gold);
+    color: rgba(255, 255, 255, 0.85);
   }
   
   .org-card.tone-ops .org-name,
   .org-card.tone-ops .org-note {
-    color: #F4F6F9;
+    color: rgba(255, 255, 255, 0.92);
   }
   
   .org-card.tone-priority {
     border-color: var(--gold);
-    box-shadow: 0 0 0 1px rgba(202, 145, 61, 0.35), var(--shadow);
+    box-shadow: 0 0 0 1px rgba(0, 111, 60, 0.28), var(--shadow);
   }
   
   .org-card.tone-open {
@@ -994,7 +995,7 @@
     left: 10%;
     right: 10%;
     height: 2px;
-    background: rgba(0, 0, 102, 0.18);
+    background: rgba(191, 33, 47, 0.18);
   }
   
   .org-node.depth-2 .org-card,
@@ -1132,7 +1133,7 @@
   }
   
   .time-track-list li.active {
-    background: rgba(0, 0, 102, 0.08);
+    background: rgba(191, 33, 47, 0.08);
     color: var(--navy);
     font-weight: 700;
   }

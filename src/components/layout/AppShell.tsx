@@ -9,7 +9,6 @@ import './AppShell.css'
 
 const NAV = [
   { to: '/', label: 'Home', end: true },
-  { to: '/leadership-meeting', label: 'AYC Leadership Meeting' },
   { to: '/join', label: 'Join' },
   { to: '/calendar', label: 'Calendar' },
   { to: '/directory', label: 'Directory' },
@@ -19,12 +18,15 @@ const NAV = [
 
 const FOOTER_LINKS = [
   { to: '/', label: 'Home' },
-  { to: '/leadership-meeting', label: 'AYC Leadership Meeting' },
   { to: '/join', label: 'Join' },
   { to: '/calendar', label: 'Calendar' },
   { to: '/directory', label: 'Directory' },
   { to: '/leader', label: 'Workbench' },
   { to: '/feedback', label: 'Feedback' },
+] as const
+
+const ARCHIVE_LINKS = [
+  { to: '/leadership-meeting', label: 'AYC Leadership Meeting' },
 ] as const
 
 export function AppShell() {
@@ -231,6 +233,14 @@ export function AppShell() {
           <nav className="footer__nav" aria-label="Footer">
             {FOOTER_LINKS.map((item) => (
               <NavLink key={item.to} to={item.to} end={item.to === '/'}>
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+          <nav className="footer__archive" aria-label="Archive">
+            <p className="footer__archive-label">Archive</p>
+            {ARCHIVE_LINKS.map((item) => (
+              <NavLink key={item.to} to={item.to}>
                 {item.label}
               </NavLink>
             ))}
