@@ -237,6 +237,7 @@ export function AppShell() {
               </NavLink>
             ))}
           </nav>
+          <div className="footer__archive"><p className="footer__archive-label">Civic learning</p><a href="https://regnatpopulus.netlify.app/youth/" rel="noopener noreferrer">Regnat Populus — Youth Initiative ↗</a></div>
           <nav className="footer__archive" aria-label="Archive">
             <p className="footer__archive-label">Archive</p>
             {ARCHIVE_LINKS.map((item) => (
